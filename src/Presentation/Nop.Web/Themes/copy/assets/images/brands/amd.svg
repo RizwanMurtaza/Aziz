@@ -1,0 +1,17 @@
+<svg width="120" height="50" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="amdRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ed1c24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b71c1c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="120" height="50" fill="transparent" />
+  
+  <!-- AMD Arrow Logo -->
+  <path d="M10,35 L25,15 L40,35 L30,35 L25,25 L20,35 Z" fill="url(#amdRed)" />
+  
+  <!-- AMD Text -->
+  <text x="50" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ed1c24">AMD</text>
+</svg>

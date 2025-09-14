@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ff4500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0" />
+      <stop offset="50%" style="stop-color:#00d4ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Shield Shape -->
+  <path d="M 25 5 L 40 12 L 40 30 L 25 45 L 10 30 L 10 12 Z"
+        fill="#0a0a0a"
+        stroke="url(#mainGradient)"
+        stroke-width="2"
+        filter="url(#glow)"/>
+
+  <!-- Inner Shield -->
+  <path d="M 25 10 L 36 15 L 36 28 L 25 40 L 14 28 L 14 15 Z"
+        fill="#111"
+        stroke="#333"
+        stroke-width="1"/>
+
+  <!-- Gaming Controller Symbol -->
+  <g transform="translate(25, 25)">
+    <!-- Controller Body -->
+    <rect x="-12" y="-6" width="24" height="12"
+          fill="#222"
+          stroke="url(#mainGradient)"
+          stroke-width="1.5"
+          rx="3"/>
+
+    <!-- D-Pad on left -->
+    <g transform="translate(-7, 0)">
+      <rect x="-1" y="-3" width="2" height="6" fill="url(#mainGradient)"/>
+      <rect x="-3" y="-1" width="6" height="2" fill="url(#mainGradient)"/>
+    </g>
+
+    <!-- Action Buttons on right -->
+    <g transform="translate(7, 0)">
+      <circle cx="0" cy="-2" r="1.5" fill="#ff6b35"/>
+      <circle cx="2" cy="0" r="1.5" fill="#00d4ff"/>
+      <circle cx="0" cy="2" r="1.5" fill="#00ff88"/>
+      <circle cx="-2" cy="0" r="1.5" fill="#ff006e"/>
+    </g>
+
+    <!-- Center Logo Mark -->
+    <circle cx="0" cy="0" r="2" fill="url(#mainGradient)" opacity="0.8"/>
+  </g>
+
+  <!-- Tech Lines for Circuit Board Effect -->
+  <g stroke="url(#glowGradient)" stroke-width="0.5" opacity="0.6">
+    <path d="M 5,20 L 8,20 L 10,22"/>
+    <path d="M 45,20 L 42,20 L 40,22"/>
+    <path d="M 5,30 L 8,30 L 10,28"/>
+    <path d="M 45,30 L 42,30 L 40,28"/>
+  </g>
+
+  <!-- Decorative Dots -->
+  <g fill="url(#mainGradient)" opacity="0.4">
+    <circle cx="25" cy="8" r="1"/>
+    <circle cx="25" cy="42" r="1"/>
+  </g>
+</svg>

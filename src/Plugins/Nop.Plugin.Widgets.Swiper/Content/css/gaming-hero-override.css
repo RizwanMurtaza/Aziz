@@ -1,0 +1,261 @@
+/* Gaming Hero Slider - Override Swiper Styles */
+.nop-slider {
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+    min-height: 600px;
+    overflow: hidden;
+}
+
+.nop-slider .swiper-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+.nop-slider .swiper-slide {
+    display: flex !important;
+    align-items: center;
+    min-height: 600px;
+    padding: 80px 0;
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+}
+
+.nop-slider .swiper-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+        linear-gradient(45deg, transparent 0%, rgba(255, 107, 53, 0.03) 50%, transparent 100%);
+    z-index: 1;
+}
+
+.nop-slider .slider-img {
+    display: none !important;
+}
+
+.nop-slider .swiper-slide a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    z-index: 3 !important;
+    text-decoration: none !important;
+}
+
+.nop-slider .swiper-slide a::after {
+    content: attr(title);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    z-index: 4;
+}
+
+/* Gaming Hero Content Styles */
+.nop-slider .hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 4;
+    width: 100%;
+}
+
+.nop-slider .hero-text {
+    flex: 1;
+    max-width: 600px;
+    color: #fff;
+}
+
+.nop-slider .hero-badge {
+    display: inline-block;
+    background: var(--primary-color, #ff6b35);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.nop-slider .hero-title {
+    font-family: var(--font-heading, 'Orbitron', sans-serif) !important;
+    font-size: 3.5rem !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    margin-bottom: 20px !important;
+    line-height: 1.1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+}
+
+.nop-slider .hero-title .highlight {
+    color: var(--primary-color, #ff6b35) !important;
+}
+
+.nop-slider .hero-description {
+    font-size: 1.2rem;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 500px;
+}
+
+.nop-slider .hero-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.nop-slider .btn {
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.nop-slider .btn-primary {
+    background: var(--primary-color, #ff6b35);
+    color: #fff;
+    border: 2px solid var(--primary-color, #ff6b35);
+}
+
+.nop-slider .btn-primary:hover {
+    background: transparent;
+    color: var(--primary-color, #ff6b35);
+    transform: translateY(-2px);
+}
+
+.nop-slider .btn-outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #555;
+}
+
+.nop-slider .btn-outline:hover {
+    border-color: var(--primary-color, #ff6b35);
+    color: var(--primary-color, #ff6b35);
+    transform: translateY(-2px);
+}
+
+.nop-slider .hero-image {
+    flex: 0 0 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 40px;
+}
+
+.nop-slider .hero-product-showcase {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+}
+
+.nop-slider .hero-icon {
+    font-size: 80px;
+    color: var(--primary-color, #ff6b35);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Navigation Overrides */
+.nop-slider .swiper-button-prev,
+.nop-slider .swiper-button-next {
+    color: var(--primary-color, #ff6b35) !important;
+    width: 50px !important;
+    height: 50px !important;
+    margin-top: -25px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease !important;
+}
+
+.nop-slider .swiper-button-prev:hover,
+.nop-slider .swiper-button-next:hover {
+    background: var(--primary-color, #ff6b35) !important;
+    color: #fff !important;
+    transform: scale(1.1) !important;
+}
+
+.nop-slider .swiper-pagination-bullet {
+    background: #555 !important;
+    width: 12px !important;
+    height: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+.nop-slider .swiper-pagination-bullet-active {
+    background: var(--primary-color, #ff6b35) !important;
+    transform: scale(1.2) !important;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
+    100% { text-shadow: 0 0 20px rgba(255, 107, 53, 0.8), 0 0 30px rgba(255, 107, 53, 0.4); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nop-slider .hero-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .nop-slider .hero-image {
+        margin-left: 0;
+        margin-top: 40px;
+        flex: 0 0 auto;
+    }
+
+    .nop-slider .hero-title {
+        font-size: 2.5rem !important;
+    }
+
+    .nop-slider .hero-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .nop-slider .btn {
+        width: 200px;
+        text-align: center;
+    }
+}

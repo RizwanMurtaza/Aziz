@@ -1,0 +1,272 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync(typeof(StoreScopeConfigurationViewComponent))
+
+<form asp-controller="SpireProductImport" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="cards-group">
+
+                <!-- Plugin Status Card -->
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Misc.SpireProductImport.Status")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsEnabled_OverrideForStore" asp-input="IsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsEnabled" />
+                                <span asp-validation-for="IsEnabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <strong>Import Status:</strong>
+                            </div>
+                            <div class="col-md-9">
+                                <span class="badge @(Model.ImportStatus.Contains("successful") ? "badge-success" : Model.ImportStatus.Contains("failed") ? "badge-danger" : "badge-secondary")">
+                                    @Model.ImportStatus
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="LastImportDateTime" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.LastImportDateTime.HasValue)
+                                {
+                                    <span>@Model.LastImportDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss") UTC</span>
+                                }
+                                else
+                                {
+                                    <span>Never</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="LastSuccessfulImportDateTime" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.LastSuccessfulImportDateTime.HasValue)
+                                {
+                                    <span>@Model.LastSuccessfulImportDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss") UTC</span>
+                                }
+                                else
+                                {
+                                    <span>Never</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FTP Configuration Card -->
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Misc.SpireProductImport.FtpConfiguration")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="FtpServer_OverrideForStore" asp-input="FtpServer" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="FtpServer" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="FtpServer" />
+                                <span asp-validation-for="FtpServer"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="FtpUsername_OverrideForStore" asp-input="FtpUsername" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="FtpUsername" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="FtpUsername" />
+                                <span asp-validation-for="FtpUsername"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="FtpPassword_OverrideForStore" asp-input="FtpPassword" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="FtpPassword" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="FtpPassword" asp-template-name="Text" />
+                                <span asp-validation-for="FtpPassword"></span>
+                                <small class="form-text text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Password is stored securely and will be displayed for configuration purposes.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CsvFileName_OverrideForStore" asp-input="CsvFileName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CsvFileName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CsvFileName" />
+                                <span asp-validation-for="CsvFileName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="XmlFileName_OverrideForStore" asp-input="XmlFileName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="XmlFileName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="XmlFileName" />
+                                <span asp-validation-for="XmlFileName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-md-3 col-md-9">
+                                <button type="submit" name="test-connection" class="btn btn-info">
+                                    <i class="fas fa-plug"></i>
+                                    @T("Plugins.Misc.SpireProductImport.TestConnection")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Import Settings Card -->
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Misc.SpireProductImport.ImportSettings")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableAutomaticImport_OverrideForStore" asp-input="EnableAutomaticImport" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableAutomaticImport" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableAutomaticImport" />
+                                <span asp-validation-for="EnableAutomaticImport"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="EnableAutomaticImport">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ImportIntervalHours_OverrideForStore" asp-input="ImportIntervalHours" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ImportIntervalHours" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ImportIntervalHours" />
+                                    <span asp-validation-for="ImportIntervalHours"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MarkupPercentage_OverrideForStore" asp-input="MarkupPercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MarkupPercentage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MarkupPercentage" asp-postfix="%" />
+                                <span asp-validation-for="MarkupPercentage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AutoCreateCategories_OverrideForStore" asp-input="AutoCreateCategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AutoCreateCategories" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AutoCreateCategories" />
+                                <span asp-validation-for="AutoCreateCategories"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="UpdateExistingProducts_OverrideForStore" asp-input="UpdateExistingProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="UpdateExistingProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="UpdateExistingProducts" />
+                                <span asp-validation-for="UpdateExistingProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MarkMissingProductsAsDiscontinued_OverrideForStore" asp-input="MarkMissingProductsAsDiscontinued" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MarkMissingProductsAsDiscontinued" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MarkMissingProductsAsDiscontinued" />
+                                <span asp-validation-for="MarkMissingProductsAsDiscontinued"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DownloadProductImages_OverrideForStore" asp-input="DownloadProductImages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DownloadProductImages" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DownloadProductImages" />
+                                <span asp-validation-for="DownloadProductImages"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableDetailedLogging_OverrideForStore" asp-input="EnableDetailedLogging" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableDetailedLogging" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableDetailedLogging" />
+                                <span asp-validation-for="EnableDetailedLogging"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Card -->
+                <div class="card card-default">
+                    <div class="card-header">
+                        @T("Plugins.Misc.SpireProductImport.Actions")
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="offset-md-3 col-md-9">
+                                <button type="submit" name="save" class="btn btn-primary">
+                                    <i class="far fa-save"></i>
+                                    @T("Admin.Common.Save")
+                                </button>
+                                <button type="submit" name="run-import" class="btn btn-success ml-2" onclick="return confirm('@T("Plugins.Misc.SpireProductImport.RunImportConfirm")');">
+                                    <i class="fas fa-download"></i>
+                                    @T("Plugins.Misc.SpireProductImport.RunImportNow")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+    $(document).ready(function () {
+        // Hide/show interval setting based on automatic import checkbox
+        $('#@Html.IdFor(model => model.EnableAutomaticImport)').change(function () {
+            if ($(this).is(':checked')) {
+                $('#@Html.IdFor(model => model.ImportIntervalHours)').closest('.form-group').show();
+            } else {
+                $('#@Html.IdFor(model => model.ImportIntervalHours)').closest('.form-group').hide();
+            }
+        }).trigger('change');
+    });
+</script>

@@ -1,0 +1,13 @@
+{
+  "name": "GamingPCRehab",
+  "SystemName": "GamingPCRehab",
+  "friendlyName": "GamingPCRehabTheme",
+  "supportRTL": false,
+  "previewImageUrl": "~/Themes/GamingPCRehab/preview.jpg",
+  "previewText": "Premium gaming PC components ecommerce theme with modern design, featuring product showcases, category browsing, and optimized checkout process.",
+  "displayOrder": 1,
+  "mobileDevicesSupported": true,
+  "supportedVersions": [ "4.80" ],
+  "author": "GamingPCRehab",
+  "version": "1.0"
+}

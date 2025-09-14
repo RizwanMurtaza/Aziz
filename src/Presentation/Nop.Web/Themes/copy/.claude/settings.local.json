@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.spire.co.uk)",
+      "Bash(mkdir:*)",
+      "Bash(python3:*)"
+    ],
+    "deny": []
+  }
+}

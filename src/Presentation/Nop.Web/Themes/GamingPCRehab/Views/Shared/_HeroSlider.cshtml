@@ -1,0 +1,184 @@
+<!-- Hero Section - Gaming PC Rehab -->
+<section class="hero-section">
+    <div class="hero-slider">
+        <!-- Slide 1 - Ultimate Gaming Components -->
+        <div class="hero-slide active">
+            <div class="hero-background">
+                <div class="hero-bg-pattern"></div>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <span class="hero-badge">New Arrivals</span>
+                        <h1 class="hero-title">Ultimate Gaming <span class="highlight">PC Components</span></h1>
+                        <p class="hero-description">Build your dream gaming rig with premium components. Latest RTX 4090, Intel Core i9, and cutting-edge hardware at unbeatable prices.</p>
+                        <div class="hero-actions">
+                            <a href="@Url.RouteUrl("ProductSearch")" class="btn btn-primary">Shop Now</a>
+                            <a href="@Url.RouteUrl("Category", new { SeName = "graphics-cards" })" class="btn btn-outline">View GPUs</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="hero-product-showcase">
+                            <i class="fas fa-microchip hero-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 - RTX 4090 -->
+        <div class="hero-slide">
+            <div class="hero-background">
+                <div class="hero-bg-pattern"></div>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <span class="hero-badge">Limited Time</span>
+                        <h1 class="hero-title">RTX 4090 <span class="highlight">Now Available</span></h1>
+                        <p class="hero-description">Experience next-gen gaming with the most powerful graphics card ever created. Ray tracing, DLSS 3, and 4K gaming perfection.</p>
+                        <div class="hero-actions">
+                            <a href="@Url.RouteUrl("Category", new { SeName = "graphics-cards" })" class="btn btn-primary">View RTX Cards</a>
+                            <a href="@Url.RouteUrl("ProductCompare")" class="btn btn-outline">Compare Models</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="hero-product-showcase">
+                            <i class="fas fa-memory hero-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 - PC Repair & Building -->
+        <div class="hero-slide">
+            <div class="hero-background">
+                <div class="hero-bg-pattern"></div>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <span class="hero-badge">Expert Service</span>
+                        <h1 class="hero-title">Professional <span class="highlight">PC Building</span></h1>
+                        <p class="hero-description">Let our experts build your perfect gaming machine. Professional assembly, testing, and warranty included with every build.</p>
+                        <div class="hero-actions">
+                            <a href="@Url.RouteUrl("Topic", new { SeName = "pc-building-service" })" class="btn btn-primary">Get Quote</a>
+                            <a href="@Url.RouteUrl("Topic", new { SeName = "custom-builds" })" class="btn btn-outline">View Gallery</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="hero-product-showcase">
+                            <i class="fas fa-tools hero-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Controls -->
+    <div class="hero-controls">
+        <div class="container">
+            <div class="slider-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+            <div class="slider-arrows">
+                <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
+                <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="hero-features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Free Shipping</h4>
+                        <p>On orders over £100</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Warranty</h4>
+                        <p>3 years manufacturer warranty</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Expert Support</h4>
+                        <p>24/7 technical assistance</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Easy Returns</h4>
+                        <p>30-day return policy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script asp-location="Footer">
+    // Hero Slider Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.querySelector('.prev-slide');
+        const nextBtn = document.querySelector('.next-slide');
+
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Dot navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+
+        // Arrow navigation
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Auto-play slider
+        setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    });
+</script>

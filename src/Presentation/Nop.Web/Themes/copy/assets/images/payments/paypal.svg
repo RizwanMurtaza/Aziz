@@ -1,0 +1,18 @@
+<svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="paypalBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#003087;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#009cde;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="60" height="30" rx="4" fill="#ffffff" stroke="#e0e0e0" stroke-width="1" />
+  
+  <!-- PayPal Logo -->
+  <path d="M15,8 Q20,6 25,8 Q30,10 28,15 Q26,20 20,20 L15,20 Z" fill="url(#paypalBlue)" />
+  <path d="M20,12 Q25,10 30,12 Q35,14 33,19 Q31,24 25,24 L20,24 Z" fill="#009cde" />
+  
+  <!-- PayPal Text -->
+  <text x="45" y="18" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#003087">PayPal</text>
+</svg>

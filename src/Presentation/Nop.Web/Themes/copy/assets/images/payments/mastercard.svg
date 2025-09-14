@@ -1,0 +1,12 @@
+<svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="60" height="30" rx="4" fill="#ffffff" stroke="#e0e0e0" stroke-width="1" />
+  
+  <!-- Mastercard Circles -->
+  <circle cx="20" cy="15" r="8" fill="#eb001b" />
+  <circle cx="30" cy="15" r="8" fill="#ff5f00" />
+  <circle cx="40" cy="15" r="8" fill="#f79e1b" />
+  
+  <!-- Mastercard Text -->
+  <text x="30" y="25" font-family="Arial, sans-serif" font-size="6" fill="#000000" text-anchor="middle">mastercard</text>
+</svg>

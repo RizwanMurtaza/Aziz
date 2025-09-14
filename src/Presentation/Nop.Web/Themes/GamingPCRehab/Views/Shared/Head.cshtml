@@ -1,0 +1,40 @@
+﻿@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+
+@inject CatalogSettings catalogSettings
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@{
+	Layout ="";
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+    var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+    //add main CSS file
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-responsive{(supportRtl ? ".rtl" : "")}.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/noble-style{(supportRtl ? ".rtl" : "")}.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-awesome.min.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.css");
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.min.css");
+
+	//add gaming custom theme CSS
+	NopHtml.AppendCssFileParts($"~/Themes/{themeName}/Content/css/gaming-custom.css");
+		
+    //add swiper css file
+    if (catalogSettings.DisplayAllPicturesOnCatalogPages)
+    {
+        NopHtml.AppendCssFileParts("~/lib_npm/swiper/swiper-bundle.min.css");
+    }
+
+    //add jQuery UI css file
+    NopHtml.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+}
+
+@* Add Gaming Fonts *@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Russo+One&family=Audiowide&display=swap" rel="stylesheet" />
+
+@* Add Font Awesome for Icons *@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />

@@ -1,0 +1,17 @@
+<svg width="120" height="50" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gigabyteOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6600;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e55a00;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="120" height="50" fill="transparent" />
+  
+  <!-- Gigabyte Eagle Wing -->
+  <path d="M10,25 Q15,15 25,20 Q35,25 40,15 Q30,30 20,35 Q15,30 10,25" fill="url(#gigabyteOrange)" />
+  
+  <!-- Gigabyte Text -->
+  <text x="45" y="30" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ff6600">GIGABYTE</text>
+</svg>

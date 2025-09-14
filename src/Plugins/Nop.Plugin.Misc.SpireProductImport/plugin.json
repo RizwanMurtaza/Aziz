@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Spire Product Import",
+  "SystemName": "Misc.SpireProductImport",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "Gaming PC Rehab",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.SpireProductImport.dll",
+  "Description": "Import products from Spire FTP data feed with automatic hourly synchronization. Supports CSV parsing, category management, and comprehensive logging for gaming PC parts inventory."
+}

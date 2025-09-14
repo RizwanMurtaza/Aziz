@@ -1,0 +1,44 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ramGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a2a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="200" height="200" fill="#0a0a0a" />
+  
+  <!-- RAM Stick -->
+  <rect x="75" y="50" width="50" height="100" rx="3" fill="url(#ramGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- Heat Spreader -->
+  <rect x="77" y="55" width="46" height="90" rx="2" fill="#ff6b35" opacity="0.8" />
+  
+  <!-- Memory Chips -->
+  <rect x="80" y="65" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="75" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="85" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="95" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="105" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="115" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="125" width="40" height="8" fill="#2a2a2a" />
+  <rect x="80" y="135" width="40" height="8" fill="#2a2a2a" />
+  
+  <!-- Contacts -->
+  <rect x="75" y="145" width="50" height="3" fill="#ffd700" />
+  
+  <!-- Notch -->
+  <rect x="95" y="145" width="10" height="8" fill="#2a2a2a" />
+  
+  <!-- Label -->
+  <text x="100" y="60" font-family="Arial, monospace" font-size="6" fill="#ffffff" text-anchor="middle">DDR5</text>
+  
+  <!-- RGB LED Strip -->
+  <rect x="77" y="52" width="46" height="2" fill="#ff6b35" opacity="0.8" />
+  
+  <!-- Product info -->
+  <text x="100" y="30" font-family="Arial, sans-serif" font-size="12" fill="#ff6b35" text-anchor="middle" font-weight="bold">Corsair Vengeance</text>
+  <text x="100" y="175" font-family="Arial, monospace" font-size="10" fill="#ffffff" text-anchor="middle">DDR5-5600 32GB</text>
+  <text x="100" y="190" font-family="Arial, monospace" font-size="8" fill="#999999" text-anchor="middle">RGB Pro</text>
+</svg>

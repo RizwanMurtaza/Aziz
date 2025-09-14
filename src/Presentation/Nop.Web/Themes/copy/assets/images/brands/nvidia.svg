@@ -1,0 +1,18 @@
+<svg width="120" height="50" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nvidiaGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#76b900;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5a8b00;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="120" height="50" fill="transparent" />
+  
+  <!-- NVIDIA Eye Logo -->
+  <path d="M10,25 Q25,10 40,25 Q25,40 10,25" fill="url(#nvidiaGreen)" />
+  <circle cx="25" cy="25" r="5" fill="#ffffff" />
+  
+  <!-- NVIDIA Text -->
+  <text x="50" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#76b900">NVIDIA</text>
+</svg>

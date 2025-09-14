@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//m/Aziz/GamingPcRehab/src/Presentation/Nop.Web/Themes/copy/**)",
+      "Read(//m/Aziz/GamingPcRehab/src/**)",
+      "Bash(dotnet build)",
+      "Bash(dir \"M:\\Aziz\\GamingPcRehab\\src\\Presentation\\Nop.Web\\Plugins\\Widgets.GamingHeroSlider\")",
+      "Bash(dotnet clean:*)",
+      "Bash(dotnet build:*)",
+      "Bash(copy:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dir:*)",
+      "Bash(find:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

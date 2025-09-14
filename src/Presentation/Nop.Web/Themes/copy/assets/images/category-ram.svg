@@ -1,0 +1,86 @@
+<svg width="400" height="250" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ramGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a2a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="250" fill="#0a0a0a" />
+  
+  <!-- RAM Stick 1 -->
+  <rect x="80" y="60" width="25" height="130" rx="3" fill="url(#ramGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- RAM Stick 2 -->
+  <rect x="120" y="60" width="25" height="130" rx="3" fill="url(#ramGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- RAM Stick 3 -->
+  <rect x="160" y="60" width="25" height="130" rx="3" fill="url(#ramGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- RAM Stick 4 -->
+  <rect x="200" y="60" width="25" height="130" rx="3" fill="url(#ramGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- Heat Spreaders -->
+  <rect x="82" y="65" width="21" height="120" rx="2" fill="#ff6b35" opacity="0.8" />
+  <rect x="122" y="65" width="21" height="120" rx="2" fill="#ff6b35" opacity="0.8" />
+  <rect x="162" y="65" width="21" height="120" rx="2" fill="#ff6b35" opacity="0.8" />
+  <rect x="202" y="65" width="21" height="120" rx="2" fill="#ff6b35" opacity="0.8" />
+  
+  <!-- Memory Chips -->
+  <rect x="84" y="80" width="17" height="8" fill="#2a2a2a" />
+  <rect x="84" y="95" width="17" height="8" fill="#2a2a2a" />
+  <rect x="84" y="110" width="17" height="8" fill="#2a2a2a" />
+  <rect x="84" y="125" width="17" height="8" fill="#2a2a2a" />
+  <rect x="84" y="140" width="17" height="8" fill="#2a2a2a" />
+  <rect x="84" y="155" width="17" height="8" fill="#2a2a2a" />
+  <rect x="84" y="170" width="17" height="8" fill="#2a2a2a" />
+  
+  <rect x="124" y="80" width="17" height="8" fill="#2a2a2a" />
+  <rect x="124" y="95" width="17" height="8" fill="#2a2a2a" />
+  <rect x="124" y="110" width="17" height="8" fill="#2a2a2a" />
+  <rect x="124" y="125" width="17" height="8" fill="#2a2a2a" />
+  <rect x="124" y="140" width="17" height="8" fill="#2a2a2a" />
+  <rect x="124" y="155" width="17" height="8" fill="#2a2a2a" />
+  <rect x="124" y="170" width="17" height="8" fill="#2a2a2a" />
+  
+  <rect x="164" y="80" width="17" height="8" fill="#2a2a2a" />
+  <rect x="164" y="95" width="17" height="8" fill="#2a2a2a" />
+  <rect x="164" y="110" width="17" height="8" fill="#2a2a2a" />
+  <rect x="164" y="125" width="17" height="8" fill="#2a2a2a" />
+  <rect x="164" y="140" width="17" height="8" fill="#2a2a2a" />
+  <rect x="164" y="155" width="17" height="8" fill="#2a2a2a" />
+  <rect x="164" y="170" width="17" height="8" fill="#2a2a2a" />
+  
+  <rect x="204" y="80" width="17" height="8" fill="#2a2a2a" />
+  <rect x="204" y="95" width="17" height="8" fill="#2a2a2a" />
+  <rect x="204" y="110" width="17" height="8" fill="#2a2a2a" />
+  <rect x="204" y="125" width="17" height="8" fill="#2a2a2a" />
+  <rect x="204" y="140" width="17" height="8" fill="#2a2a2a" />
+  <rect x="204" y="155" width="17" height="8" fill="#2a2a2a" />
+  <rect x="204" y="170" width="17" height="8" fill="#2a2a2a" />
+  
+  <!-- Contacts/Pins -->
+  <rect x="80" y="185" width="25" height="3" fill="#ffd700" />
+  <rect x="120" y="185" width="25" height="3" fill="#ffd700" />
+  <rect x="160" y="185" width="25" height="3" fill="#ffd700" />
+  <rect x="200" y="185" width="25" height="3" fill="#ffd700" />
+  
+  <!-- Notches -->
+  <rect x="90" y="185" width="5" height="8" fill="#2a2a2a" />
+  <rect x="130" y="185" width="5" height="8" fill="#2a2a2a" />
+  <rect x="170" y="185" width="5" height="8" fill="#2a2a2a" />
+  <rect x="210" y="185" width="5" height="8" fill="#2a2a2a" />
+  
+  <!-- Labels -->
+  <text x="92" y="75" font-family="Arial, monospace" font-size="6" fill="#ffffff" text-anchor="middle">DDR5</text>
+  <text x="132" y="75" font-family="Arial, monospace" font-size="6" fill="#ffffff" text-anchor="middle">DDR5</text>
+  <text x="172" y="75" font-family="Arial, monospace" font-size="6" fill="#ffffff" text-anchor="middle">DDR5</text>
+  <text x="212" y="75" font-family="Arial, monospace" font-size="6" fill="#ffffff" text-anchor="middle">DDR5</text>
+  
+  <!-- RGB LED Strip -->
+  <rect x="82" y="62" width="21" height="2" fill="#ff6b35" opacity="0.8" />
+  <rect x="122" y="62" width="21" height="2" fill="#ff6b35" opacity="0.8" />
+  <rect x="162" y="62" width="21" height="2" fill="#ff6b35" opacity="0.8" />
+  <rect x="202" y="62" width="21" height="2" fill="#ff6b35" opacity="0.8" />
+</svg>

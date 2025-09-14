@@ -1,0 +1,10 @@
+<svg width="120" height="50" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="120" height="50" fill="transparent" />
+  
+  <!-- ASUS Text -->
+  <text x="10" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#666666">ASUS</text>
+  
+  <!-- Tagline -->
+  <text x="70" y="35" font-family="Arial, sans-serif" font-size="8" fill="#999999">Rock Solid. Heart Touching.</text>
+</svg>

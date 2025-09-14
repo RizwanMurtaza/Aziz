@@ -1,0 +1,104 @@
+﻿@model GamingSlidePictureModel
+
+<div class="card card-default">
+    <div class="card-header">
+        @T("Plugins.Widgets.GamingHeroSlider.Slide")
+    </div>
+    <div class="card-body">
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="PictureId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Badge" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Badge" />
+                <span asp-validation-for="Badge"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TitleText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TitleText" />
+                <span asp-validation-for="TitleText"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TitleHighlight" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TitleHighlight" />
+                <span asp-validation-for="TitleHighlight"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="AltText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AltText" />
+                <span asp-validation-for="AltText"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="PrimaryButtonText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PrimaryButtonText" />
+                <span asp-validation-for="PrimaryButtonText"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="LinkUrl" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="LinkUrl" />
+                <span asp-validation-for="LinkUrl"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SecondaryButtonText" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SecondaryButtonText" />
+                <span asp-validation-for="SecondaryButtonText"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SecondaryButtonUrl" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SecondaryButtonUrl" />
+                <span asp-validation-for="SecondaryButtonUrl"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="IconClass" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IconClass" />
+                <span asp-validation-for="IconClass"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="offset-md-3 col-md-9">
+                <button type="submit" name="add-slide" class="btn btn-primary">@T("Plugins.Widgets.GamingHeroSlider.Slide.Add")</button>
+            </div>
+        </div>
+    </div>
+</div>

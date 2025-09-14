@@ -1,0 +1,18 @@
+<svg width="120" height="50" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="intelBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0071c5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#004a85;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="120" height="50" fill="transparent" />
+  
+  <!-- Intel Swoosh -->
+  <path d="M10,30 Q20,15 35,25 Q45,35 55,25" stroke="url(#intelBlue)" stroke-width="3" fill="none" />
+  
+  <!-- Intel Text -->
+  <text x="15" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#0071c5">intel</text>
+  <text x="75" y="28" font-family="Arial, sans-serif" font-size="8" fill="#666666">INSIDE</text>
+</svg>

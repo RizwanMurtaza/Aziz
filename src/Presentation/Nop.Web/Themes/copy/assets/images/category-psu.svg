@@ -1,0 +1,78 @@
+<svg width="400" height="250" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="psuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a2a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="250" fill="#0a0a0a" />
+  
+  <!-- PSU Unit -->
+  <rect x="100" y="80" width="200" height="100" rx="8" fill="url(#psuGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- Fan grille -->
+  <circle cx="200" cy="130" r="35" fill="none" stroke="#ff6b35" stroke-width="2" />
+  <circle cx="200" cy="130" r="25" fill="none" stroke="#ff6b35" stroke-width="1" opacity="0.5" />
+  <circle cx="200" cy="130" r="15" fill="none" stroke="#ff6b35" stroke-width="1" opacity="0.3" />
+  
+  <!-- Fan blades -->
+  <g stroke="#ff6b35" stroke-width="1" opacity="0.4">
+    <path d="M185,130 L215,130 M200,115 L200,145 M192,122 L208,138 M208,122 L192,138" />
+  </g>
+  
+  <!-- Power rating label -->
+  <rect x="120" y="90" width="60" height="20" fill="#2a2a2a" />
+  <text x="150" y="102" font-family="Arial, sans-serif" font-size="10" fill="#ff6b35" text-anchor="middle" font-weight="bold">850W</text>
+  <text x="150" y="112" font-family="Arial, monospace" font-size="6" fill="#ffffff" text-anchor="middle">80+ GOLD</text>
+  
+  <!-- Efficiency badge -->
+  <rect x="220" y="90" width="60" height="20" fill="#ffd700" opacity="0.8" />
+  <text x="250" y="102" font-family="Arial, sans-serif" font-size="8" fill="#000000" text-anchor="middle" font-weight="bold">80 PLUS</text>
+  <text x="250" y="110" font-family="Arial, sans-serif" font-size="6" fill="#000000" text-anchor="middle">GOLD</text>
+  
+  <!-- Modular connectors -->
+  <rect x="305" y="95" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="105" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="115" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="125" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="135" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="145" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="155" width="8" height="6" fill="#ff6b35" />
+  <rect x="305" y="165" width="8" height="6" fill="#ff6b35" />
+  
+  <!-- AC input -->
+  <rect x="95" y="120" width="8" height="20" fill="#ff6b35" />
+  <rect x="97" y="122" width="4" height="16" fill="#2a2a2a" />
+  
+  <!-- Power switch -->
+  <rect x="110" y="155" width="15" height="8" fill="#ff6b35" />
+  <circle cx="117" cy="159" r="2" fill="#ffffff" />
+  
+  <!-- Cables illustration -->
+  <g stroke="#ff6b35" stroke-width="3" fill="none" opacity="0.6">
+    <!-- 24-pin ATX -->
+    <path d="M320,100 Q350,100 350,120" />
+    <!-- PCIe -->
+    <path d="M320,120 Q340,120 340,140" />
+    <!-- CPU -->
+    <path d="M320,140 Q330,140 330,160" />
+    <!-- SATA -->
+    <path d="M320,160 Q335,160 335,180" />
+  </g>
+  
+  <!-- Cable labels -->
+  <text x="350" y="115" font-family="Arial, monospace" font-size="6" fill="#ffffff">24-PIN</text>
+  <text x="340" y="135" font-family="Arial, monospace" font-size="6" fill="#ffffff">PCIe</text>
+  <text x="330" y="155" font-family="Arial, monospace" font-size="6" fill="#ffffff">CPU</text>
+  <text x="335" y="175" font-family="Arial, monospace" font-size="6" fill="#ffffff">SATA</text>
+  
+  <!-- Brand area -->
+  <text x="200" y="60" font-family="Arial, sans-serif" font-size="14" fill="#ff6b35" text-anchor="middle" font-weight="bold">Modular Power Supply</text>
+  <text x="200" y="200" font-family="Arial, monospace" font-size="10" fill="#ffffff" text-anchor="middle">Fully Modular • 80+ Gold • 10 Year Warranty</text>
+  
+  <!-- Specifications -->
+  <text x="60" y="220" font-family="Arial, monospace" font-size="8" fill="#999999">850W Continuous Power</text>
+  <text x="60" y="235" font-family="Arial, monospace" font-size="8" fill="#999999">140mm Silent Fan</text>
+</svg>

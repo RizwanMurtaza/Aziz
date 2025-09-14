@@ -1,0 +1,12 @@
+<svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="60" height="30" rx="4" fill="#ffffff" stroke="#e0e0e0" stroke-width="1" />
+  
+  <!-- Google G -->
+  <circle cx="15" cy="15" r="6" fill="#4285f4" />
+  <path d="M15,9 Q21,9 21,15 Q21,21 15,21" fill="#ffffff" />
+  <rect x="18" y="13" width="3" height="4" fill="#4285f4" />
+  
+  <!-- Pay Text -->
+  <text x="35" y="18" font-family="Arial, sans-serif" font-size="10" fill="#666666">Pay</text>
+</svg>

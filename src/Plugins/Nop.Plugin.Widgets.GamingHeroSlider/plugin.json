@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Gaming Hero Slider",
+  "SystemName": "Widgets.GamingHeroSlider",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "GamingPC Rehab",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.GamingHeroSlider.dll",
+  "Description": "Gaming-themed hero slider with customizable slides, buttons, and features. Perfect for gaming PC component stores with admin panel configuration."
+}

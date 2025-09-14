@@ -1,0 +1,50 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a3a3a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2a2a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="orangeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff4500;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- PC Case -->
+  <rect x="120" y="80" width="160" height="240" rx="8" fill="url(#pcGradient)" stroke="#ff6b35" stroke-width="2" />
+  
+  <!-- Front Panel -->
+  <rect x="130" y="90" width="140" height="220" rx="4" fill="#1a1a1a" />
+  
+  <!-- Power Button -->
+  <circle cx="200" cy="110" r="8" fill="url(#orangeGlow)" />
+  <circle cx="200" cy="110" r="4" fill="#ffffff" opacity="0.3" />
+  
+  <!-- Front Fans -->
+  <circle cx="200" cy="150" r="25" fill="none" stroke="#ff6b35" stroke-width="2" />
+  <circle cx="200" cy="150" r="15" fill="none" stroke="#ff6b35" stroke-width="1" opacity="0.5" />
+  <circle cx="200" cy="220" r="25" fill="none" stroke="#ff6b35" stroke-width="2" />
+  <circle cx="200" cy="220" r="15" fill="none" stroke="#ff6b35" stroke-width="1" opacity="0.5" />
+  
+  <!-- LED Strips -->
+  <rect x="125" y="280" width="150" height="4" fill="url(#orangeGlow)" opacity="0.8" />
+  <rect x="125" y="290" width="150" height="2" fill="url(#orangeGlow)" opacity="0.6" />
+  
+  <!-- Side Glow -->
+  <rect x="275" y="90" width="4" height="220" fill="url(#orangeGlow)" opacity="0.4" />
+  
+  <!-- Motherboard visible through side panel -->
+  <g opacity="0.3">
+    <rect x="285" y="100" width="80" height="60" fill="#2a4a2a" />
+    <rect x="290" y="105" width="15" height="15" fill="#ff6b35" />
+    <rect x="310" y="105" width="25" height="8" fill="#4a4a4a" />
+    <circle cx="350" cy="130" r="8" fill="#ff6b35" />
+  </g>
+  
+  <!-- Base/Stand -->
+  <rect x="110" y="320" width="180" height="20" rx="10" fill="#2a2a2a" />
+  
+  <!-- RGB Underglow -->
+  <ellipse cx="200" cy="345" rx="100" ry="15" fill="url(#orangeGlow)" opacity="0.3" />
+</svg>

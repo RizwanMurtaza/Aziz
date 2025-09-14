@@ -1,0 +1,179 @@
+@model PublicInfoModel
+@{
+    Layout = "";
+}
+
+<!-- Gaming Hero Slider - Dynamic Content -->
+@if (Model.Slides?.Any() == true)
+{
+    <section class="hero-section">
+        <div class="hero-slider">
+            @for (int i = 0; i < Model.Slides.Count; i++)
+            {
+                var slide = Model.Slides[i];
+                <div class="hero-slide @(i == 0 ? "active" : "")">
+                    <div class="hero-background">
+                        <div class="hero-bg-pattern"></div>
+                    </div>
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-text">
+                                @if (!string.IsNullOrEmpty(slide.Badge))
+                                {
+                                    <span class="hero-badge">@slide.Badge</span>
+                                }
+                                <h1 class="hero-title">@slide.TitleText @(!string.IsNullOrEmpty(slide.TitleHighlight) ? Html.Raw($"<span class='highlight'>{slide.TitleHighlight}</span>") : "")</h1>
+                                <p class="hero-description">@slide.AltText</p>
+                                <div class="hero-actions">
+                                    @if (!string.IsNullOrEmpty(slide.LinkUrl))
+                                    {
+                                        <a href="@slide.LinkUrl" class="btn btn-primary">@(!string.IsNullOrEmpty(slide.PrimaryButtonText) ? slide.PrimaryButtonText : "Shop Now")</a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(slide.SecondaryButtonUrl))
+                                    {
+                                        <a href="@slide.SecondaryButtonUrl" class="btn btn-outline">@(!string.IsNullOrEmpty(slide.SecondaryButtonText) ? slide.SecondaryButtonText : "Learn More")</a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="hero-image">
+                                <div class="hero-product-showcase">
+                                    @if (!string.IsNullOrEmpty(slide.IconClass))
+                                    {
+                                        <i class="@slide.IconClass hero-icon"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-microchip hero-icon"></i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (Model.Slides.Count > 1)
+        {
+            <!-- Hero Controls -->
+            <div class="hero-controls">
+                <div class="container">
+                    @if (Model.ShowPagination)
+                    {
+                        <div class="slider-dots">
+                            @for (int i = 0; i < Model.Slides.Count; i++)
+                            {
+                                <span class="dot @(i == 0 ? "active" : "")" data-slide="@i"></span>
+                            }
+                        </div>
+                    }
+                    @if (Model.ShowNavigation)
+                    {
+                        <div class="slider-arrows">
+                            <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
+                            <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Features Section -->
+        <div class="hero-features">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Free Shipping</h4>
+                            <p>On orders over £100</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Warranty</h4>
+                            <p>3 years manufacturer warranty</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Expert Support</h4>
+                            <p>24/7 technical assistance</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Easy Returns</h4>
+                            <p>30-day return policy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @if (Model.Slides.Count > 1)
+    {
+        <script asp-location="Footer">
+            // Gaming Hero Slider Functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const slides = document.querySelectorAll('.hero-slide');
+                const dots = document.querySelectorAll('.dot');
+                const prevBtn = document.querySelector('.prev-slide');
+                const nextBtn = document.querySelector('.next-slide');
+
+                if (slides.length === 0) return;
+
+                let currentSlide = 0;
+                const totalSlides = slides.length;
+
+                function showSlide(index) {
+                    slides.forEach(slide => slide.classList.remove('active'));
+                    dots.forEach(dot => dot.classList.remove('active'));
+
+                    slides[index].classList.add('active');
+                    if (dots[index]) dots[index].classList.add('active');
+                }
+
+                function nextSlide() {
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    showSlide(currentSlide);
+                }
+
+                function prevSlide() {
+                    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    showSlide(currentSlide);
+                }
+
+                // Dot navigation
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        currentSlide = index;
+                        showSlide(currentSlide);
+                    });
+                });
+
+                // Arrow navigation
+                if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+                if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+
+                @if (Model.Autoplay)
+                {
+                    @Html.Raw("// Auto-play slider")
+                    @Html.Raw($"setInterval(nextSlide, {Model.AutoplayDelay});")
+                }
+            });
+        </script>
+    }
+}
