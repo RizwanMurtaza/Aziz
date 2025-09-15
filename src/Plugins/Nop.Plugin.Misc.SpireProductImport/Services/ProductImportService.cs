@@ -1,9 +1,7 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Media;
-using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Misc.SpireProductImport.Models;
 using Nop.Services.Catalog;

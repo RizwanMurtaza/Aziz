@@ -5910,6 +5910,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
     <Value>Select to enable the category path (breadcrumb). This is the bar at the top of the screen that indicates which categories and subcategories the product was viewed in on the product pages. Each sub-element of the bar is a separate hyperlink.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopMenuCategoriesDisplayNumber">
+    <Value>Maximum number of top menu categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopMenuCategoriesDisplayNumber.Hint">
+    <Value>Set the maximum number of categories to display in the top navigation menu. Set to 0 to display all categories.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled">
     <Value>'Compare Products' enabled</Value>
   </LocaleResource>

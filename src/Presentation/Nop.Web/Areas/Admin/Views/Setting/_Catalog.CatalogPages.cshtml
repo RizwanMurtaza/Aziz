@@ -65,6 +65,16 @@
     </div>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TopMenuCategoriesDisplayNumber_OverrideForStore" asp-input="TopMenuCategoriesDisplayNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="TopMenuCategoriesDisplayNumber" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="TopMenuCategoriesDisplayNumber" />
+            <span asp-validation-for="TopMenuCategoriesDisplayNumber"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ManufacturersBlockItemsToDisplay_OverrideForStore" asp-input="ManufacturersBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ManufacturersBlockItemsToDisplay" />
         </div>

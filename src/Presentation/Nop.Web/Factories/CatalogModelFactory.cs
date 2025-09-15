@@ -628,7 +628,18 @@ public partial class CatalogModelFactory : ICatalogModelFactory
         var cachedCategoriesModel = new List<CategorySimpleModel>();
         //categories
         if (!_catalogSettings.UseAjaxLoadMenu)
+        {
             cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
+
+            // Apply limit to top-level categories if configured
+            if (_catalogSettings.TopMenuCategoriesDisplayNumber > 0)
+            {
+                cachedCategoriesModel = cachedCategoriesModel
+                    .Where(c => c.IncludeInTopMenu)
+                    .Take(_catalogSettings.TopMenuCategoriesDisplayNumber)
+                    .ToList();
+            }
+        }
 
         var store = await _storeContext.GetCurrentStoreAsync();
 

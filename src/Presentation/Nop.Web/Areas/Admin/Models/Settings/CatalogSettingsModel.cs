@@ -86,6 +86,10 @@ public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     public bool CategoryBreadcrumbEnabled { get; set; }
     public bool CategoryBreadcrumbEnabled_OverrideForStore { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.TopMenuCategoriesDisplayNumber")]
+    public int TopMenuCategoriesDisplayNumber { get; set; }
+    public bool TopMenuCategoriesDisplayNumber_OverrideForStore { get; set; }
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowShareButton")]
     public bool ShowShareButton { get; set; }
     public bool ShowShareButton_OverrideForStore { get; set; }

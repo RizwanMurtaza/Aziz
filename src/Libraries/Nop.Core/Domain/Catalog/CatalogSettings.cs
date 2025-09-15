@@ -540,6 +540,11 @@ public partial class CatalogSettings : ISettings
     public bool UseAjaxLoadMenu { get; set; }
 
     /// <summary>
+    /// Gets or sets the maximum number of categories to display in the top menu (0 = unlimited)
+    /// </summary>
+    public int TopMenuCategoriesDisplayNumber { get; set; }
+
+    /// <summary>
     /// Get or set a value indicating whether to use standard or AJAX products loading (applicable to 'paging', 'filtering', 'view modes') in catalog
     /// </summary>
     public bool UseAjaxCatalogProductsLoading { get; set; }
