@@ -1,0 +1,58 @@
+@using Nop.Plugin.Misc.SpireProductImport.Services
+@using Microsoft.Extensions.DependencyInjection
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var externalImageService = Context.RequestServices.GetService<IProductExternalImageService>();
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        External Images Test
+    </h1>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">External Images Data</h3>
+                    </div>
+                    <div class="card-body">
+                        @if (externalImageService != null)
+                        {
+                            <p>External Image Service is available.</p>
+
+                            <!-- Test with a few product IDs -->
+                            @for (int productId = 1; productId <= 10; productId++)
+                            {
+                                var externalImages = await externalImageService.GetProductExternalImagesAsync(productId);
+                                if (externalImages != null && (!string.IsNullOrEmpty(externalImages.MainImageUrl) || !string.IsNullOrEmpty(externalImages.ThumbnailUrl)))
+                                {
+                                    <div class="border p-3 mb-3">
+                                        <h5>Product ID: @productId</h5>
+                                        @if (!string.IsNullOrEmpty(externalImages.MainImageUrl))
+                                        {
+                                            <p><strong>Main Image:</strong> @externalImages.MainImageUrl</p>
+                                            <img src="@externalImages.MainImageUrl" alt="Product @productId" style="max-width: 200px; height: auto;" class="mb-2" />
+                                        }
+                                        @if (!string.IsNullOrEmpty(externalImages.ThumbnailUrl))
+                                        {
+                                            <p><strong>Thumbnail:</strong> @externalImages.ThumbnailUrl</p>
+                                            <img src="@externalImages.ThumbnailUrl" alt="Product @productId Thumbnail" style="max-width: 100px; height: auto;" />
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-danger">External Image Service is not available.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

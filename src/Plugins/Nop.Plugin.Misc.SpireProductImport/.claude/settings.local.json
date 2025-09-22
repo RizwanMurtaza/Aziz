@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//m/GamingRehab/Aziz/src/Presentation/Nop.Web/Themes/GamingPCRehab/Views/Shared/**)",
+      "Read(//m/GamingRehab/Aziz/src/Presentation/Nop.Web/Themes/GamingPCRehab/Views/Product/**)",
+      "Read(//m/GamingRehab/Aziz/src/**)",
+      "Bash(dotnet build)",
+      "Bash(dotnet build:*)",
+      "Bash(copy:*)",
+      "WebFetch(domain:github.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

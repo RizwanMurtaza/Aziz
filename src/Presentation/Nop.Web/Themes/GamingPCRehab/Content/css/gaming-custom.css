@@ -1095,6 +1095,16 @@ input[type="submit"],
     transform: scale(1.05) !important;
 }
 
+/* Additional styles for external images from Spire */
+.product-card .product-image img[src*="spire.co.uk"] {
+    object-fit: contain !important;
+    object-position: center !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    background: #fff !important;
+    padding: 10px !important;
+}
+
 /* Product Badges */
 .product-badges {
     position: absolute !important;

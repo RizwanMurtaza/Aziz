@@ -6,10 +6,14 @@
 <div class="picture-gallery gallery">
     @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
     <div class="picture">
+        @{
+            var mainImageUrl = Model.DefaultPictureModel.ImageUrl;
+            var fullSizeImageUrl = Model.DefaultPictureModel.FullSizeImageUrl;
+        }
         @if (Model.DefaultPictureZoomEnabled && Model.PictureModels.Count == 1)
         {
-            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
-                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+            <a href="@fullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@mainImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
             </a>
             <script asp-location="Footer">
                 $(function () {
@@ -19,7 +23,7 @@
         }
         else
         {
-            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@mainImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-@Model.Id" />
         }
     </div>
     @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)

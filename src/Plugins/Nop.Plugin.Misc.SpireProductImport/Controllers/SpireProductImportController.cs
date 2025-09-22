@@ -25,6 +25,7 @@ public class SpireProductImportController : BasePluginController
     private readonly IStoreContext _storeContext;
     private readonly IFtpService _ftpService;
     private readonly IProductImportService _productImportService;
+    private readonly IProductExternalImageService _productExternalImageService;
 
     #endregion
 
@@ -36,7 +37,8 @@ public class SpireProductImportController : BasePluginController
         ISettingService settingService,
         IStoreContext storeContext,
         IFtpService ftpService,
-        IProductImportService productImportService)
+        IProductImportService productImportService,
+        IProductExternalImageService productExternalImageService)
     {
         _localizationService = localizationService;
         _notificationService = notificationService;
@@ -44,6 +46,7 @@ public class SpireProductImportController : BasePluginController
         _storeContext = storeContext;
         _ftpService = ftpService;
         _productImportService = productImportService;
+        _productExternalImageService = productExternalImageService;
     }
 
     #endregion
@@ -311,6 +314,46 @@ public class SpireProductImportController : BasePluginController
         await SaveSettings(model);
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
         return RedirectToAction("Configure");
+    }
+
+    [CheckPermission(StandardPermission.Configuration.MANAGE_PLUGINS)]
+    public async Task<IActionResult> TestExternalImages()
+    {
+        var message = "External Image Service Test:\n\n";
+
+        try
+        {
+            // Test service availability
+            if (_productExternalImageService == null)
+            {
+                message += "❌ External Image Service is NOT available\n";
+            }
+            else
+            {
+                message += "✅ External Image Service is available\n\n";
+
+                // Test with a few product IDs
+                for (int productId = 1; productId <= 10; productId++)
+                {
+                    var externalImages = await _productExternalImageService.GetProductExternalImagesAsync(productId);
+                    if (externalImages != null && (!string.IsNullOrEmpty(externalImages.MainImageUrl) || !string.IsNullOrEmpty(externalImages.ThumbnailUrl)))
+                    {
+                        message += $"Product {productId}:\n";
+                        if (!string.IsNullOrEmpty(externalImages.MainImageUrl))
+                            message += $"  Main Image: {externalImages.MainImageUrl}\n";
+                        if (!string.IsNullOrEmpty(externalImages.ThumbnailUrl))
+                            message += $"  Thumbnail: {externalImages.ThumbnailUrl}\n";
+                        message += "\n";
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            message += $"❌ Error: {ex.Message}\n";
+        }
+
+        return Content(message, "text/plain");
     }
 
     #endregion

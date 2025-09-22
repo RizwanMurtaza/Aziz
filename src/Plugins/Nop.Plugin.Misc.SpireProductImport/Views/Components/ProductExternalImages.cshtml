@@ -1,0 +1,40 @@
+@model Nop.Plugin.Misc.SpireProductImport.Models.ProductExternalImageModel
+
+@if (Model != null)
+{
+    <style>
+        .spire-external-images {
+            margin: 10px 0;
+        }
+        .spire-external-images img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+        .spire-main-image {
+            max-height: 500px;
+            object-fit: contain;
+        }
+        .spire-thumbnail-image {
+            max-height: 150px;
+            object-fit: contain;
+        }
+    </style>
+
+    <div class="spire-external-images">
+        @if (!string.IsNullOrEmpty(Model.MainImageUrl))
+        {
+            <div class="main-image-container">
+                <img src="@Model.MainImageUrl" alt="Product Image" class="spire-main-image" />
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ThumbnailUrl) && Model.ThumbnailUrl != Model.MainImageUrl)
+        {
+            <div class="thumbnail-image-container">
+                <img src="@Model.ThumbnailUrl" alt="Product Thumbnail" class="spire-thumbnail-image" />
+            </div>
+        }
+    </div>
+}

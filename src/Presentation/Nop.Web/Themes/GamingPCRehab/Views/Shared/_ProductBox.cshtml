@@ -29,9 +29,11 @@
     <div class="product-image">
         @{
             var picture = Model.PictureModels.FirstOrDefault();
+            // Use thumbnail for product listings, fall back to main image if no thumbnail
+            var imageUrl = picture?.ThumbImageUrl ?? picture?.ImageUrl;
         }
         <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
-            <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+            <img alt="@picture?.AlternateText" src="@imageUrl" title="@picture?.Title" />
         </a>
 
         <div class="product-badges">

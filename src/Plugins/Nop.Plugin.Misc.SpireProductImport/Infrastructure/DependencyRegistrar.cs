@@ -1,8 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Misc.SpireProductImport.Services;
+using Nop.Plugin.Misc.SpireProductImport.Filters;
+using Nop.Services.Events;
+using Nop.Services.Logging;
+using Nop.Web.Framework.Events;
+using Nop.Web.Models.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Plugin.Misc.SpireProductImport.Infrastructure;
 
@@ -26,6 +33,9 @@ public class NopStartup : INopStartup
 
         // Register product import service
         services.AddScoped<IProductImportService, ProductImportService>();
+
+        // Register external image service
+        services.AddScoped<IProductExternalImageService, ProductExternalImageService>();
 
         // Register scheduled task
         services.AddScoped<SpireProductImportTask>();

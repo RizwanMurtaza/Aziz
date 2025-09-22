@@ -29,6 +29,7 @@ public class ProductImportService : IProductImportService
     private readonly IUrlRecordService _urlRecordService;
     private readonly INopFileProvider _fileProvider;
     private readonly IStoreContext _storeContext;
+    private readonly IProductExternalImageService _productExternalImageService;
 
     #endregion
 
@@ -45,7 +46,8 @@ public class ProductImportService : IProductImportService
         IPictureService pictureService,
         IUrlRecordService urlRecordService,
         INopFileProvider fileProvider,
-        IStoreContext storeContext)
+        IStoreContext storeContext,
+        IProductExternalImageService productExternalImageService)
     {
         _logger = logger;
         _settingService = settingService;
@@ -58,6 +60,7 @@ public class ProductImportService : IProductImportService
         _urlRecordService = urlRecordService;
         _fileProvider = fileProvider;
         _storeContext = storeContext;
+        _productExternalImageService = productExternalImageService;
     }
 
     #endregion
@@ -225,13 +228,8 @@ public class ProductImportService : IProductImportService
 
             if (existingProduct != null)
             {
-                if (!settings.UpdateExistingProducts)
-                {
-                    _logger.LogDebug("Skipping existing product {ProductNumber} (update disabled)", csvProduct.ProductNumber);
-                    return true;
-                }
-
-                // Update existing product
+                // Always update existing products - new import might have data changes
+                _logger.LogDebug("Updating existing product {ProductNumber}", csvProduct.ProductNumber);
                 await UpdateExistingProductAsync(existingProduct, csvProduct, settings);
                 return true;
             }
@@ -330,24 +328,12 @@ public class ProductImportService : IProductImportService
             }
         }
 
-        // Handle images - either download or save URLs directly
-        if (settings.DownloadProductImages)
-        {
-            // Download and save images locally
-            if (!string.IsNullOrWhiteSpace(csvProduct.MainImage))
-            {
-                await DownloadProductImageAsync(csvProduct.MainImage, product.Id, true);
-            }
-            if (!string.IsNullOrWhiteSpace(csvProduct.Thumbnail) && csvProduct.Thumbnail != csvProduct.MainImage)
-            {
-                await DownloadProductImageAsync(csvProduct.Thumbnail, product.Id, false);
-            }
-        }
-        else
-        {
-            // Save image URLs directly without downloading
-            await SaveProductImageUrlsAsync(csvProduct.MainImage, csvProduct.Thumbnail, product.Id);
-        }
+        // Handle images - save URLs as external images
+        _logger.LogDebug("Processing images for new product {ProductId}: MainImage={MainImage}, Thumbnail={Thumbnail}",
+            product.Id, csvProduct.MainImage, csvProduct.Thumbnail);
+
+        await _productExternalImageService.SaveProductExternalImagesAsync(product.Id, csvProduct.MainImage, csvProduct.Thumbnail);
+        _logger.LogDebug("Saved external image URLs for product {ProductId}", product.Id);
 
         _logger.LogDebug("Created new product: {ProductNumber} - {Name}", product.Sku, product.Name);
     }
@@ -374,24 +360,12 @@ public class ProductImportService : IProductImportService
 
         await _productService.UpdateProductAsync(existingProduct);
 
-        // Handle images - either download or save URLs directly
-        if (settings.DownloadProductImages)
-        {
-            // Download and save images locally
-            if (!string.IsNullOrWhiteSpace(csvProduct.MainImage))
-            {
-                await DownloadProductImageAsync(csvProduct.MainImage, existingProduct.Id, true);
-            }
-            if (!string.IsNullOrWhiteSpace(csvProduct.Thumbnail) && csvProduct.Thumbnail != csvProduct.MainImage)
-            {
-                await DownloadProductImageAsync(csvProduct.Thumbnail, existingProduct.Id, false);
-            }
-        }
-        else
-        {
-            // Save image URLs directly without downloading
-            await SaveProductImageUrlsAsync(csvProduct.MainImage, csvProduct.Thumbnail, existingProduct.Id);
-        }
+        // Handle images - save URLs as external images
+        _logger.LogDebug("Processing images for product {ProductId}: MainImage={MainImage}, Thumbnail={Thumbnail}",
+            existingProduct.Id, csvProduct.MainImage, csvProduct.Thumbnail);
+
+        await _productExternalImageService.SaveProductExternalImagesAsync(existingProduct.Id, csvProduct.MainImage, csvProduct.Thumbnail);
+        _logger.LogDebug("Updated external image URLs for product {ProductId}", existingProduct.Id);
 
         _logger.LogDebug("Updated existing product: {ProductNumber} - {Name}", existingProduct.Sku, existingProduct.Name);
     }
@@ -513,7 +487,7 @@ public class ProductImportService : IProductImportService
     }
 
     /// <summary>
-    /// Downloads and saves product images
+    /// Downloads and saves product images (kept for interface compatibility, uses external URLs instead)
     /// </summary>
     public async Task<bool> DownloadProductImageAsync(string imageUrl, int productId, bool isMainImage = false)
     {
@@ -522,199 +496,32 @@ public class ProductImportService : IProductImportService
             if (string.IsNullOrWhiteSpace(imageUrl))
                 return false;
 
-            using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromMinutes(2);
+            // Instead of downloading, we save the URL directly using the external image service
+            var externalImages = await _productExternalImageService.GetProductExternalImagesAsync(productId);
 
-            var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-
-            if (imageBytes?.Length > 0)
+            if (isMainImage)
             {
-                // Extract file extension from URL
-                var fileName = Path.GetFileName(new Uri(imageUrl).LocalPath);
-                var extension = Path.GetExtension(fileName);
-
-                if (string.IsNullOrWhiteSpace(extension))
-                    extension = ".jpg"; // Default extension
-
-                var mimeType = GetMimeType(extension);
-                var displayOrder = isMainImage ? 0 : 1;
-
-                var picture = await _pictureService.InsertPictureAsync(imageBytes, mimeType, fileName);
-
-                if (picture != null)
-                {
-                    var productPicture = new ProductPicture
-                    {
-                        PictureId = picture.Id,
-                        ProductId = productId,
-                        DisplayOrder = displayOrder
-                    };
-
-                    await _productService.InsertProductPictureAsync(productPicture);
-
-                    _logger.LogDebug("Downloaded and saved product image for product {ProductId}: {ImageUrl}", productId, imageUrl);
-                    return true;
-                }
+                await _productExternalImageService.SaveProductExternalImagesAsync(
+                    productId,
+                    imageUrl,
+                    externalImages?.ThumbnailUrl);
             }
+            else
+            {
+                await _productExternalImageService.SaveProductExternalImagesAsync(
+                    productId,
+                    externalImages?.MainImageUrl ?? imageUrl,
+                    imageUrl);
+            }
+
+            _logger.LogDebug("Saved external image URL for product {ProductId}: {ImageUrl}", productId, imageUrl);
+            return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to download product image for product {ProductId}: {ImageUrl}", productId, imageUrl);
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Saves product image URLs directly without downloading
-    /// </summary>
-    private async Task<bool> SaveProductImageUrlsAsync(string mainImageUrl, string thumbnailUrl, int productId)
-    {
-        try
-        {
-            // Remove existing product pictures first to avoid duplicates
-            var existingPictures = await _productService.GetProductPicturesByProductIdAsync(productId);
-            foreach (var existingPicture in existingPictures)
-            {
-                await _productService.DeleteProductPictureAsync(existingPicture);
-            }
-
-            var picturesCreated = 0;
-
-            // Create picture record for main image URL
-            if (!string.IsNullOrWhiteSpace(mainImageUrl))
-            {
-                // Create a "virtual" picture entry with the external URL stored in VirtualPath
-                var mainPicture = await _pictureService.InsertPictureAsync(
-                    pictureBinary: new byte[0], // Empty byte array for external URLs
-                    mimeType: GetMimeTypeFromUrl(mainImageUrl),
-                    seoFilename: GetSeoFriendlyFileName(mainImageUrl),
-                    altAttribute: "Product Image",
-                    titleAttribute: "Product Image",
-                    isNew: true,
-                    validateBinary: false
-                );
-
-                if (mainPicture != null)
-                {
-                    // Update the picture to store the external URL in VirtualPath
-                    mainPicture.VirtualPath = mainImageUrl;
-                    await _pictureService.UpdatePictureAsync(mainPicture);
-
-                    var productPicture = new ProductPicture
-                    {
-                        PictureId = mainPicture.Id,
-                        ProductId = productId,
-                        DisplayOrder = 0
-                    };
-
-                    await _productService.InsertProductPictureAsync(productPicture);
-                    picturesCreated++;
-
-                    _logger.LogDebug("Saved main image URL for product {ProductId}: {ImageUrl}", productId, mainImageUrl);
-                }
-            }
-
-            // Create picture record for thumbnail URL (if different from main)
-            if (!string.IsNullOrWhiteSpace(thumbnailUrl) && thumbnailUrl != mainImageUrl)
-            {
-                var thumbnailPicture = await _pictureService.InsertPictureAsync(
-                    pictureBinary: new byte[0], // Empty byte array for external URLs
-                    mimeType: GetMimeTypeFromUrl(thumbnailUrl),
-                    seoFilename: GetSeoFriendlyFileName(thumbnailUrl),
-                    altAttribute: "Product Thumbnail",
-                    titleAttribute: "Product Thumbnail",
-                    isNew: true,
-                    validateBinary: false
-                );
-
-                if (thumbnailPicture != null)
-                {
-                    // Update the picture to store the external URL in VirtualPath
-                    thumbnailPicture.VirtualPath = thumbnailUrl;
-                    await _pictureService.UpdatePictureAsync(thumbnailPicture);
-
-                    var productPicture = new ProductPicture
-                    {
-                        PictureId = thumbnailPicture.Id,
-                        ProductId = productId,
-                        DisplayOrder = 1
-                    };
-
-                    await _productService.InsertProductPictureAsync(productPicture);
-                    picturesCreated++;
-
-                    _logger.LogDebug("Saved thumbnail URL for product {ProductId}: {ImageUrl}", productId, thumbnailUrl);
-                }
-            }
-
-            return picturesCreated > 0;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to save image URLs for product {ProductId}. Main: {MainUrl}, Thumbnail: {ThumbnailUrl}",
-                productId, mainImageUrl, thumbnailUrl);
+            _logger.LogError(ex, "Failed to save external image URL for product {ProductId}: {ImageUrl}", productId, imageUrl);
             return false;
         }
-    }
-
-    /// <summary>
-    /// Gets SEO-friendly filename from URL
-    /// </summary>
-    private string GetSeoFriendlyFileName(string imageUrl)
-    {
-        if (string.IsNullOrWhiteSpace(imageUrl))
-            return "image";
-
-        try
-        {
-            var uri = new Uri(imageUrl);
-            var fileName = Path.GetFileNameWithoutExtension(uri.LocalPath);
-            if (string.IsNullOrWhiteSpace(fileName))
-                return "image";
-
-            // Make it SEO-friendly
-            return Regex.Replace(fileName.ToLowerInvariant(), @"[^a-z0-9\-]", "-");
-        }
-        catch
-        {
-            return "image";
-        }
-    }
-
-    /// <summary>
-    /// Gets MIME type from URL
-    /// </summary>
-    private string GetMimeTypeFromUrl(string imageUrl)
-    {
-        if (string.IsNullOrWhiteSpace(imageUrl))
-            return MimeTypes.ImageJpeg;
-
-        try
-        {
-            var uri = new Uri(imageUrl);
-            var extension = Path.GetExtension(uri.LocalPath);
-            return GetMimeType(extension);
-        }
-        catch
-        {
-            return MimeTypes.ImageJpeg;
-        }
-    }
-
-    /// <summary>
-    /// Gets MIME type from file extension
-    /// </summary>
-    private string GetMimeType(string extension)
-    {
-        return extension.ToLowerInvariant() switch
-        {
-            ".jpg" or ".jpeg" => MimeTypes.ImageJpeg,
-            ".png" => MimeTypes.ImagePng,
-            ".gif" => MimeTypes.ImageGif,
-            ".webp" => "image/webp",
-            _ => MimeTypes.ImageJpeg
-        };
     }
 
     /// <summary>
