@@ -9,20 +9,30 @@
 
 @if (Model.Products.Count > 0)
 {
-    <div class="@(Model.ViewMode == "list" ? "product-list" : "product-grid")">
-        <div class="item-grid">
+    @if (Model.ViewMode == "list")
+    {
+        <div class="product-list">
             <div class="row">
                 @foreach (var product in Model.Products)
                 {
-                    <div class="item-box @(Model.ViewMode == "list" ? "col-xs-12 col-sm-12 col-md-12 product-align" : "col-xs-12 col-sm-4 col-md-4 product-align")">
+                    <div class="col-xs-12 col-sm-12 col-md-12 product-align">
                         <div class="thumbnail">
                             @await Html.PartialAsync("_ProductBox", product)
-                        </div>                        
+                        </div>
                     </div>
                 }
-            </div>            
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="products-grid">
+            @foreach (var product in Model.Products)
+            {
+                @await Html.PartialAsync("_ProductBox", product)
+            }
+        </div>
+    }
 
     var pager = Html.Pager(Model)
         .QueryParam("pagenumber")
