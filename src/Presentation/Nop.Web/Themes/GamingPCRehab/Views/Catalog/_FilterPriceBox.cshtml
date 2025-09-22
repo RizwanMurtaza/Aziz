@@ -4,17 +4,18 @@
 <script asp-exclude-from-bundle="true" src="~/lib_npm/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js" asp-location="Footer"></script>
 
 
-<div class="product-filter price-range-filter well">
-    <div class="filter-title">
-        <i class="fa fa-arrow-circle-right"></i>
+<div class="product-filter price-range-filter well modern-filter-nav">
+    <div class="title main-title">
         <strong>@T("Filtering.PriceRangeFilter")</strong>
     </div>
-    <div class="filter-content">
+    <div class="filter-content listbox">
         <div class="selected-price-range">
-            <span class="from"></span>
-            <span class="to"></span>
+            <span class="price-label">Selected Range:</span>
+            <span class="price-values">
+                <span class="from"></span> - <span class="to"></span>
+            </span>
         </div>
-        <div id="price-range-slider"></div>
+        <div id="price-range-slider" class="modern-price-slider"></div>
         <script asp-location="Footer">
             $(function () {
                 var $priceRangeEl = $("#price-range-slider");

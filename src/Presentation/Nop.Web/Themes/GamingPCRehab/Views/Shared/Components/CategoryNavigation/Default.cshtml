@@ -65,12 +65,16 @@
 }
 @if (Model.Categories.Count > 0)
 {
-    <div class="block block-category-navigation well box-shadow-wrapper">
+    <div class="block block-category-navigation well box-shadow-wrapper modern-category-nav">
         <div class="title main-title">
             <strong>@T("Categories")</strong>
         </div>
         <div class="listbox">
-            <ul class="nav nav-list">
+            <ul class="nav nav-list category-list">
+                @{
+                    var visibleCount = 6; // Show 6 categories initially
+                    var currentIndex = 0;
+                }
                 @foreach (var category in Model.Categories)
                 {
                     var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
@@ -78,9 +82,68 @@
                         CurrentCategoryId = Model.CurrentCategoryId,
                         Category = category
                     };
-                    await CategoryLine(categoryLineModel);
+                    var itemClass = currentIndex >= visibleCount ? "category-item-hidden" : "category-item-visible";
+
+                    <div class="category-wrapper @itemClass">
+                        @{ await CategoryLine(categoryLineModel); }
+                    </div>
+                    currentIndex++;
                 }
             </ul>
+            @if (Model.Categories.Count > visibleCount)
+            {
+                <div class="category-expand-section">
+                    <button class="btn-expand-categories" onclick="toggleCategories()">
+                        <span class="expand-text">Show More Categories</span>
+                        <span class="collapse-text" style="display: none;">Show Less Categories</span>
+                        <i class="fa fa-chevron-down expand-icon"></i>
+                        <i class="fa fa-chevron-up collapse-icon" style="display: none;"></i>
+                    </button>
+                    <div class="category-count">
+                        <span class="visible-count">@visibleCount</span> of <span class="total-count">@Model.Categories.Count</span> categories
+                    </div>
+                </div>
+            }
         </div>
     </div>
+
+    <script>
+    function toggleCategories() {
+        const hiddenItems = document.querySelectorAll('.category-wrapper.category-item-hidden');
+        const expandText = document.querySelector('.btn-expand-categories .expand-text');
+        const collapseText = document.querySelector('.btn-expand-categories .collapse-text');
+        const expandIcon = document.querySelector('.btn-expand-categories .expand-icon');
+        const collapseIcon = document.querySelector('.btn-expand-categories .collapse-icon');
+
+        // Check if items are currently visible by checking computed style or existing inline style
+        const isExpanded = hiddenItems[0] && (
+            hiddenItems[0].style.display === 'block' ||
+            window.getComputedStyle(hiddenItems[0]).display === 'block'
+        );
+
+        hiddenItems.forEach(item => {
+            if (isExpanded) {
+                // Collapse - hide the items
+                item.style.display = 'none';
+            } else {
+                // Expand - show the items
+                item.style.display = 'block';
+            }
+        });
+
+        if (isExpanded) {
+            // Collapse
+            expandText.style.display = 'inline';
+            collapseText.style.display = 'none';
+            expandIcon.style.display = 'inline';
+            collapseIcon.style.display = 'none';
+        } else {
+            // Expand
+            expandText.style.display = 'none';
+            collapseText.style.display = 'inline';
+            expandIcon.style.display = 'none';
+            collapseIcon.style.display = 'inline';
+        }
+    }
+    </script>
 }

@@ -1,24 +1,81 @@
 ﻿@model ManufacturerFilterModel
 
-<div class="product-filter product-manufacturer-filter well">
-    <div class="filter-title">
-        <i class="fa fa-arrow-circle-right"></i>
+<div class="product-filter product-manufacturer-filter well modern-filter-nav">
+    <div class="title main-title">
         <strong>@T("Filtering.ManufacturerFilter")</strong>
     </div>
-    <div class="filter-content">
-        <ul class="group product-manufacturer-group">
+    <div class="filter-content listbox">
+        <ul class="group product-manufacturer-group nav nav-list manufacturer-list">
+            @{
+                var visibleCount = 6; // Show 6 manufacturers initially
+                var currentIndex = 0;
+            }
             @foreach (var manufacturer in Model.Manufacturers)
             {
-                <li class="item">
-                    <input id="attribute-manufacturer-@manufacturer.Value" type="checkbox" data-manufacturer-id="@manufacturer.Value" checked="@manufacturer.Selected" />
-                    <label for="attribute-manufacturer-@manufacturer.Value">
-                        @manufacturer.Text
-                    </label>
-                </li>
+                var itemClass = currentIndex >= visibleCount ? "manufacturer-item-hidden" : "manufacturer-item-visible";
+                <div class="manufacturer-wrapper @itemClass">
+                    <li class="item">
+                        <input id="attribute-manufacturer-@manufacturer.Value" type="checkbox" data-manufacturer-id="@manufacturer.Value" checked="@manufacturer.Selected" />
+                        <label for="attribute-manufacturer-@manufacturer.Value">
+                            @manufacturer.Text
+                        </label>
+                    </li>
+                </div>
+                currentIndex++;
             }
         </ul>
+        @if (Model.Manufacturers.Count > visibleCount)
+        {
+            <div class="filter-expand-section">
+                <button class="btn-expand-manufacturers" onclick="toggleManufacturers()">
+                    <span class="expand-text">Show More Manufacturers</span>
+                    <span class="collapse-text" style="display: none;">Show Less Manufacturers</span>
+                    <i class="fa fa-chevron-down expand-icon"></i>
+                    <i class="fa fa-chevron-up collapse-icon" style="display: none;"></i>
+                </button>
+                <div class="manufacturer-count">
+                    <span class="visible-count">@visibleCount</span> of <span class="total-count">@Model.Manufacturers.Count</span> manufacturers
+                </div>
+            </div>
+        }
     </div>
 </div>
+
+<script>
+function toggleManufacturers() {
+    const hiddenItems = document.querySelectorAll('.manufacturer-wrapper.manufacturer-item-hidden');
+    const expandText = document.querySelector('.btn-expand-manufacturers .expand-text');
+    const collapseText = document.querySelector('.btn-expand-manufacturers .collapse-text');
+    const expandIcon = document.querySelector('.btn-expand-manufacturers .expand-icon');
+    const collapseIcon = document.querySelector('.btn-expand-manufacturers .collapse-icon');
+
+    // Check if items are currently visible by checking computed style or existing inline style
+    const isExpanded = hiddenItems[0] && (
+        hiddenItems[0].style.display === 'block' ||
+        window.getComputedStyle(hiddenItems[0]).display === 'block'
+    );
+
+    hiddenItems.forEach(item => {
+        if (isExpanded) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'block';
+        }
+    });
+
+    if (isExpanded) {
+        expandText.style.display = 'inline';
+        collapseText.style.display = 'none';
+        expandIcon.style.display = 'inline';
+        collapseIcon.style.display = 'none';
+    } else {
+        expandText.style.display = 'none';
+        collapseText.style.display = 'inline';
+        expandIcon.style.display = 'none';
+        collapseIcon.style.display = 'inline';
+    }
+}
+</script>
 <script asp-location="Footer">
     $(function () {
         var $msEls = $('[data-manufacturer-id]');
