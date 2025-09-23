@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Repair Appointment System",
+  "SystemName": "Misc.RepairAppointment",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "Gaming PC Rehab",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.RepairAppointment.dll",
+  "Description": "Complete repair appointment booking system for mobile and laptop repairs with time slot management, email confirmations, and admin dashboard."
+}

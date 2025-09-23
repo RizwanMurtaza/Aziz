@@ -1,0 +1,155 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointmentSearchModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Repair Appointments";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Repair Appointments
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row">
+                            <div class="search-text">Search</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="FromDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="FromDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ToDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="ToDate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="StatusId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="StatusId" asp-items="Model.AvailableStatuses" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchText" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchText" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-appointments" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "appointments-grid",
+                            UrlRead = new DataUrl("AppointmentList", "RepairAppointment", new RouteValueDictionary { ["area"] = "Admin" }),
+                            SearchButtonId = "search-appointments",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.FromDate)),
+                                new FilterParameter(nameof(Model.ToDate)),
+                                new FilterParameter(nameof(Model.StatusId)),
+                                new FilterParameter(nameof(Model.SearchText))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(RepairAppointmentModel.ConfirmationCode))
+                                {
+                                    Title = "Confirmation Code",
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.CustomerName))
+                                {
+                                    Title = "Customer Name",
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.Email))
+                                {
+                                    Title = "Email",
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.Phone))
+                                {
+                                    Title = "Phone",
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.DeviceType))
+                                {
+                                    Title = "Device",
+                                    Width = "80"
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.AppointmentDate))
+                                {
+                                    Title = "Date",
+                                    Width = "100",
+                                    Render = new RenderCustom("function(data, type, row, meta) { return new Date(data).toLocaleDateString(); }")
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.TimeSlot))
+                                {
+                                    Title = "Time Slot",
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.StatusName))
+                                {
+                                    Title = "Status",
+                                    Width = "80",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.Id))
+                                {
+                                    Title = "Edit",
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit", "RepairAppointment", new RouteValueDictionary { ["area"] = "Admin" }))
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.Id))
+                                {
+                                    Title = "Delete",
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonRemove("Delete")
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

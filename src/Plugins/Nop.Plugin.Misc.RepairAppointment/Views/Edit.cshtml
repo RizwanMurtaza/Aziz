@@ -1,0 +1,146 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointmentModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Edit Appointment";
+}
+
+<form asp-controller="RepairAppointment" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Edit Appointment - @Model.ConfirmationCode
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                Save
+            </button>
+            <a asp-action="List" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to list
+            </a>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <input asp-for="Id" type="hidden" />
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CustomerName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CustomerName" />
+                                <span asp-validation-for="CustomerName"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Email" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Email" />
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Phone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Phone" />
+                                <span asp-validation-for="Phone"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DeviceType" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DeviceType" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DeviceBrand" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DeviceBrand" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DeviceModel" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DeviceModel" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IssueDescription" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="IssueDescription" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AppointmentDate" />
+                            </div>
+                            <div class="col-md-9">
+                                <input asp-for="AppointmentDate" class="form-control" readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TimeSlot" />
+                            </div>
+                            <div class="col-md-9">
+                                <input asp-for="TimeSlot" class="form-control" readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StatusId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="StatusId" asp-items="Model.AvailableStatuses" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Notes" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="Notes" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label>Confirmation Code</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input asp-for="ConfirmationCode" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

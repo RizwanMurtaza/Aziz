@@ -1,0 +1,356 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointmentModel
+@using Nop.Web.Framework.UI
+@{
+    Layout = "_ColumnsOne";
+    NopHtml.AddTitleParts("Book Repair Appointment");
+    NopHtml.AppendPageCssClassParts("html-repair-appointment-page");
+    NopHtml.AppendCssFileParts("~/Plugins/Misc.RepairAppointment/Content/appointment.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.RepairAppointment/Content/appointment.js");
+}
+
+<div class="page repair-appointment-page">
+    <div class="page-title">
+        <h1>Book Repair Appointment</h1>
+    </div>
+
+    <div class="page-body">
+        <form asp-controller="RepairAppointmentPublic" asp-action="BookAppointment" method="post" id="appointment-form">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+
+            <!-- Personal Information Section -->
+            <div class="fieldset">
+                <div class="title">
+                    <strong>Personal Information</strong>
+                </div>
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="CustomerName" asp-postfix=":"></label>
+                        <input asp-for="CustomerName" />
+                        <nop-required />
+                        <span asp-validation-for="CustomerName"></span>
+                    </div>
+
+                    <div class="inputs">
+                        <label asp-for="Email" asp-postfix=":"></label>
+                        <input asp-for="Email" type="email" />
+                        <nop-required />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+
+                    <div class="inputs">
+                        <label asp-for="Phone" asp-postfix=":"></label>
+                        <input asp-for="Phone" type="tel" />
+                        <nop-required />
+                        <span asp-validation-for="Phone"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device Information Section -->
+            <div class="fieldset">
+                <div class="title">
+                    <strong>Device Information</strong>
+                </div>
+                <div class="form-fields">
+                    <!-- Device Type (Primary dropdown) -->
+                    <div class="inputs">
+                        <label asp-for="DeviceType" asp-postfix=":"></label>
+                        <select asp-for="DeviceType" asp-items="Model.AvailableDeviceTypes">
+                            <option value="">Select device type</option>
+                        </select>
+                        <nop-required />
+                        <span asp-validation-for="DeviceType"></span>
+                    </div>
+
+                    <!-- Brand -->
+                    <div class="inputs">
+                        <label asp-for="DeviceBrand" asp-postfix=":"></label>
+                        <input asp-for="DeviceBrand" placeholder="e.g., Apple, Samsung, Dell" />
+                        <span asp-validation-for="DeviceBrand"></span>
+                    </div>
+
+                    <!-- Model -->
+                    <div class="inputs">
+                        <label asp-for="DeviceModel" asp-postfix=":"></label>
+                        <input asp-for="DeviceModel" placeholder="e.g., iPhone 14, Galaxy S23, XPS 15" />
+                        <span asp-validation-for="DeviceModel"></span>
+                    </div>
+
+                    <!-- Repair Type with autocomplete -->
+                    <div class="inputs">
+                        <label for="repair-type-input">Repair Type:</label>
+                        <input type="text" id="repair-type-input" class="text-box single-line" placeholder="Start typing to search repair types (e.g., Screen Replacement, Battery Replacement)" />
+                        <input asp-for="RepairTypeId" type="hidden" id="repair-type-id" />
+                        <div id="repair-type-suggestions" class="suggestions-dropdown"></div>
+                        <div id="estimated-price" class="price-display"></div>
+                    </div>
+
+                    <!-- Issue Description -->
+                    <div class="inputs">
+                        <label asp-for="IssueDescription" asp-postfix=":"></label>
+                        <textarea asp-for="IssueDescription" rows="4"
+                                  placeholder="Please describe the issue with your device..."></textarea>
+                        <nop-required />
+                        <span asp-validation-for="IssueDescription"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Date & Time Section -->
+            <div class="fieldset">
+                <div class="title">
+                    <strong>Select Appointment Date & Time</strong>
+                </div>
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="AppointmentDate" asp-postfix=":"></label>
+                        <input asp-for="AppointmentDate" type="date" id="appointment-date" />
+                        <nop-required />
+                        <span asp-validation-for="AppointmentDate"></span>
+                    </div>
+
+                    <div class="inputs">
+                        <label asp-for="TimeSlotId" asp-postfix=":"></label>
+                        <select asp-for="TimeSlotId" id="time-slots" disabled>
+                            <option value="">Please select a date first</option>
+                        </select>
+                        <nop-required />
+                        <span asp-validation-for="TimeSlotId"></span>
+                        <div id="slot-availability" class="slot-info"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden fields for category and product (used by repair type search) -->
+            <input asp-for="RepairCategoryId" type="hidden" id="repair-category-id" />
+            <input asp-for="RepairProductId" type="hidden" id="repair-product-id" />
+
+            <div class="buttons">
+                <button type="submit" class="button-1 register-button" id="submit-appointment">
+                    Book Appointment
+                </button>
+            </div>
+
+            <div id="appointment-message" class="message-box" style="display:none;"></div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Set minimum date to today
+        var today = new Date().toISOString().split('T')[0];
+        $('#appointment-date').attr('min', today);
+
+        // Load time slots when date is selected
+        $('#appointment-date').on('change', function() {
+            var selectedDate = $(this).val();
+            if (selectedDate) {
+                loadAvailableSlots(selectedDate);
+            }
+        });
+
+        function loadAvailableSlots(date) {
+            $('#time-slots').prop('disabled', true).html('<option>Loading...</option>');
+            $('#slot-availability').html('');
+
+            $.ajax({
+                url: '@Url.Action("GetAvailableSlots", "RepairAppointmentPublic")',
+                type: 'GET',
+                data: { date: date },
+                success: function(response) {
+                    var $select = $('#time-slots');
+                    $select.empty().prop('disabled', false);
+
+                    if (response.slots && response.slots.length > 0) {
+                        $select.append('<option value="">Select a time slot</option>');
+                        $.each(response.slots, function(i, slot) {
+                            var optionText = slot.text;
+                            if (slot.available > 0) {
+                                optionText += ' (' + slot.available + ' available)';
+                            }
+                            $select.append('<option value="' + slot.id + '">' + optionText + '</option>');
+                        });
+                    } else {
+                        $select.append('<option value="">No available slots for this date</option>');
+                        $('#slot-availability').html('<span class="text-warning">No appointments available for the selected date. Please choose another date.</span>');
+                    }
+                },
+                error: function() {
+                    $('#time-slots').html('<option value="">Error loading slots</option>');
+                }
+            });
+        }
+
+        // Simplified repair type search based on device type
+        setupRepairTypeSearch();
+
+        function setupRepairTypeSearch() {
+            var $input = $('#repair-type-input');
+            var $hidden = $('#repair-type-id');
+            var $suggestions = $('#repair-type-suggestions');
+            var currentRequest = null;
+            var selectedIndex = -1;
+
+            $input.on('input', function() {
+                var term = $(this).val().trim();
+                selectedIndex = -1;
+
+                if (term.length < 2) {
+                    $suggestions.hide().empty();
+                    $hidden.val('');
+                    $('#estimated-price').removeClass('show');
+                    return;
+                }
+
+                if (currentRequest) {
+                    currentRequest.abort();
+                }
+
+                $input.addClass('autocomplete-loading');
+
+                // Search repair types based on current device type
+                var deviceType = $('#DeviceType').val();
+
+                currentRequest = $.ajax({
+                    url: '@Url.Action("SearchRepairTypes", "RepairAppointmentPublic")',
+                    type: 'GET',
+                    data: {
+                        term: term,
+                        deviceType: deviceType
+                    },
+                    success: function(response) {
+                        $input.removeClass('autocomplete-loading');
+                        $suggestions.empty();
+
+                        if (response && response.length > 0) {
+                            $.each(response, function(index, item) {
+                                var suggestionHtml = '<div class="suggestion-item" data-id="' + item.id + '" data-index="' + index + '">';
+                                suggestionHtml += '<div class="suggestion-title">' + item.text + '</div>';
+                                if (item.description) {
+                                    suggestionHtml += '<div class="suggestion-description">' + item.description + '</div>';
+                                }
+                                if (item.price && item.price > 0) {
+                                    suggestionHtml += '<div class="suggestion-price">$' + item.price.toFixed(2) + '</div>';
+                                }
+                                if (item.duration && item.duration > 0) {
+                                    suggestionHtml += '<div class="suggestion-duration">' + item.duration + ' minutes</div>';
+                                }
+                                suggestionHtml += '</div>';
+                                $suggestions.append(suggestionHtml);
+                            });
+                            $suggestions.show();
+                        } else {
+                            $suggestions.html('<div class="no-suggestions">No repair types found</div>').show();
+                        }
+                    },
+                    error: function() {
+                        $input.removeClass('autocomplete-loading');
+                        $suggestions.hide();
+                    }
+                });
+            });
+
+            // Handle suggestion click
+            $suggestions.on('click', '.suggestion-item', function() {
+                var $item = $(this);
+                var id = $item.data('id');
+                var text = $item.find('.suggestion-title').text();
+                var price = parseFloat($item.find('.suggestion-price').text().replace('$', '')) || 0;
+                var duration = parseInt($item.find('.suggestion-duration').text()) || 0;
+
+                $input.val(text);
+                $hidden.val(id);
+                $suggestions.hide();
+
+                // Show estimated price
+                if (price > 0) {
+                    var priceDisplay = '<span class="price-amount">Estimated Price: $' + price.toFixed(2) + '</span>';
+                    if (duration > 0) {
+                        priceDisplay += '<span class="price-duration"> | Duration: ' + duration + ' minutes</span>';
+                    }
+                    $('#estimated-price').html(priceDisplay).addClass('show');
+                } else {
+                    $('#estimated-price').removeClass('show');
+                }
+            });
+
+            // Keyboard navigation
+            $input.on('keydown', function(e) {
+                var $items = $suggestions.find('.suggestion-item');
+
+                if (e.keyCode === 40) { // Down arrow
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, $items.length - 1);
+                    updateSelection($items);
+                } else if (e.keyCode === 38) { // Up arrow
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection($items);
+                } else if (e.keyCode === 13) { // Enter
+                    e.preventDefault();
+                    if (selectedIndex >= 0) {
+                        $items.eq(selectedIndex).click();
+                    }
+                } else if (e.keyCode === 27) { // Escape
+                    $suggestions.hide();
+                    selectedIndex = -1;
+                }
+            });
+
+            function updateSelection($items) {
+                $items.removeClass('selected');
+                if (selectedIndex >= 0) {
+                    $items.eq(selectedIndex).addClass('selected');
+                }
+            }
+
+            // Hide suggestions when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#repair-type-input, #repair-type-suggestions').length) {
+                    $suggestions.hide();
+                }
+            });
+        }
+
+        // Form submission
+        $('#appointment-form').on('submit', function(e) {
+            e.preventDefault();
+
+            var $form = $(this);
+            var $submitBtn = $('#submit-appointment');
+            var $message = $('#appointment-message');
+
+            $submitBtn.prop('disabled', true).text('Processing...');
+            $message.hide();
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $message.removeClass('message-error').addClass('message-success')
+                            .html(response.message + '<br/>Confirmation Code: <strong>' + response.confirmationCode + '</strong>')
+                            .show();
+
+                        if (response.redirectUrl) {
+                            setTimeout(function() {
+                                window.location.href = response.redirectUrl;
+                            }, 2000);
+                        }
+                    } else {
+                        $message.removeClass('message-success').addClass('message-error')
+                            .html(response.message).show();
+                        $submitBtn.prop('disabled', false).text('Book Appointment');
+                    }
+                },
+                error: function() {
+                    $message.removeClass('message-success').addClass('message-error')
+                        .html('An error occurred. Please try again.').show();
+                    $submitBtn.prop('disabled', false).text('Book Appointment');
+                }
+            });
+        });
+    });
+</script>

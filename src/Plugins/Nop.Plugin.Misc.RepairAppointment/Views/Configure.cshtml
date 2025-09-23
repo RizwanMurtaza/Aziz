@@ -1,0 +1,115 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.ConfigurationModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Repair Appointment Settings";
+}
+
+<form asp-controller="RepairAppointment" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Repair Appointment Settings
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                Save
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EnableAppointmentSystem" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableAppointmentSystem" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SlotDurationMinutes" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SlotDurationMinutes" />
+                                <span class="hint">Duration of each appointment slot in minutes (default: 30)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BusinessStartTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BusinessStartTime" />
+                                <span class="hint">Business start time in 24-hour format (e.g., 09:00)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BusinessEndTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BusinessEndTime" />
+                                <span class="hint">Business end time in 24-hour format (e.g., 17:00)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MaxAdvanceBookingDays" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaxAdvanceBookingDays" />
+                                <span class="hint">How many days in advance customers can book appointments (0 = unlimited)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendConfirmationEmail" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendConfirmationEmail" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendReminderEmail" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendReminderEmail" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ReminderHoursBeforeAppointment" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ReminderHoursBeforeAppointment" />
+                                <span class="hint">Send reminder email X hours before appointment</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RequireCustomerLogin" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RequireCustomerLogin" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

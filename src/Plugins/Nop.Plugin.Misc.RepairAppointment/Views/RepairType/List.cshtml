@@ -1,0 +1,210 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairTypeSearchModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Repair Types";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Repair Types
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Add new
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="row search-row opened" data-hideAttribute="@(Model.HideSearchBlock)">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!Model.HideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(Model.HideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchRepairTypeName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchRepairTypeName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchProductId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchProductId" asp-items="Model.AvailableProducts" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchIsActive" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchIsActive" asp-items="Model.AvailableActiveOptions" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-repair-types" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "repairtypes-grid",
+                        UrlRead = new DataUrl("RepairTypeList", "RepairType", new RouteValueDictionary { ["area"] = "Admin" }),
+                        SearchButtonId = "search-repair-types",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchRepairTypeName)),
+                            new FilterParameter(nameof(Model.SearchCategoryId)),
+                            new FilterParameter(nameof(Model.SearchProductId)),
+                            new FilterParameter(nameof(Model.SearchIsActive))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(RepairTypeModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_repair_types"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.Name))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.Name").Text,
+                                Width = "250"
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.CategoryName))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.Category").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.ProductName))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.Product").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.EstimatedPrice))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.EstimatedPrice").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.EstimatedDuration))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.EstimatedDuration").Text,
+                                Width = "120",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.IsActive))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.IsActive").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(RepairTypeModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit", "RepairType", new RouteValueDictionary { ["area"] = "Admin" }))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<nop-alert asp-alert-id="mastercheckbox_notifreload" />
+
+<script>
+    $(function() {
+        //"delete selected" button
+        $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+            var postData = {
+                selectedIds: selectedIds
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("DeleteSelected", "RepairType"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    $("#repairtypes-grid").DataTable().ajax.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    showAlert('delete-selected-action-confirmation', jqXHR.responseText, 'error');
+                }
+            });
+            $('#delete-selected-action-confirmation').modal('toggle');
+            return false;
+        });
+
+        // Category change handler
+        $('#SearchCategoryId').change(function() {
+            var categoryId = $(this).val();
+            var $productSelect = $('#SearchProductId');
+
+            // Clear products dropdown
+            $productSelect.empty().append('<option value="0">All</option>');
+
+            if (categoryId && categoryId !== '0') {
+                // Load products for selected category
+                $.ajax({
+                    url: '@Url.Action("GetProductsByCategory", "RepairType")',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    success: function(data) {
+                        $.each(data, function(i, product) {
+                            $productSelect.append('<option value="' + product.value + '">' + product.text + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>

@@ -1,0 +1,128 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairCategorySearchModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Repair Categories";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Repair Categories
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Add new category
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row">
+                            <div class="search-text">Search</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchName" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="IsActiveId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="IsActiveId">
+                                            <option value="0">All</option>
+                                            <option value="1">Active only</option>
+                                            <option value="2">Inactive only</option>
+                                        </nop-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-categories" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "categories-grid",
+                            UrlRead = new DataUrl("CategoryList", "RepairCategory", new RouteValueDictionary { ["area"] = "Admin" }),
+                            SearchButtonId = "search-categories",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchName)),
+                                new FilterParameter(nameof(Model.IsActiveId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(RepairCategoryModel.Name))
+                                {
+                                    Title = "Name",
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(RepairCategoryModel.Description))
+                                {
+                                    Title = "Description",
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(RepairCategoryModel.DisplayOrder))
+                                {
+                                    Title = "Display Order",
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll
+                                },
+                                new ColumnProperty(nameof(RepairCategoryModel.IsActive))
+                                {
+                                    Title = "Is Active",
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(RepairCategoryModel.Id))
+                                {
+                                    Title = "Edit",
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit", "RepairCategory", new RouteValueDictionary { ["area"] = "Admin" }))
+                                },
+                                new ColumnProperty(nameof(RepairCategoryModel.Id))
+                                {
+                                    Title = "Delete",
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonRemove("Delete")
+                                }
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

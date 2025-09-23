@@ -1,0 +1,146 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointmentModel
+@{
+    Layout = "_ColumnsOne";
+}
+
+<div class="page appointment-confirmation-page">
+    <div class="page-title">
+        <h1>Appointment Confirmation</h1>
+    </div>
+
+    <div class="page-body">
+        <div class="confirmation-success">
+            <div class="success-icon">
+                <i class="fas fa-check-circle" style="font-size: 48px; color: #28a745;"></i>
+            </div>
+            <h2>Your appointment has been successfully booked!</h2>
+        </div>
+
+        <div class="appointment-details">
+            <h3>Appointment Details</h3>
+
+            <div class="detail-card">
+                <div class="detail-row">
+                    <label>Confirmation Code:</label>
+                    <strong class="confirmation-code">@Model.ConfirmationCode</strong>
+                </div>
+
+                <div class="detail-row">
+                    <label>Customer Name:</label>
+                    <span>@Model.CustomerName</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Email:</label>
+                    <span>@Model.Email</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Phone:</label>
+                    <span>@Model.Phone</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Appointment Date:</label>
+                    <span>@Model.AppointmentDate.ToString("dddd, MMMM dd, yyyy")</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Time Slot:</label>
+                    <span>@Model.TimeSlot</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Device:</label>
+                    <span>@Model.DeviceType - @Model.DeviceBrand @Model.DeviceModel</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Issue Description:</label>
+                    <span>@Model.IssueDescription</span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Status:</label>
+                    <span class="badge badge-success">@Model.StatusName</span>
+                </div>
+            </div>
+
+            <div class="important-info">
+                <h4>Important Information</h4>
+                <ul>
+                    <li>Please arrive 5-10 minutes before your appointment time</li>
+                    <li>Bring your device and any relevant accessories</li>
+                    <li>A confirmation email has been sent to @Model.Email</li>
+                    <li>Save your confirmation code: <strong>@Model.ConfirmationCode</strong></li>
+                    <li>If you need to cancel or reschedule, please contact us as soon as possible</li>
+                </ul>
+            </div>
+
+            <div class="actions">
+                <button onclick="window.print();" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> Print Confirmation
+                </button>
+                <a href="@Url.RouteUrl("HomePage")" class="btn btn-primary">
+                    Return to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .appointment-confirmation-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .confirmation-success {
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .detail-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .detail-row {
+        display: flex;
+        padding: 10px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-row label {
+        font-weight: bold;
+        min-width: 150px;
+    }
+
+    .confirmation-code {
+        color: #007bff;
+        font-size: 1.2em;
+    }
+
+    .important-info {
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .actions {
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .actions .btn {
+        margin: 0 10px;
+    }
+</style>

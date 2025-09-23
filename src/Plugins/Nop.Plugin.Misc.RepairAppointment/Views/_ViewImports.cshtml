@@ -1,0 +1,16 @@
+@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+
+@inject INopHtmlHelper NopHtml
+@inject IWorkContext workContext
+
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Microsoft.AspNetCore.Routing
+@using Nop.Web.Framework.UI
+@using Nop.Web.Framework.Extensions
+@using System.Text.Encodings.Web
+@using Nop.Web.Framework.Models.DataTables
+@using Nop.Plugin.Misc.RepairAppointment.Models
+@using Nop.Core
+@using Nop.Web.Framework.Infrastructure

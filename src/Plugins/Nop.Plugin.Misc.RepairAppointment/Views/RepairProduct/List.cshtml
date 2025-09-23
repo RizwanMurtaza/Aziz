@@ -1,0 +1,171 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairProductSearchModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Repair Products";
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Repair Products
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Add new
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="row search-row opened" data-hideAttribute="@(Model.HideSearchBlock)">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!Model.HideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(Model.HideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchProductName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchProductName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchIsActive" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchIsActive" asp-items="Model.AvailableActiveOptions" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "repairproducts-grid",
+                        UrlRead = new DataUrl("RepairProductList", "RepairProduct", new RouteValueDictionary { ["area"] = "Admin" }),
+                        SearchButtonId = "search-products",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchProductName)),
+                            new FilterParameter(nameof(Model.SearchCategoryId)),
+                            new FilterParameter(nameof(Model.SearchIsActive))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(RepairProductModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_products"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.Name))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Name").Text,
+                                Width = "300"
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.CategoryName))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Category").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.Brand))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Brand").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.Model))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Model").Text,
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.IsActive))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.IsActive").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit", "RepairProduct", new RouteValueDictionary { ["area"] = "Admin" }))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<nop-alert asp-alert-id="mastercheckbox_notifreload" />
+
+<script>
+    $(function() {
+        //"delete selected" button
+        $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+            var postData = {
+                selectedIds: selectedIds
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("DeleteSelected", "RepairProduct"))",
+                data: postData,
+                success: function (data, textStatus, jqXHR) {
+                    $("#repairproducts-grid").DataTable().ajax.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    showAlert('delete-selected-action-confirmation', jqXHR.responseText, 'error');
+                }
+            });
+            $('#delete-selected-action-confirmation').modal('toggle');
+            return false;
+        });
+    });
+</script>

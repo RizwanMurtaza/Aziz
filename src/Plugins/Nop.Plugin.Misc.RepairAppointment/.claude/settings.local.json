@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//m/GamingRehab/Aziz/src/Presentation/Nop.Web/**)",
+      "Read(//m/GamingRehab/Aziz/src/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

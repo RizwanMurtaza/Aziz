@@ -1,0 +1,334 @@
+/* NopCommerce Repair Appointment Styles */
+.repair-appointment-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Override NopCommerce fieldset styles for better alignment */
+.repair-appointment-page .fieldset {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.repair-appointment-page .fieldset .title {
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 20px;
+    margin: 0;
+    border-radius: 8px 8px 0 0;
+}
+
+.repair-appointment-page .fieldset .title strong {
+    font-size: 1.2em;
+    color: #495057;
+    font-weight: 600;
+}
+
+.repair-appointment-page .form-fields {
+    padding: 20px;
+}
+
+.repair-appointment-page .inputs {
+    margin-bottom: 20px;
+}
+
+.repair-appointment-page .inputs label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: #495057;
+    font-size: 0.95em;
+}
+
+/* Style form controls */
+.repair-appointment-page input[type="text"],
+.repair-appointment-page input[type="email"],
+.repair-appointment-page input[type="tel"],
+.repair-appointment-page input[type="date"],
+.repair-appointment-page select,
+.repair-appointment-page textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-sizing: border-box;
+}
+
+.repair-appointment-page input:focus,
+.repair-appointment-page select:focus,
+.repair-appointment-page textarea:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.repair-appointment-page input:disabled,
+.repair-appointment-page select:disabled {
+    background-color: #e9ecef;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+/* Required field indicator */
+.repair-appointment-page .inputs nop-required,
+.repair-appointment-page .inputs .required::after {
+    color: #dc3545;
+    font-size: 1.1em;
+    margin-left: 3px;
+}
+
+/* Validation messages */
+.repair-appointment-page .field-validation-error,
+.repair-appointment-page .text-danger {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Button styling */
+.repair-appointment-page .buttons {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+    margin-top: 20px;
+}
+
+.repair-appointment-page .button-1 {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+}
+
+.repair-appointment-page .button-1:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    color: white;
+    text-decoration: none;
+}
+
+.repair-appointment-page .button-1:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Message boxes */
+.repair-appointment-page .message-box {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.repair-appointment-page .message-success,
+.repair-appointment-page .message-box.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.repair-appointment-page .message-error,
+.repair-appointment-page .message-box.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Auto-complete suggestions */
+.suggestions-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0 0 4px 4px;
+}
+
+.suggestion-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-title {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.suggestion-description {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.suggestion-item:hover .suggestion-description,
+.suggestion-item.selected .suggestion-description {
+    color: #e6f3ff;
+}
+
+.suggestion-price {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.suggestion-duration {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.suggestion-item:hover .suggestion-price,
+.suggestion-item.selected .suggestion-price,
+.suggestion-item:hover .suggestion-duration,
+.suggestion-item.selected .suggestion-duration {
+    color: #90ee90;
+}
+
+.no-suggestions {
+    padding: 10px 12px;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Price display */
+.price-display {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 4px;
+    display: none;
+}
+
+.price-display.show {
+    display: block;
+}
+
+.price-amount {
+    font-weight: bold;
+    color: #0066cc;
+    font-size: 1.1em;
+}
+
+.price-duration {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Loading indicator */
+.autocomplete-loading {
+    position: relative;
+}
+
+.autocomplete-loading::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* Slot info */
+.slot-info {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.text-warning {
+    color: #856404;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .repair-appointment-page {
+        margin: 10px;
+    }
+
+    .repair-appointment-page .fieldset .title {
+        padding: 12px 15px;
+    }
+
+    .repair-appointment-page .form-fields {
+        padding: 15px;
+    }
+
+    .repair-appointment-page .buttons {
+        padding: 15px;
+    }
+
+    .repair-appointment-page .button-1 {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .suggestions-dropdown {
+        max-height: 150px;
+    }
+}
+
+/* Fix for relative positioning in inputs with suggestions */
+.repair-appointment-page .inputs {
+    position: relative;
+}
+
+/* Ensure textarea resizes properly */
+.repair-appointment-page textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Placeholder styling */
+.repair-appointment-page input::placeholder,
+.repair-appointment-page textarea::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
