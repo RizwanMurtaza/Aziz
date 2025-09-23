@@ -95,6 +95,8 @@
     <Content Remove="Themes\Themes\GamingPCRehab\Views\Shared\_Root.cshtml" />
     <Content Remove="Themes\Themes\GamingPCRehab\Views\Shared\_Root.Head.cshtml" />
     <Content Remove="Themes\Themes\GamingPCRehab\Views\ShoppingCart\Cart.cshtml" />
+    <Content Include="App_Data\appsettings.json" />
+    <Content Include="App_Data\plugins.json" />
 
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

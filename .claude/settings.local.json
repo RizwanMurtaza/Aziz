@@ -8,7 +8,9 @@
       "Bash(cp:*)",
       "Bash(touch:*)",
       "Bash(chmod:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(dos2unix:*)",
+      "Bash(ssh:*)"
     ],
     "deny": []
   }

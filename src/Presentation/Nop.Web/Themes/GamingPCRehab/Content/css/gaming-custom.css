@@ -1760,16 +1760,19 @@ input[type="submit"],
 .modern-category-nav .nav.nav-list li a:before {
     content: "▶" !important;
     position: absolute !important;
-    left: -5px !important;
+    left: -15px !important;
     opacity: 0 !important;
     transition: all 0.3s ease !important;
     color: var(--primary-color) !important;
+    font-size: 10px !important;
+    z-index: 10 !important;
+    display: inline-block !important;
 }
 
 .modern-category-nav .nav.nav-list li a:hover:before,
 .modern-category-nav .nav.nav-list li.active a:before {
     opacity: 1 !important;
-    left: 5px !important;
+    left: -8px !important;
 }
 
 /* Manufacturer Filter Specific Styles */
@@ -2732,6 +2735,406 @@ button:active {
 
 .product-viewmode .viewmode-icon i {
     font-size: 11px !important;
+}
+
+/* ===== RECENTLY VIEWED PRODUCTS STYLING ===== */
+.block.block-recently-viewed-products,
+.recently-viewed-products,
+.block.block-recently-viewed,
+.widget.recently-viewed {
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a) !important;
+    border: 1px solid #333 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+    overflow: hidden !important;
+    margin-bottom: 20px !important;
+}
+
+.block.block-recently-viewed-products .title,
+.recently-viewed-products .title,
+.block.block-recently-viewed .title,
+.widget.recently-viewed .title {
+    background: linear-gradient(135deg, var(--primary-color), #ff4500) !important;
+    color: #ffffff !important;
+    padding: 15px 20px !important;
+    margin: 0 !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    border-bottom: 2px solid #333 !important;
+}
+
+.block.block-recently-viewed-products .title strong,
+.recently-viewed-products .title strong,
+.block.block-recently-viewed .title strong,
+.widget.recently-viewed .title strong,
+.block.block-recently-viewed-products .title *,
+.recently-viewed-products .title *,
+.block.block-recently-viewed .title *,
+.widget.recently-viewed .title * {
+    color: #ffffff !important;
+}
+
+.block.block-recently-viewed-products .listbox,
+.recently-viewed-products .listbox,
+.block.block-recently-viewed .listbox,
+.widget.recently-viewed .listbox {
+    padding: 15px !important;
+    background: transparent !important;
+}
+
+/* Recently viewed product items */
+.block.block-recently-viewed-products .product-item,
+.recently-viewed-products .product-item,
+.block.block-recently-viewed .item,
+.widget.recently-viewed .item {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 10px !important;
+    margin-bottom: 10px !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.block.block-recently-viewed-products .product-item:hover,
+.recently-viewed-products .product-item:hover,
+.block.block-recently-viewed .item:hover,
+.widget.recently-viewed .item:hover {
+    background: rgba(255, 107, 53, 0.1) !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.2) !important;
+}
+
+.block.block-recently-viewed-products .product-item:last-child,
+.recently-viewed-products .product-item:last-child,
+.block.block-recently-viewed .item:last-child,
+.widget.recently-viewed .item:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Product images in recently viewed */
+.block.block-recently-viewed-products .product-picture,
+.recently-viewed-products .product-picture,
+.block.block-recently-viewed .picture,
+.widget.recently-viewed .picture {
+    flex: 0 0 60px !important;
+    width: 60px !important;
+    height: 60px !important;
+    overflow: hidden !important;
+    border-radius: 6px !important;
+    background: #fff !important;
+}
+
+.block.block-recently-viewed-products .product-picture img,
+.recently-viewed-products .product-picture img,
+.block.block-recently-viewed .picture img,
+.widget.recently-viewed .picture img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease !important;
+}
+
+.block.block-recently-viewed-products .product-item:hover .product-picture img,
+.recently-viewed-products .product-item:hover .product-picture img,
+.block.block-recently-viewed .item:hover .picture img,
+.widget.recently-viewed .item:hover .picture img {
+    transform: scale(1.1) !important;
+}
+
+/* Product info in recently viewed */
+.block.block-recently-viewed-products .product-details,
+.recently-viewed-products .product-details,
+.block.block-recently-viewed .details,
+.widget.recently-viewed .details {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+}
+
+.block.block-recently-viewed-products .product-title,
+.recently-viewed-products .product-title,
+.block.block-recently-viewed .product-name,
+.widget.recently-viewed .product-name {
+    color: #fff !important;
+    font-family: var(--font-body) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.block.block-recently-viewed-products .product-title:hover,
+.recently-viewed-products .product-title:hover,
+.block.block-recently-viewed .product-name:hover,
+.widget.recently-viewed .product-name:hover {
+    color: var(--primary-color) !important;
+}
+
+.block.block-recently-viewed-products .product-title a,
+.recently-viewed-products .product-title a,
+.block.block-recently-viewed .product-name a,
+.widget.recently-viewed .product-name a {
+    color: #fff !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.block.block-recently-viewed-products .product-title a:hover,
+.recently-viewed-products .product-title a:hover,
+.block.block-recently-viewed .product-name a:hover,
+.widget.recently-viewed .product-name a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Product price in recently viewed */
+.block.block-recently-viewed-products .product-price,
+.recently-viewed-products .product-price,
+.block.block-recently-viewed .price,
+.widget.recently-viewed .price {
+    color: var(--primary-color) !important;
+    font-family: var(--font-heading) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+}
+
+/* Responsive adjustments for recently viewed */
+@media (max-width: 768px) {
+    .block.block-recently-viewed-products .title,
+    .recently-viewed-products .title,
+    .block.block-recently-viewed .title,
+    .widget.recently-viewed .title {
+        padding: 12px 15px !important;
+        font-size: 14px !important;
+    }
+
+    .block.block-recently-viewed-products .listbox,
+    .recently-viewed-products .listbox,
+    .block.block-recently-viewed .listbox,
+    .widget.recently-viewed .listbox {
+        padding: 10px !important;
+    }
+
+    .block.block-recently-viewed-products .product-picture,
+    .recently-viewed-products .product-picture,
+    .block.block-recently-viewed .picture,
+    .widget.recently-viewed .picture {
+        width: 50px !important;
+        height: 50px !important;
+        flex: 0 0 50px !important;
+    }
+
+    .block.block-recently-viewed-products .product-title,
+    .recently-viewed-products .product-title,
+    .block.block-recently-viewed .product-name,
+    .widget.recently-viewed .product-name {
+        font-size: 12px !important;
+    }
+
+    .block.block-recently-viewed-products .product-price,
+    .recently-viewed-products .product-price,
+    .block.block-recently-viewed .price,
+    .widget.recently-viewed .price {
+        font-size: 13px !important;
+    }
+}
+
+/* ===== TOPIC HTML CONTENT STYLING ===== */
+.topic-html-content-body,
+.topic-html-content-body.panel-body {
+    background: #f8f9fa !important;
+    color: #333 !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    border: 1px solid #dee2e6 !important;
+    margin: 15px 0 !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+    font-size: 14px !important;
+}
+
+/* Ensure all text elements are visible */
+.topic-html-content-body *,
+.topic-html-content-body.panel-body * {
+    color: #333 !important;
+}
+
+.topic-html-content-body h1,
+.topic-html-content-body h2,
+.topic-html-content-body h3,
+.topic-html-content-body h4,
+.topic-html-content-body h5,
+.topic-html-content-body h6 {
+    color: #222 !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+}
+
+.topic-html-content-body h1:first-child,
+.topic-html-content-body h2:first-child,
+.topic-html-content-body h3:first-child {
+    margin-top: 0 !important;
+}
+
+.topic-html-content-body p {
+    color: #333 !important;
+    margin-bottom: 15px !important;
+    line-height: 1.6 !important;
+}
+
+.topic-html-content-body a {
+    color: var(--primary-color) !important;
+    text-decoration: underline !important;
+    font-weight: 500 !important;
+}
+
+.topic-html-content-body a:hover {
+    color: #ff4500 !important;
+    text-decoration: none !important;
+}
+
+.topic-html-content-body ul,
+.topic-html-content-body ol {
+    color: #333 !important;
+    margin: 15px 0 !important;
+    padding-left: 25px !important;
+}
+
+.topic-html-content-body li {
+    color: #333 !important;
+    margin-bottom: 5px !important;
+}
+
+.topic-html-content-body strong,
+.topic-html-content-body b {
+    color: #222 !important;
+    font-weight: 700 !important;
+}
+
+.topic-html-content-body em,
+.topic-html-content-body i {
+    color: #555 !important;
+    font-style: italic !important;
+}
+
+/* Tables in topic content */
+.topic-html-content-body table {
+    background: #fff !important;
+    border: 1px solid #dee2e6 !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 15px 0 !important;
+}
+
+.topic-html-content-body table th {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+    padding: 10px 12px !important;
+    border: 1px solid #dee2e6 !important;
+    text-align: left !important;
+}
+
+.topic-html-content-body table td {
+    color: #333 !important;
+    padding: 8px 12px !important;
+    border: 1px solid #dee2e6 !important;
+}
+
+.topic-html-content-body table tr:nth-child(even) {
+    background: #f8f9fa !important;
+}
+
+.topic-html-content-body table tr:hover {
+    background: rgba(255, 107, 53, 0.1) !important;
+}
+
+/* Code blocks */
+.topic-html-content-body code {
+    background: #e9ecef !important;
+    color: #333 !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+}
+
+.topic-html-content-body pre {
+    background: #f8f9fa !important;
+    color: #333 !important;
+    padding: 15px !important;
+    border-radius: 6px !important;
+    border: 1px solid #dee2e6 !important;
+    overflow-x: auto !important;
+    margin: 15px 0 !important;
+}
+
+.topic-html-content-body pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Blockquotes */
+.topic-html-content-body blockquote {
+    background: rgba(255, 107, 53, 0.1) !important;
+    color: #333 !important;
+    border-left: 4px solid var(--primary-color) !important;
+    padding: 15px 20px !important;
+    margin: 15px 0 !important;
+    border-radius: 0 6px 6px 0 !important;
+    font-style: italic !important;
+}
+
+/* Images */
+.topic-html-content-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    margin: 10px 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .topic-html-content-body,
+    .topic-html-content-body.panel-body {
+        padding: 15px !important;
+        font-size: 13px !important;
+    }
+
+    .topic-html-content-body h1,
+    .topic-html-content-body h2,
+    .topic-html-content-body h3 {
+        font-size: 18px !important;
+    }
+
+    .topic-html-content-body h4,
+    .topic-html-content-body h5,
+    .topic-html-content-body h6 {
+        font-size: 16px !important;
+    }
+
+    .topic-html-content-body table {
+        font-size: 12px !important;
+    }
+
+    .topic-html-content-body table th,
+    .topic-html-content-body table td {
+        padding: 6px 8px !important;
+    }
 }
 
 /* Don't override Bootstrap grid too aggressively - let it work naturally */
