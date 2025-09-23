@@ -11,7 +11,7 @@
     @*sorting*@
     @if (Model.AllowProductSorting)
     {
-        <div class="product-sorting col-xs-12 col-sm-4 col-md-4 pull-text-center product-sorting-view">
+        <div class="product-sorting col-xs-6 col-sm-4 col-md-4 product-sorting-view">
             <div class="row">
                 <div class="col-sm-4 col-md-4 remove_right_padding product-span">
                     <label>@T("Catalog.OrderBy")</label>
@@ -38,7 +38,7 @@
     @*page size*@
     @if (Model.AllowCustomersToSelectPageSize)
     {
-        <div class="product-page-size col-xs-12 col-sm-4 col-md-4 pull-text-center product-page-view">
+        <div class="product-page-size col-xs-6 col-sm-4 col-md-4 pull-text-center product-page-view">
             <div class="row">
                 <div class="col-sm-4 col-md-4 product-span">
                     <label>@T("Catalog.PageSize")</label>
@@ -68,7 +68,7 @@
     @*view mode*@
     @if (Model.AllowProductViewModeChanging)
     {
-        <div class="product-viewmode col-xs-12 col-sm-4 col-md-4 pull-text-center">
+        <div class="product-viewmode col-xs-6 col-sm-4 col-md-4 pull-text-center">
             <div class="row">
                 @if (Model.AvailableViewModes.Count > 1)
                 {

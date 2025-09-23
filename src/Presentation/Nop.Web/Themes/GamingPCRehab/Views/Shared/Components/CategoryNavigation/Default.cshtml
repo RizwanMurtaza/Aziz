@@ -108,41 +108,70 @@
     </div>
 
     <script>
+    let categoryDisplayedCount = 6; // Initially showing 6 categories
+    const categoryStepSize = 10; // Show 10 more each time
+
     function toggleCategories() {
-        const hiddenItems = document.querySelectorAll('.category-wrapper.category-item-hidden');
+        const allItems = document.querySelectorAll('.category-wrapper');
+        const totalCount = allItems.length;
         const expandText = document.querySelector('.btn-expand-categories .expand-text');
         const collapseText = document.querySelector('.btn-expand-categories .collapse-text');
         const expandIcon = document.querySelector('.btn-expand-categories .expand-icon');
         const collapseIcon = document.querySelector('.btn-expand-categories .collapse-icon');
+        const visibleCountSpan = document.querySelector('.category-expand-section .visible-count');
 
-        // Check if items are currently visible by checking computed style or existing inline style
-        const isExpanded = hiddenItems[0] && (
-            hiddenItems[0].style.display === 'block' ||
-            window.getComputedStyle(hiddenItems[0]).display === 'block'
-        );
+        // Check current state
+        const isShowingAll = categoryDisplayedCount >= totalCount;
 
-        hiddenItems.forEach(item => {
-            if (isExpanded) {
-                // Collapse - hide the items
-                item.style.display = 'none';
-            } else {
-                // Expand - show the items
-                item.style.display = 'block';
-            }
-        });
+        if (isShowingAll) {
+            // Collapse back to initial 6
+            categoryDisplayedCount = 6;
+            allItems.forEach((item, index) => {
+                if (index < categoryDisplayedCount) {
+                    item.style.display = 'block';
+                    item.classList.remove('category-item-hidden');
+                    item.classList.add('category-item-visible');
+                } else {
+                    item.style.display = 'none';
+                    item.classList.add('category-item-hidden');
+                    item.classList.remove('category-item-visible');
+                }
+            });
 
-        if (isExpanded) {
-            // Collapse
+            // Show expand button
             expandText.style.display = 'inline';
             collapseText.style.display = 'none';
             expandIcon.style.display = 'inline';
             collapseIcon.style.display = 'none';
         } else {
-            // Expand
-            expandText.style.display = 'none';
-            collapseText.style.display = 'inline';
-            expandIcon.style.display = 'none';
-            collapseIcon.style.display = 'inline';
+            // Show more categories (10 more)
+            const newCount = Math.min(categoryDisplayedCount + categoryStepSize, totalCount);
+
+            allItems.forEach((item, index) => {
+                if (index < newCount) {
+                    item.style.display = 'block';
+                    item.classList.remove('category-item-hidden');
+                    item.classList.add('category-item-visible');
+                }
+            });
+
+            categoryDisplayedCount = newCount;
+
+            // Update button text based on whether all items are now visible
+            if (categoryDisplayedCount >= totalCount) {
+                expandText.textContent = 'Show More Categories';
+                expandText.style.display = 'none';
+                collapseText.style.display = 'inline';
+                expandIcon.style.display = 'none';
+                collapseIcon.style.display = 'inline';
+            } else {
+                expandText.textContent = `Show ${Math.min(categoryStepSize, totalCount - categoryDisplayedCount)} More Categories`;
+            }
+        }
+
+        // Update visible count display
+        if (visibleCountSpan) {
+            visibleCountSpan.textContent = categoryDisplayedCount;
         }
     }
     </script>

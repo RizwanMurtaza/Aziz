@@ -16,10 +16,11 @@
     }
 
     //resources
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/noble.js");
-	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/bootstrap.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/head.min.js");
-    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/NobleTheme/Content/js/owl.carousel.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/GamingPCRehab/Content/js/mobile-menu.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/GamingPCRehab/Content/js/noble.js");
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/GamingPCRehab/Content/js/bootstrap.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/GamingPCRehab/Content/js/head.min.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Themes/GamingPCRehab/Content/js/owl.carousel.min.js");
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
     NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
@@ -60,7 +61,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preload" as="font" href="@Url.Content($"~/Themes/NobleTheme/Content/fonts/fontawesome-webfont.woff2")" crossorigin>
+    @* Font Awesome CDN - since local font file is missing *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @* Gaming Fonts *@
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Audiowide&family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet" />
     @NopHtml.GenerateHeadCustom()
     @*This is used so that themes can inject content into the header*@

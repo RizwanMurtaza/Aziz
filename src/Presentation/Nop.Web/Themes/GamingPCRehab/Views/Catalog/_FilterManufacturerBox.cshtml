@@ -42,37 +42,70 @@
 </div>
 
 <script>
+let manufacturerDisplayedCount = 6; // Initially showing 6 manufacturers
+const manufacturerStepSize = 10; // Show 10 more each time
+
 function toggleManufacturers() {
-    const hiddenItems = document.querySelectorAll('.manufacturer-wrapper.manufacturer-item-hidden');
+    const allItems = document.querySelectorAll('.manufacturer-wrapper');
+    const totalCount = allItems.length;
     const expandText = document.querySelector('.btn-expand-manufacturers .expand-text');
     const collapseText = document.querySelector('.btn-expand-manufacturers .collapse-text');
     const expandIcon = document.querySelector('.btn-expand-manufacturers .expand-icon');
     const collapseIcon = document.querySelector('.btn-expand-manufacturers .collapse-icon');
+    const visibleCountSpan = document.querySelector('.manufacturer-count .visible-count');
 
-    // Check if items are currently visible by checking computed style or existing inline style
-    const isExpanded = hiddenItems[0] && (
-        hiddenItems[0].style.display === 'block' ||
-        window.getComputedStyle(hiddenItems[0]).display === 'block'
-    );
+    // Check current state
+    const isShowingAll = manufacturerDisplayedCount >= totalCount;
 
-    hiddenItems.forEach(item => {
-        if (isExpanded) {
-            item.style.display = 'none';
-        } else {
-            item.style.display = 'block';
-        }
-    });
+    if (isShowingAll) {
+        // Collapse back to initial 6
+        manufacturerDisplayedCount = 6;
+        allItems.forEach((item, index) => {
+            if (index < manufacturerDisplayedCount) {
+                item.style.display = 'block';
+                item.classList.remove('manufacturer-item-hidden');
+                item.classList.add('manufacturer-item-visible');
+            } else {
+                item.style.display = 'none';
+                item.classList.add('manufacturer-item-hidden');
+                item.classList.remove('manufacturer-item-visible');
+            }
+        });
 
-    if (isExpanded) {
+        // Show expand button
         expandText.style.display = 'inline';
         collapseText.style.display = 'none';
         expandIcon.style.display = 'inline';
         collapseIcon.style.display = 'none';
     } else {
-        expandText.style.display = 'none';
-        collapseText.style.display = 'inline';
-        expandIcon.style.display = 'none';
-        collapseIcon.style.display = 'inline';
+        // Show more manufacturers (10 more)
+        const newCount = Math.min(manufacturerDisplayedCount + manufacturerStepSize, totalCount);
+
+        allItems.forEach((item, index) => {
+            if (index < newCount) {
+                item.style.display = 'block';
+                item.classList.remove('manufacturer-item-hidden');
+                item.classList.add('manufacturer-item-visible');
+            }
+        });
+
+        manufacturerDisplayedCount = newCount;
+
+        // Update button text based on whether all items are now visible
+        if (manufacturerDisplayedCount >= totalCount) {
+            expandText.textContent = 'Show More Manufacturers';
+            expandText.style.display = 'none';
+            collapseText.style.display = 'inline';
+            expandIcon.style.display = 'none';
+            collapseIcon.style.display = 'inline';
+        } else {
+            expandText.textContent = `Show ${Math.min(manufacturerStepSize, totalCount - manufacturerDisplayedCount)} More Manufacturers`;
+        }
+    }
+
+    // Update visible count display
+    if (visibleCountSpan) {
+        visibleCountSpan.textContent = manufacturerDisplayedCount;
     }
 }
 </script>
