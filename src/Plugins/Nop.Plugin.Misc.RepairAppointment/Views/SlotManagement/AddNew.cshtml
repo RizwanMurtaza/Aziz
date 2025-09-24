@@ -244,7 +244,7 @@ $(document).ready(function() {
         $.ajax({
             url: ajaxUrl,
             type: 'POST',
-            data: JSON.stringify({ Date: selectedDate.toISOString() }),
+            data: JSON.stringify({ Date: selectedDate.getFullYear() + '-' + String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + String(selectedDate.getDate()).padStart(2, '0') + 'T00:00:00' }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             beforeSend: function(xhr) {
@@ -254,10 +254,12 @@ $(document).ready(function() {
                 }
             },
             success: function(response) {
+                console.log('[AJAX] Server response:', response);
                 if (response.success) {
                     timeSlots = response.timeSlots;
                     renderTimeSlots();
                 } else {
+                    console.log('[AJAX] Server returned error:', response.message);
                     $('#time-slots-container').html('<div class="alert alert-danger">' + response.message + '</div>');
                 }
             },
@@ -359,7 +361,7 @@ $(document).ready(function() {
             url: '@Url.Action("ApplySlotChangesForDate", "SlotManagement", new { area = "Admin" })',
             type: 'POST',
             data: JSON.stringify({
-                Date: selectedDate.toISOString(),
+                Date: selectedDate.getFullYear() + '-' + String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + String(selectedDate.getDate()).padStart(2, '0') + 'T00:00:00',
                 TimeSlots: timeSlots
             }),
             contentType: 'application/json; charset=utf-8',
