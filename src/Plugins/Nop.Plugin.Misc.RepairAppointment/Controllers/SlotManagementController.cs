@@ -390,6 +390,142 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             }
         }
 
+        public async Task<IActionResult> AddNew()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
+                return AccessDeniedView();
+
+            var settings = await _settingService.LoadSettingAsync<RepairAppointmentSettings>();
+            var workingDays = new List<int>();
+            if (!string.IsNullOrEmpty(settings.WorkingDays))
+            {
+                workingDays = settings.WorkingDays.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                 .Select(int.Parse)
+                                                 .ToList();
+            }
+
+            var model = new SingleDaySlotManagementModel
+            {
+                SelectedDate = DateTime.Today.AddDays(1),
+                WorkingDays = workingDays
+            };
+
+            return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/AddNew.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetTimeSlotsForDate([FromBody] GetTimeSlotsForDateRequest request)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
+                return Json(new { success = false, message = "Access denied" });
+
+            try
+            {
+                var settings = await _settingService.LoadSettingAsync<RepairAppointmentSettings>();
+
+                // Check if the selected date is a working day
+                if (!string.IsNullOrEmpty(settings.WorkingDays))
+                {
+                    var workingDays = settings.WorkingDays.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                         .Select(int.Parse)
+                                                         .ToList();
+                    var dayOfWeek = (int)request.Date.DayOfWeek;
+
+                    if (!workingDays.Contains(dayOfWeek))
+                    {
+                        return Json(new { success = false, message = "Selected date is not a working day" });
+                    }
+                }
+
+                var timeSlots = new List<TimeSlotCapacityModel>();
+
+                if (!TimeSpan.TryParse(settings.BusinessStartTime, out var startTime) ||
+                    !TimeSpan.TryParse(settings.BusinessEndTime, out var endTime))
+                {
+                    return Json(new { success = false, message = "Invalid business hours configuration" });
+                }
+
+                var slotDuration = TimeSpan.FromMinutes(settings.SlotDurationMinutes);
+                var currentTime = startTime;
+
+                while (currentTime.Add(slotDuration) <= endTime)
+                {
+                    var slotEndTime = currentTime.Add(slotDuration);
+
+                    // Check if slot already exists
+                    var existingSlot = await _slotCapacityService.GetSlotCapacityAsync(request.Date, currentTime, slotEndTime);
+
+                    timeSlots.Add(new TimeSlotCapacityModel
+                    {
+                        TimeSlot = $"{currentTime:hh\\:mm} - {slotEndTime:hh\\:mm}",
+                        StartTime = currentTime,
+                        EndTime = slotEndTime,
+                        DefaultCapacity = existingSlot?.MaxAppointments ?? settings.MaxAppointmentsPerSlot,
+                        NewCapacity = existingSlot?.MaxAppointments ?? settings.MaxAppointmentsPerSlot,
+                        StartTimeFormatted = currentTime.ToString(@"hh\:mm"),
+                        EndTimeFormatted = slotEndTime.ToString(@"hh\:mm"),
+                        Exists = existingSlot != null
+                    });
+
+                    currentTime = currentTime.Add(slotDuration);
+                }
+
+                return Json(new { success = true, timeSlots });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplySlotChangesForDate([FromBody] ApplySlotChangesForDateRequest request)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
+                return Json(new { success = false, message = "Access denied" });
+
+            try
+            {
+                int affectedSlots = 0;
+
+                foreach (var timeSlot in request.TimeSlots)
+                {
+                    var existingSlot = await _slotCapacityService.GetSlotCapacityAsync(
+                        request.Date, timeSlot.StartTime, timeSlot.EndTime);
+
+                    if (existingSlot != null)
+                    {
+                        // Update existing slot
+                        existingSlot.MaxAppointments = timeSlot.NewCapacity;
+                        existingSlot.ModifiedOnUtc = DateTime.UtcNow;
+                        await _slotCapacityService.UpdateSlotCapacityAsync(existingSlot);
+                    }
+                    else
+                    {
+                        // Create new slot capacity entry
+                        var newSlotCapacity = new Domain.SlotCapacity
+                        {
+                            Date = request.Date,
+                            StartTime = timeSlot.StartTime,
+                            EndTime = timeSlot.EndTime,
+                            MaxAppointments = timeSlot.NewCapacity,
+                            CurrentBookings = 0,
+                            IsActive = true,
+                            CreatedOnUtc = DateTime.UtcNow
+                        };
+                        await _slotCapacityService.InsertSlotCapacityAsync(newSlotCapacity);
+                    }
+                    affectedSlots++;
+                }
+
+                return Json(new { success = true, affectedSlots });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAvailableTimeSlots()
         {

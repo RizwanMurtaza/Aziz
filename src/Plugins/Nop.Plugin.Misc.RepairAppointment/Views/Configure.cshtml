@@ -38,8 +38,8 @@
                                 <nop-label asp-for="SlotDurationMinutes" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="SlotDurationMinutes" />
-                                <span class="hint">Duration of each appointment slot in minutes (default: 30)</span>
+                                <nop-select asp-for="SlotDurationMinutes" asp-items="Model.AvailableSlotDurations" id="SlotDurationMinutes" />
+                                <span class="hint">Duration of each appointment slot. <strong>Warning:</strong> Changing this will delete all existing slot capacity data.</span>
                             </div>
                         </div>
 
@@ -58,8 +58,8 @@
                                 <nop-label asp-for="BusinessStartTime" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="BusinessStartTime" />
-                                <span class="hint">Business start time in 24-hour format (e.g., 09:00)</span>
+                                <input type="time" asp-for="BusinessStartTime" class="form-control" />
+                                <span class="hint">Business start time (24-hour format)</span>
                             </div>
                         </div>
 
@@ -68,8 +68,8 @@
                                 <nop-label asp-for="BusinessEndTime" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="BusinessEndTime" />
-                                <span class="hint">Business end time in 24-hour format (e.g., 17:00)</span>
+                                <input type="time" asp-for="BusinessEndTime" class="form-control" />
+                                <span class="hint">Business end time (24-hour format)</span>
                             </div>
                         </div>
 
@@ -164,3 +164,29 @@
     color: #28a745;
 }
 </style>
+
+<script>
+$(document).ready(function() {
+    var originalSlotDuration = $('#SlotDurationMinutes').val();
+    var warningShown = false;
+
+    $('#SlotDurationMinutes').change(function() {
+        var newValue = $(this).val();
+
+        if (originalSlotDuration !== newValue && !warningShown) {
+            if (!confirm('WARNING: Changing the slot duration will delete all existing slot capacity data and appointment settings. This cannot be undone.\n\nAre you sure you want to continue?')) {
+                // Reset to original value if user cancels
+                $(this).val(originalSlotDuration);
+                return false;
+            }
+            warningShown = true;
+        }
+    });
+
+    // Reset warning flag when form is submitted successfully
+    $('form').on('submit', function() {
+        warningShown = false;
+        originalSlotDuration = $('#SlotDurationMinutes').val();
+    });
+});
+</script>

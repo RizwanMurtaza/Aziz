@@ -17,6 +17,14 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Configuration.SlotDurationMinutes")]
         public int SlotDurationMinutes { get; set; }
 
+        public IList<SelectListItem> AvailableSlotDurations { get; set; } = new List<SelectListItem>
+        {
+            new() { Text = "15 minutes", Value = "15" },
+            new() { Text = "30 minutes", Value = "30" },
+            new() { Text = "45 minutes", Value = "45" },
+            new() { Text = "60 minutes", Value = "60" }
+        };
+
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Configuration.MaxSlotsPerDay")]
         public int MaxSlotsPerDay { get; set; }
 

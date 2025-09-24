@@ -125,6 +125,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public int NewCapacity { get; set; }
         public string StartTimeFormatted { get; set; } = string.Empty;
         public string EndTimeFormatted { get; set; } = string.Empty;
+        public bool Exists { get; set; } = false;
     }
 
     public record GetTimeSlotsRequest
@@ -138,5 +139,22 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public DateTime ToDate { get; set; }
         public int[] SelectedWeekdays { get; set; } = Array.Empty<int>();
         public TimeSlotCapacityModel[] TimeSlots { get; set; } = Array.Empty<TimeSlotCapacityModel>();
+    }
+
+    public record SingleDaySlotManagementModel : BaseNopModel
+    {
+        public DateTime SelectedDate { get; set; }
+        public IList<int> WorkingDays { get; set; } = new List<int>();
+    }
+
+    public record GetTimeSlotsForDateRequest
+    {
+        public DateTime Date { get; set; }
+    }
+
+    public record ApplySlotChangesForDateRequest
+    {
+        public DateTime Date { get; set; }
+        public IList<TimeSlotCapacityModel> TimeSlots { get; set; } = new List<TimeSlotCapacityModel>();
     }
 }

@@ -101,6 +101,9 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var settings = await _settingService.LoadSettingAsync<RepairAppointmentSettings>(storeScope);
 
+            // Check if slot duration has changed
+            var slotDurationChanged = settings.SlotDurationMinutes != model.SlotDurationMinutes;
+
             settings.EnableAppointmentSystem = model.EnableAppointmentSystem;
             settings.SlotDurationMinutes = model.SlotDurationMinutes;
             settings.MaxSlotsPerDay = model.MaxSlotsPerDay;
@@ -115,6 +118,13 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
 
             // Save working days
             settings.WorkingDays = string.Join(",", model.SelectedWorkingDays);
+
+            // If slot duration changed, delete all existing slot capacity data
+            if (slotDurationChanged)
+            {
+                await _slotCapacityService.DeleteAllSlotCapacitiesAsync();
+                _notificationService.WarningNotification("Slot duration changed. All existing slot capacity data has been deleted.");
+            }
 
             await _settingService.SaveSettingAsync(settings, storeScope);
 

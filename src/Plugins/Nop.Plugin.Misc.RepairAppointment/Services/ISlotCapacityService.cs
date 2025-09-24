@@ -70,6 +70,11 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
         Task DeleteSlotCapacityAsync(SlotCapacity slotCapacity);
 
         /// <summary>
+        /// Deletes all slot capacity data
+        /// </summary>
+        Task DeleteAllSlotCapacitiesAsync();
+
+        /// <summary>
         /// Gets the effective capacity for a specific slot (considers both default settings and overrides)
         /// </summary>
         /// <param name="date">Date</param>

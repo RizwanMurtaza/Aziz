@@ -101,6 +101,12 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
             await _slotCapacityRepository.DeleteAsync(slotCapacity);
         }
 
+        public virtual async Task DeleteAllSlotCapacitiesAsync()
+        {
+            var allSlotCapacities = await _slotCapacityRepository.Table.ToListAsync();
+            await _slotCapacityRepository.DeleteAsync(allSlotCapacities);
+        }
+
         public virtual async Task<(int maxCapacity, int currentBookings)> GetEffectiveSlotCapacityAsync(DateTime date, TimeSpan startTime, TimeSpan endTime)
         {
             // Always get the actual current bookings from the appointments table for accuracy
