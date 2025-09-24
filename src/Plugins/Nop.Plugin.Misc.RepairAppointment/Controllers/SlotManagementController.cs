@@ -86,69 +86,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             return Json(model);
         }
 
-        public async Task<IActionResult> Create()
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
-                return AccessDeniedView();
-
-            var model = new SlotCapacityModel
-            {
-                Date = DateTime.Today.AddDays(1), // Default to tomorrow
-                MaxAppointments = 1,
-                IsActive = true
-            };
-
-            return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/Create.cshtml", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(SlotCapacityModel model)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
-                return AccessDeniedView();
-
-            if (!ModelState.IsValid)
-                return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/Create.cshtml", model);
-
-            // Parse time strings
-            if (!TimeSpan.TryParse(model.StartTime, out var startTime) ||
-                !TimeSpan.TryParse(model.EndTime, out var endTime))
-            {
-                ModelState.AddModelError("", "Invalid time format");
-                return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/Create.cshtml", model);
-            }
-
-            if (startTime >= endTime)
-            {
-                ModelState.AddModelError("", "Start time must be before end time");
-                return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/Create.cshtml", model);
-            }
-
-            // Check if slot already exists
-            var existingSlot = await _slotCapacityService.GetSlotCapacityAsync(model.Date, startTime, endTime);
-            if (existingSlot != null)
-            {
-                ModelState.AddModelError("", "A slot with this date and time already exists");
-                return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/Create.cshtml", model);
-            }
-
-            var slotCapacity = new SlotCapacity
-            {
-                Date = model.Date.Date,
-                StartTime = startTime,
-                EndTime = endTime,
-                MaxAppointments = model.MaxAppointments,
-                CurrentBookings = 0,
-                IsActive = model.IsActive,
-                Notes = model.Notes
-            };
-
-            await _slotCapacityService.InsertSlotCapacityAsync(slotCapacity);
-
-            _notificationService.SuccessNotification("Slot capacity created successfully");
-
-            return RedirectToAction("List");
-        }
 
         public async Task<IActionResult> Edit(int id)
         {

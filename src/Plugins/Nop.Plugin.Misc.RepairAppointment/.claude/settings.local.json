@@ -20,7 +20,8 @@
       "Bash(for file in RepairCategory/List.cshtml RepairProduct/List.cshtml RepairType/List.cshtml)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(head:*)",
-      "Bash(for file in \"RepairCategory/List.cshtml\" \"RepairProduct/List.cshtml\" \"RepairType/List.cshtml\")"
+      "Bash(for file in \"RepairCategory/List.cshtml\" \"RepairProduct/List.cshtml\" \"RepairType/List.cshtml\")",
+      "Bash(del \"M:\\GamingRehab\\Aziz\\src\\Plugins\\Nop.Plugin.Misc.RepairAppointment\\Views\\SlotManagement\\Create.cshtml\")"
     ],
     "deny": [],
     "ask": []
