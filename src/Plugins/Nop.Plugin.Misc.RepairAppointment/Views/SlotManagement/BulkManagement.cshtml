@@ -1,4 +1,4 @@
-@model BulkSlotManagementModel
+@model Nop.Plugin.Misc.RepairAppointment.Models.SlotCapacity.BulkSlotManagementModel
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Bulk Slot Management";
@@ -262,8 +262,6 @@ $(document).ready(function() {
 
         // Load time slots via AJAX
         var ajaxUrl = '@Url.Action("GetTimeSlotsForWeekdays", "SlotManagement", new { area = "Admin" })';
-        console.log('AJAX URL:', ajaxUrl);
-        console.log('Selected weekdays:', selectedWeekdays);
 
         $.ajax({
             url: ajaxUrl,
@@ -273,13 +271,11 @@ $(document).ready(function() {
             dataType: 'json',
             beforeSend: function(xhr) {
                 var token = $('input[name="__RequestVerificationToken"]').val();
-                console.log('GetTimeSlotsForWeekdays - Antiforgery token found:', token ? 'Yes' : 'No');
                 if (token) {
                     xhr.setRequestHeader("RequestVerificationToken", token);
                 }
             },
             success: function(response) {
-                console.log('AJAX Success:', response);
                 if (response.success) {
                     timeSlots = response.timeSlots;
                     renderTimeSlots();
@@ -396,7 +392,6 @@ $(document).ready(function() {
             dataType: 'json',
             beforeSend: function(xhr) {
                 var token = $('input[name="__RequestVerificationToken"]').val();
-                console.log('ApplyBulkCapacityChanges - Antiforgery token found:', token ? 'Yes' : 'No');
                 if (token) {
                     xhr.setRequestHeader("RequestVerificationToken", token);
                 }

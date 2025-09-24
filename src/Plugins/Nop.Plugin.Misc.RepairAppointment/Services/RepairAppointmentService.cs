@@ -247,7 +247,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
                         slot.StartTime < TimeSpan.Zero || slot.EndTime < TimeSpan.Zero)
                     {
                         // Skip the update if TimeSpan values are corrupted to prevent MySQL error
-                        System.Diagnostics.Debug.WriteLine($"Skipping slot update due to corrupted TimeSpan values: StartTime={slot.StartTime}, EndTime={slot.EndTime}");
                         return;
                     }
 
@@ -265,11 +264,9 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
                     await _timeSlotRepository.UpdateAsync(slot);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log the error but don't break the appointment creation
-                System.Diagnostics.Debug.WriteLine($"Error updating slot booking count: {ex.Message}");
-
                 // Don't rethrow to avoid breaking appointment creation
                 // In production, you would log this properly and possibly alert administrators
             }

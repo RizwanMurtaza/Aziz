@@ -14,7 +14,13 @@
       "Bash(dotnet build:*)",
       "Bash(python:*)",
       "Bash(dir:*)",
-      "Bash(copy:*)"
+      "Bash(copy:*)",
+      "Bash(del ModelsSlotCapacityModel.cs)",
+      "Bash(for file in RepairProduct/Create.cshtml RepairProduct/Edit.cshtml RepairType/Create.cshtml RepairType/Edit.cshtml)",
+      "Bash(for file in RepairCategory/List.cshtml RepairProduct/List.cshtml RepairType/List.cshtml)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(head:*)",
+      "Bash(for file in \"RepairCategory/List.cshtml\" \"RepairProduct/List.cshtml\" \"RepairType/List.cshtml\")"
     ],
     "deny": [],
     "ask": []

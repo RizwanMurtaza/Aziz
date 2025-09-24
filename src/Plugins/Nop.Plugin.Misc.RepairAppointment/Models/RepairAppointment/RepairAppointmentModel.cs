@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Plugin.Misc.RepairAppointment.Models
+namespace Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointment
 {
     public record RepairAppointmentModel : BaseNopEntityModel
     {
@@ -91,31 +91,5 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableProducts { get; set; }
         public IList<SelectListItem> AvailableRepairTypes { get; set; }
-    }
-
-    public record RepairAppointmentListModel : BasePagedListModel<RepairAppointmentModel>
-    {
-    }
-
-    public record RepairAppointmentSearchModel : BaseSearchModel
-    {
-        public RepairAppointmentSearchModel()
-        {
-            AvailableStatuses = new List<SelectListItem>();
-        }
-
-        [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Search.FromDate")]
-        public DateTime? FromDate { get; set; }
-
-        [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Search.ToDate")]
-        public DateTime? ToDate { get; set; }
-
-        [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Search.Status")]
-        public int StatusId { get; set; }
-
-        [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Search.SearchText")]
-        public string? SearchText { get; set; }
-
-        public IList<SelectListItem> AvailableStatuses { get; set; }
     }
 }

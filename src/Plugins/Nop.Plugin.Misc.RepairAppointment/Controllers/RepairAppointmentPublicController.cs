@@ -7,7 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.RepairAppointment.Domain;
-using Nop.Plugin.Misc.RepairAppointment.Models;
+using Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointment;
 using Nop.Plugin.Misc.RepairAppointment.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;

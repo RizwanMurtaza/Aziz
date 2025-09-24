@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Misc.RepairAppointment.Domain;
-using Nop.Plugin.Misc.RepairAppointment.Models;
+using Nop.Plugin.Misc.RepairAppointment.Models.RepairCategory;
 using Nop.Plugin.Misc.RepairAppointment.Services;
 using Nop.Services.Localization;
 using Nop.Services.Messages;

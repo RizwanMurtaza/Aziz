@@ -1,4 +1,4 @@
-@model SingleDaySlotManagementModel
+@model Nop.Plugin.Misc.RepairAppointment.Models.SlotCapacity.SingleDaySlotManagementModel
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Add New Slot";
@@ -33,6 +33,7 @@
                         <input type="date" id="selected-date" class="form-control"
                                value="@Model.SelectedDate.ToString("yyyy-MM-dd")"
                                min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <div id="date-validation-message" class="text-danger mt-1" style="display: none;"></div>
                         <small class="form-text text-muted">Select a date to manage slots for.</small>
                     </div>
                     <div class="col-md-4">
@@ -52,6 +53,11 @@
                         var workingDayNames = Model.WorkingDays.Select(d => dayNames[d]).ToArray();
                     }
                     @string.Join(", ", workingDayNames)
+                    <br />
+                    <small class="text-muted">
+                        <i class="fas fa-calendar-alt"></i>
+                        Only dates that fall on these days can be selected. Non-working days will show a validation error.
+                    </small>
                 </div>
 
                 <!-- Time Slots Section -->
@@ -187,6 +193,18 @@
     background-color: #17a2b8;
     color: white;
 }
+
+#date-validation-message {
+    font-size: 0.9em;
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 4px solid #dc3545;
+    background-color: #f8d7da;
+}
+
+#selected-date:invalid {
+    border-color: #dc3545;
+}
 </style>
 
 <script>
@@ -196,21 +214,24 @@ var selectedDate = null;
 var workingDays = @Html.Raw(Json.Serialize(Model.WorkingDays));
 
 $(document).ready(function() {
+    // Debug: log the working days
+    console.log('Working days from server:', workingDays);
+    console.log('Working days type:', typeof workingDays);
+    // Initialize date validation
+    validateSelectedDate();
+
+    // Add real-time date validation
+    $('#selected-date').on('change', function() {
+        validateSelectedDate();
+    });
+
     // Load slots for selected date
     $('#load-slots').click(function() {
+        if (!validateSelectedDate()) {
+            return;
+        }
+
         selectedDate = new Date($('#selected-date').val() + 'T00:00:00');
-
-        if (!selectedDate || isNaN(selectedDate.getTime())) {
-            alert('Please select a valid date.');
-            return;
-        }
-
-        // Check if selected date is a working day
-        var dayOfWeek = selectedDate.getDay();
-        if (!workingDays.includes(dayOfWeek)) {
-            alert('Selected date is not a working day. Please choose a date that falls on: @string.Join(", ", workingDayNames)');
-            return;
-        }
 
         // Show loading
         $('#time-slots-container').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading time slots...</div>');
@@ -372,5 +393,55 @@ $(document).ready(function() {
             renderTimeSlots();
         }
     });
+
+    // Date validation function
+    function validateSelectedDate() {
+        var dateInput = $('#selected-date');
+        var messageDiv = $('#date-validation-message');
+        var loadButton = $('#load-slots');
+
+        var selectedDateStr = dateInput.val();
+        if (!selectedDateStr) {
+            messageDiv.hide();
+            loadButton.prop('disabled', true);
+            return false;
+        }
+
+        var selectedDate = new Date(selectedDateStr + 'T00:00:00');
+        if (isNaN(selectedDate.getTime())) {
+            messageDiv.text('Please select a valid date.').show();
+            loadButton.prop('disabled', true);
+            return false;
+        }
+
+        // Check if selected date is a working day
+        var dayOfWeek = selectedDate.getDay();
+        var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        // Ensure working days are integers for all operations
+        var workingDaysInt = workingDays.map(function(day) {
+            return parseInt(day, 10);
+        });
+        var workingDayNames = workingDaysInt.map(d => dayNames[d]);
+
+        // Debug: log the validation details
+        console.log('Selected date:', selectedDate);
+        console.log('Day of week (JS):', dayOfWeek, '(' + dayNames[dayOfWeek] + ')');
+        console.log('Working days array (original):', workingDays);
+        console.log('Working days as integers:', workingDaysInt);
+        console.log('Working day names:', workingDayNames);
+        console.log('Is day of week in working days?', workingDaysInt.includes(dayOfWeek));
+
+        if (!workingDaysInt.includes(dayOfWeek)) {
+            messageDiv.html('<i class="fas fa-exclamation-triangle"></i> Selected date (' + dayNames[dayOfWeek] + ') is not a working day.<br>Please choose a date that falls on: <strong>' + workingDayNames.join(', ') + '</strong>').show();
+            loadButton.prop('disabled', true);
+            return false;
+        }
+
+        // Date is valid
+        messageDiv.hide();
+        loadButton.prop('disabled', false);
+        return true;
+    }
 });
 </script>

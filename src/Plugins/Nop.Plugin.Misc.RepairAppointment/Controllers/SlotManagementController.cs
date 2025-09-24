@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Plugin.Misc.RepairAppointment.Models;
+using Nop.Plugin.Misc.RepairAppointment.Models.SlotCapacity;
+using Nop.Plugin.Misc.RepairAppointment.Models.Requests;
 using Nop.Plugin.Misc.RepairAppointment.Services;
 using Nop.Plugin.Misc.RepairAppointment.Domain;
 using Nop.Services.Configuration;
@@ -431,9 +432,21 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                                                          .ToList();
                     var dayOfWeek = (int)request.Date.DayOfWeek;
 
+                    // Debug logging for server-side validation
+                    System.Diagnostics.Debug.WriteLine($"[SERVER] Selected date: {request.Date}");
+                    System.Diagnostics.Debug.WriteLine($"[SERVER] Settings WorkingDays: '{settings.WorkingDays}'");
+                    System.Diagnostics.Debug.WriteLine($"[SERVER] Working days parsed: [{string.Join(",", workingDays)}]");
+                    System.Diagnostics.Debug.WriteLine($"[SERVER] Day of week (C#): {dayOfWeek} ({request.Date.DayOfWeek})");
+                    System.Diagnostics.Debug.WriteLine($"[SERVER] Contains check: {workingDays.Contains(dayOfWeek)}");
+
                     if (!workingDays.Contains(dayOfWeek))
                     {
+                        System.Diagnostics.Debug.WriteLine($"[SERVER] VALIDATION FAILED - returning error");
                         return Json(new { success = false, message = "Selected date is not a working day" });
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[SERVER] VALIDATION PASSED");
                     }
                 }
 

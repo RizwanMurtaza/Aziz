@@ -1,4 +1,4 @@
-@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointmentModel
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointment.RepairAppointmentModel
 @using Nop.Web.Framework.UI
 @{
     Layout = "_ColumnsOne";
@@ -175,8 +175,6 @@ $(document).ready(function() {
         var categoryId = $(this).val();
         var categoryName = $(this).find('option:selected').text();
 
-        console.log('Device type changed:', categoryId, categoryName);
-
         $('#device-type-hidden').val(categoryName);
         $('#repair-category-id').val(categoryId);
 
@@ -197,8 +195,6 @@ $(document).ready(function() {
     $('#product-select').on('change', function() {
         var productId = $(this).val();
 
-        console.log('Product changed:', productId);
-
         // Reset repair types
         $('#repair-type-select').html('<option value="">Loading repair types...</option>').prop('disabled', true);
         hidePrice();
@@ -216,8 +212,6 @@ $(document).ready(function() {
     $('#repair-type-select').on('change', function() {
         var repairTypeId = $(this).val();
 
-        console.log('Repair type changed:', repairTypeId);
-
         if (repairTypeId && repairTypeId !== '' && repairTypeId !== 'other') {
             showEstimatedPrice(repairTypeId);
         } else {
@@ -226,15 +220,11 @@ $(document).ready(function() {
     });
 
     function loadProductsByCategory(categoryId) {
-        console.log('Loading products for category:', categoryId);
-
         $.ajax({
             url: '@Url.Action("GetProductsByCategory", "RepairAppointmentPublic")',
             type: 'GET',
             data: { categoryId: categoryId },
             success: function(products) {
-                console.log('Products loaded:', products);
-
                 var $select = $('#product-select');
                 $select.empty().prop('disabled', false);
 
@@ -257,15 +247,11 @@ $(document).ready(function() {
     }
 
     function loadRepairTypesByProduct(productId) {
-        console.log('Loading repair types for product:', productId);
-
         $.ajax({
             url: '@Url.Action("GetRepairTypesByProduct", "RepairAppointmentPublic")',
             type: 'GET',
             data: { productId: productId },
             success: function(repairTypes) {
-                console.log('Repair types loaded:', repairTypes);
-
                 var $select = $('#repair-type-select');
                 $select.empty().prop('disabled', false);
 

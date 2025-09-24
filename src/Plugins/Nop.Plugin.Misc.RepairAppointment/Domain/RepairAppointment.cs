@@ -29,22 +29,4 @@ namespace Nop.Plugin.Misc.RepairAppointment.Domain
         public bool ConfirmationSent { get; set; }
     }
 
-    public enum AppointmentStatus
-    {
-        Pending = 0,
-        Confirmed = 1,
-        InProgress = 2,
-        Completed = 3,
-        Cancelled = 4,
-        NoShow = 5
-    }
-
-    public enum DeviceType
-    {
-        Mobile = 0,
-        Laptop = 1,
-        Desktop = 2,
-        Tablet = 3,
-        Other = 4
-    }
 }

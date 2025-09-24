@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Plugin.Misc.RepairAppointment.Domain;
 using Nop.Plugin.Misc.RepairAppointment.Models;
+using Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointment;
 using Nop.Plugin.Misc.RepairAppointment.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
