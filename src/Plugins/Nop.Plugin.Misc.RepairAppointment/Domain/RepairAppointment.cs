@@ -18,7 +18,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Domain
         public decimal? EstimatedPrice { get; set; }
         public DateTime AppointmentDate { get; set; }
         public string TimeSlot { get; set; } = string.Empty;
-        public int TimeSlotId { get; set; }
+        public string TimeSlotId { get; set; } = string.Empty;
         public AppointmentStatus Status { get; set; }
         public int? CustomerId { get; set; }
         public string? Notes { get; set; }

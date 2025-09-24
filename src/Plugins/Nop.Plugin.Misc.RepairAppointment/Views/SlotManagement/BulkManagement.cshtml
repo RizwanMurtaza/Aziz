@@ -1,0 +1,387 @@
+@model BulkSlotManagementModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Bulk Slot Management";
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.SlotManagement");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        <i class="fas fa-calendar-week"></i>
+        Weekday-Based Slot Management
+    </h1>
+    <div class="float-right">
+        <a asp-action="List" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <!-- Date Range Selection -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Step 1: Select Date Range
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Instructions:</strong> Select the date range where you want to apply capacity changes for specific weekdays.
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <nop-label asp-for="FromDate" />
+                                <nop-editor asp-for="FromDate" />
+                                <span asp-validation-for="FromDate"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <nop-label asp-for="ToDate" />
+                                <nop-editor asp-for="ToDate" />
+                                <span asp-validation-for="ToDate"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekday Selection -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-calendar-week"></i>
+                        Step 2: Select Weekdays
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Select which weekdays to update:</label>
+                        <div class="weekday-selection mt-2">
+                            @for (int i = 0; i < Model.AvailableWeekdays.Count; i++)
+                            {
+                                var weekday = Model.AvailableWeekdays[i];
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" class="custom-control-input weekday-checkbox"
+                                           id="weekday_@weekday.Value" name="SelectedWeekdays" value="@weekday.Value"
+                                           @(Model.SelectedWeekdays.Contains(int.Parse(weekday.Value)) ? "checked" : "") />
+                                    <label class="custom-control-label" for="weekday_@weekday.Value">
+                                        @weekday.Text
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <button type="button" id="load-time-slots" class="btn btn-primary mt-2" disabled>
+                        <i class="fas fa-clock"></i>
+                        Load Time Slots for Selected Days
+                    </button>
+                </div>
+            </div>
+
+            <!-- Time Slots Configuration -->
+            <div class="card card-default" id="time-slots-card" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-clock"></i>
+                        Step 3: Configure Time Slot Capacities
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Note:</strong> Click on any time slot to modify its capacity. Changes will be applied to all selected weekdays within the date range.
+                    </div>
+
+                    <div id="time-slots-container">
+                        <!-- Time slots will be loaded here -->
+                    </div>
+
+                    <div class="mt-3" id="apply-changes-section" style="display: none;">
+                        <button type="button" id="apply-changes" class="btn btn-success">
+                            <i class="fas fa-save"></i>
+                            Apply Capacity Changes
+                        </button>
+                        <button type="button" id="reset-changes" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo"></i>
+                            Reset Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Time Slot Capacity Modal -->
+<div class="modal fade" id="capacity-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-edit"></i>
+                    Edit Time Slot Capacity
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modal-time-slot">Time Slot:</label>
+                    <input type="text" id="modal-time-slot" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="modal-default-capacity">Default Capacity:</label>
+                    <input type="number" id="modal-default-capacity" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="modal-new-capacity">New Capacity:</label>
+                    <input type="number" id="modal-new-capacity" class="form-control" min="0" max="100" />
+                    <small class="form-text text-muted">Number of appointments allowed for this time slot</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save-capacity">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.time-slot-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.time-slot-card:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 5px rgba(0,123,255,0.2);
+}
+
+.time-slot-card.modified {
+    border-color: #28a745;
+    background-color: #f8fff9;
+}
+
+.time-slot-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.capacity-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.capacity-default {
+    background-color: #6c757d;
+    color: white;
+}
+
+.capacity-modified {
+    background-color: #28a745;
+    color: white;
+}
+
+.weekday-selection .custom-control-inline {
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    let timeSlots = [];
+    let selectedSlotIndex = -1;
+
+    // Enable/disable load button based on weekday selection
+    $('.weekday-checkbox').change(function() {
+        var selectedCount = $('.weekday-checkbox:checked').length;
+        $('#load-time-slots').prop('disabled', selectedCount === 0);
+
+        if (selectedCount === 0) {
+            $('#time-slots-card').hide();
+        }
+    });
+
+    // Load time slots for selected weekdays
+    $('#load-time-slots').click(function() {
+        var selectedWeekdays = [];
+        $('.weekday-checkbox:checked').each(function() {
+            selectedWeekdays.push($(this).val());
+        });
+
+        if (selectedWeekdays.length === 0) {
+            alert('Please select at least one weekday.');
+            return;
+        }
+
+        // Show loading
+        $('#time-slots-container').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading time slots...</div>');
+        $('#time-slots-card').show();
+
+        // Load time slots via AJAX
+        $.ajax({
+            url: '@Url.Action("GetTimeSlotsForWeekdays")',
+            type: 'POST',
+            data: JSON.stringify({ weekdays: selectedWeekdays }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    timeSlots = response.timeSlots;
+                    renderTimeSlots();
+                } else {
+                    $('#time-slots-container').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', xhr.responseText);
+                $('#time-slots-container').html('<div class="alert alert-danger">Error loading time slots: ' + error + '. Please try again.</div>');
+            }
+        });
+    });
+
+    function renderTimeSlots() {
+        var html = '<div class="row">';
+
+        for (var i = 0; i < timeSlots.length; i++) {
+            var slot = timeSlots[i];
+            var isModified = slot.newCapacity !== slot.defaultCapacity;
+            var capacityClass = isModified ? 'capacity-modified' : 'capacity-default';
+            var cardClass = isModified ? 'time-slot-card modified' : 'time-slot-card';
+
+            html += '<div class="col-md-4">';
+            html += '<div class="' + cardClass + '" data-slot-index="' + i + '">';
+            html += '<div class="time-slot-info">';
+            html += '<div>';
+            html += '<strong>' + slot.timeSlot + '</strong><br/>';
+            html += '<small class="text-muted">' + slot.startTime + ' - ' + slot.endTime + '</small>';
+            html += '</div>';
+            html += '<div>';
+            html += '<span class="capacity-badge ' + capacityClass + '">';
+            html += isModified ? slot.newCapacity : slot.defaultCapacity;
+            html += '</span>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+        }
+
+        html += '</div>';
+        $('#time-slots-container').html(html);
+        $('#apply-changes-section').show();
+    }
+
+    // Handle time slot click
+    $(document).on('click', '.time-slot-card', function() {
+        selectedSlotIndex = $(this).data('slot-index');
+        var slot = timeSlots[selectedSlotIndex];
+
+        $('#modal-time-slot').val(slot.timeSlot);
+        $('#modal-default-capacity').val(slot.defaultCapacity);
+        $('#modal-new-capacity').val(slot.newCapacity);
+
+        $('#capacity-modal').modal('show');
+    });
+
+    // Save capacity changes
+    $('#save-capacity').click(function() {
+        var newCapacity = parseInt($('#modal-new-capacity').val());
+
+        if (isNaN(newCapacity) || newCapacity < 0 || newCapacity > 100) {
+            alert('Please enter a valid capacity between 0 and 100.');
+            return;
+        }
+
+        timeSlots[selectedSlotIndex].newCapacity = newCapacity;
+        renderTimeSlots();
+        $('#capacity-modal').modal('hide');
+    });
+
+    // Apply changes
+    $('#apply-changes').click(function() {
+        var selectedWeekdays = [];
+        $('.weekday-checkbox:checked').each(function() {
+            selectedWeekdays.push($(this).val());
+        });
+
+        var fromDate = $('#FromDate').val();
+        var toDate = $('#ToDate').val();
+
+        if (!fromDate || !toDate) {
+            alert('Please select both from and to dates.');
+            return;
+        }
+
+        var changedSlots = timeSlots.filter(slot => slot.newCapacity !== slot.defaultCapacity);
+
+        if (changedSlots.length === 0) {
+            alert('No capacity changes to apply.');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to apply capacity changes to ' + changedSlots.length + ' time slots for the selected weekdays and date range?')) {
+            return;
+        }
+
+        // Apply changes via AJAX
+        $.ajax({
+            url: '@Url.Action("ApplyBulkCapacityChanges")',
+            type: 'POST',
+            data: JSON.stringify({
+                fromDate: fromDate,
+                toDate: toDate,
+                selectedWeekdays: selectedWeekdays,
+                timeSlots: changedSlots
+            }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Capacity changes applied successfully to ' + response.affectedSlots + ' slots.');
+                    // Optionally redirect back to list
+                    window.location.href = '@Url.Action("List")';
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', xhr.responseText);
+                alert('Error applying changes: ' + error + '. Please try again.');
+            }
+        });
+    });
+
+    // Reset changes
+    $('#reset-changes').click(function() {
+        if (confirm('Are you sure you want to reset all capacity changes?')) {
+            timeSlots.forEach(slot => slot.newCapacity = slot.defaultCapacity);
+            renderTimeSlots();
+        }
+    });
+});
+</script>

@@ -14,6 +14,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Infrastructure
             services.AddScoped<IRepairCategoryService, RepairCategoryService>();
             services.AddScoped<IRepairProductService, RepairProductService>();
             services.AddScoped<IRepairTypeService, RepairTypeService>();
+            services.AddScoped<ISlotCapacityService, SlotCapacityService>();
         }
 
         public void Configure(IApplicationBuilder application)

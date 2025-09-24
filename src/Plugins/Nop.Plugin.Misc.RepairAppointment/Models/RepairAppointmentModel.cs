@@ -66,7 +66,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Fields.TimeSlot")]
         public string? TimeSlot { get; set; }
 
-        public int TimeSlotId { get; set; }
+        public string TimeSlotId { get; set; } = string.Empty;
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.Fields.Status")]
         public int StatusId { get; set; }

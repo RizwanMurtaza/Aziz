@@ -12,7 +12,9 @@
       "Bash(done)",
       "Bash(find:*)",
       "Bash(dotnet build:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(copy:*)"
     ],
     "deny": [],
     "ask": []

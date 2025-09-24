@@ -52,8 +52,10 @@ namespace Nop.Plugin.Misc.RepairAppointment
                 EnableAppointmentSystem = true,
                 SlotDurationMinutes = 30,
                 MaxSlotsPerDay = 16,
+                MaxAppointmentsPerSlot = 1,
                 BusinessStartTime = "09:00",
                 BusinessEndTime = "17:00",
+                WorkingDays = "1,2,3,4,5", // Monday to Friday by default
                 SendConfirmationEmail = true,
                 SendReminderEmail = true,
                 ReminderHoursBeforeAppointment = 24
@@ -158,13 +160,40 @@ namespace Nop.Plugin.Misc.RepairAppointment
                 ["Plugins.Misc.RepairAppointment.Configuration.EnableAppointmentSystem"] = "Enable Appointment System",
                 ["Plugins.Misc.RepairAppointment.Configuration.SlotDurationMinutes"] = "Slot Duration (Minutes)",
                 ["Plugins.Misc.RepairAppointment.Configuration.MaxSlotsPerDay"] = "Max Slots Per Day",
+                ["Plugins.Misc.RepairAppointment.Configuration.MaxAppointmentsPerSlot"] = "Max Appointments Per Slot",
                 ["Plugins.Misc.RepairAppointment.Configuration.BusinessStartTime"] = "Business Start Time",
                 ["Plugins.Misc.RepairAppointment.Configuration.BusinessEndTime"] = "Business End Time",
+                ["Plugins.Misc.RepairAppointment.Configuration.WorkingDays"] = "Working Days",
                 ["Plugins.Misc.RepairAppointment.Configuration.SendConfirmationEmail"] = "Send Confirmation Email",
                 ["Plugins.Misc.RepairAppointment.Configuration.SendReminderEmail"] = "Send Reminder Email",
                 ["Plugins.Misc.RepairAppointment.Configuration.ReminderHoursBeforeAppointment"] = "Reminder Hours Before Appointment",
                 ["Plugins.Misc.RepairAppointment.Configuration.MaxAdvanceBookingDays"] = "Max Advance Booking Days",
                 ["Plugins.Misc.RepairAppointment.Configuration.RequireCustomerLogin"] = "Require Customer Login",
+
+                // Slot Capacity Management
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.Date"] = "Date",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.StartTime"] = "Start Time",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.EndTime"] = "End Time",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.MaxAppointments"] = "Max Appointments",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.CurrentBookings"] = "Current Bookings",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.AvailableSlots"] = "Available",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.IsActive"] = "Active",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.Notes"] = "Notes",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.CreatedOn"] = "Created On",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Fields.ModifiedOn"] = "Modified On",
+
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Search.Date"] = "Search Date",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Search.FromDate"] = "From Date",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Search.ToDate"] = "To Date",
+                ["Plugins.Misc.RepairAppointment.SlotCapacity.Search.IsActive"] = "Status",
+
+                // Bulk Slot Management
+                ["Plugins.Misc.RepairAppointment.BulkSlot.FromDate"] = "From Date",
+                ["Plugins.Misc.RepairAppointment.BulkSlot.ToDate"] = "To Date",
+                ["Plugins.Misc.RepairAppointment.BulkSlot.StartTime"] = "Start Time Filter",
+                ["Plugins.Misc.RepairAppointment.BulkSlot.EndTime"] = "End Time Filter",
+                ["Plugins.Misc.RepairAppointment.BulkSlot.NewCapacity"] = "New Capacity",
+                ["Plugins.Misc.RepairAppointment.BulkSlot.CreateDefaultSlots"] = "Create Default Slots",
 
                 // Common dropdown options
                 ["Admin.Common.All"] = "All",
@@ -210,7 +239,6 @@ namespace Nop.Plugin.Misc.RepairAppointment
         {
             return Task.FromResult<IList<string>>(new List<string>
             {
-                PublicWidgetZones.HeaderMenuBefore,
                 PublicWidgetZones.HeaderMenuAfter
             });
         }

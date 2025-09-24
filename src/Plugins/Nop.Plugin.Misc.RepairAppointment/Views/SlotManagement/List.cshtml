@@ -1,0 +1,154 @@
+@model SlotCapacitySearchModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Slot Management";
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.SlotManagement");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Slot Management
+    </h1>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Add Slot
+        </a>
+        <a asp-action="BulkManagement" class="btn btn-info">
+            <i class="fas fa-cogs"></i>
+            Bulk Management
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="card card-default card-search">
+                <div class="card-body">
+                    <div class="row search-row opened">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-up" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="FromDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="FromDate" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="ToDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="ToDate" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="IsActive" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="IsActive" asp-items="@(new List<SelectListItem>
+                                        {
+                                            new SelectListItem { Text = "All", Value = "" },
+                                            new SelectListItem { Text = "Active", Value = "true" },
+                                            new SelectListItem { Text = "Inactive", Value = "false" }
+                                        })" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <button type="button" id="search-slots" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "slotcapacity-grid",
+                        UrlRead = new DataUrl("SlotCapacityList", "SlotManagement", new RouteValueDictionary { ["area"] = "Admin" }),
+                        UrlDelete = new DataUrl("Delete", "SlotManagement", new RouteValueDictionary { ["area"] = "Admin" }),
+                        SearchButtonId = "search-slots",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.FromDate)),
+                            new FilterParameter(nameof(Model.ToDate)),
+                            new FilterParameter(nameof(Model.IsActive))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(SlotCapacityModel.FormattedDate))
+                            {
+                                Title = "Date",
+                                Width = "150"
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.TimeSlot))
+                            {
+                                Title = "Time Slot",
+                                Width = "120"
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.CapacityStatus))
+                            {
+                                Title = "Capacity",
+                                Width = "80",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.AvailableSlots))
+                            {
+                                Title = "Available",
+                                Width = "80",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.StatusText))
+                            {
+                                Title = "Status",
+                                Width = "80",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.Notes))
+                            {
+                                Title = "Notes",
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/SlotManagement/Edit"))
+                            },
+                            new ColumnProperty(nameof(SlotCapacityModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonRemove("Delete")
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

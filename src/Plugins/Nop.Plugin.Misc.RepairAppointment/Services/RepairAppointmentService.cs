@@ -87,7 +87,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
             appointment.ConfirmationCode = await GenerateConfirmationCodeAsync();
 
             await _appointmentRepository.InsertAsync(appointment);
-            await UpdateSlotBookingCountAsync(appointment.TimeSlotId, true);
         }
 
         public async Task UpdateAppointmentAsync(Domain.RepairAppointment appointment)
@@ -104,7 +103,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
             if (appointment == null)
                 throw new ArgumentNullException(nameof(appointment));
 
-            await UpdateSlotBookingCountAsync(appointment.TimeSlotId, false);
             await _appointmentRepository.DeleteAsync(appointment);
         }
 

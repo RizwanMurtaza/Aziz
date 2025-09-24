@@ -71,6 +71,14 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
                     new()
                     {
                         Visible = true,
+                        SystemName = "RepairAppointments.SlotManagement",
+                        Title = "Slot Management",
+                        Url = _adminMenu.GetMenuItemUrl("SlotManagement", "List"),
+                        IconClass = "far fa-calendar-times"
+                    },
+                    new()
+                    {
+                        Visible = true,
                         SystemName = "RepairAppointments.Settings",
                         Title = "Settings",
                         Url = plugin.GetConfigurationPageUrl(),

@@ -15,6 +15,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Data
             Create.TableFor<RepairType>();
             Create.TableFor<Domain.RepairAppointment>();
             Create.TableFor<RepairTimeSlot>();
+            Create.TableFor<SlotCapacity>();
         }
     }
 }

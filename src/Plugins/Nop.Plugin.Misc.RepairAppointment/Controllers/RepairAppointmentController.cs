@@ -25,6 +25,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
         private readonly IRepairAppointmentService _appointmentService;
         private readonly IRepairProductService _repairProductService;
         private readonly IRepairTypeService _repairTypeService;
+        private readonly ISlotCapacityService _slotCapacityService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -35,6 +36,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             IRepairAppointmentService appointmentService,
             IRepairProductService repairProductService,
             IRepairTypeService repairTypeService,
+            ISlotCapacityService slotCapacityService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
@@ -44,6 +46,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             _appointmentService = appointmentService;
             _repairProductService = repairProductService;
             _repairTypeService = repairTypeService;
+            _slotCapacityService = slotCapacityService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
@@ -64,6 +67,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 EnableAppointmentSystem = settings.EnableAppointmentSystem,
                 SlotDurationMinutes = settings.SlotDurationMinutes,
                 MaxSlotsPerDay = settings.MaxSlotsPerDay,
+                MaxAppointmentsPerSlot = settings.MaxAppointmentsPerSlot,
                 BusinessStartTime = settings.BusinessStartTime,
                 BusinessEndTime = settings.BusinessEndTime,
                 SendConfirmationEmail = settings.SendConfirmationEmail,
@@ -72,6 +76,15 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 MaxAdvanceBookingDays = settings.MaxAdvanceBookingDays,
                 RequireCustomerLogin = settings.RequireCustomerLogin
             };
+
+            // Parse working days from settings
+            if (!string.IsNullOrEmpty(settings.WorkingDays))
+            {
+                var workingDays = settings.WorkingDays.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                model.SelectedWorkingDays = workingDays.Where(d => int.TryParse(d, out _))
+                                                      .Select(int.Parse)
+                                                      .ToList();
+            }
 
             return View("~/Plugins/Misc.RepairAppointment/Views/Configure.cshtml", model);
         }
@@ -91,6 +104,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             settings.EnableAppointmentSystem = model.EnableAppointmentSystem;
             settings.SlotDurationMinutes = model.SlotDurationMinutes;
             settings.MaxSlotsPerDay = model.MaxSlotsPerDay;
+            settings.MaxAppointmentsPerSlot = model.MaxAppointmentsPerSlot;
             settings.BusinessStartTime = model.BusinessStartTime;
             settings.BusinessEndTime = model.BusinessEndTime;
             settings.SendConfirmationEmail = model.SendConfirmationEmail;
@@ -98,6 +112,9 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             settings.ReminderHoursBeforeAppointment = model.ReminderHoursBeforeAppointment;
             settings.MaxAdvanceBookingDays = model.MaxAdvanceBookingDays;
             settings.RequireCustomerLogin = model.RequireCustomerLogin;
+
+            // Save working days
+            settings.WorkingDays = string.Join(",", model.SelectedWorkingDays);
 
             await _settingService.SaveSettingAsync(settings, storeScope);
 
@@ -313,6 +330,16 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             if (appointment == null)
                 return Json(new { Result = false });
 
+            // Decrement slot booking count before deleting
+            if (ParseTimeSlotId(appointment.TimeSlotId, out var slotDate, out var startTime, out var endTime))
+            {
+                await _slotCapacityService.UpdateSlotBookingCountAsync(
+                    appointment.AppointmentDate.Date,
+                    startTime,
+                    endTime,
+                    increment: false);
+            }
+
             await _appointmentService.DeleteAppointmentAsync(appointment);
 
             return Json(new { Result = true });
@@ -324,6 +351,35 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 return AccessDeniedView();
 
             return View("~/Plugins/Misc.RepairAppointment/Views/TimeSlots.cshtml");
+        }
+
+        private bool ParseTimeSlotId(string timeSlotId, out DateTime date, out TimeSpan startTime, out TimeSpan endTime)
+        {
+            date = DateTime.MinValue;
+            startTime = TimeSpan.Zero;
+            endTime = TimeSpan.Zero;
+
+            if (string.IsNullOrEmpty(timeSlotId))
+                return false;
+
+            // Expected format: "2025-09-29_13:00_13:30"
+            var parts = timeSlotId.Split('_');
+            if (parts.Length != 3)
+                return false;
+
+            // Parse date
+            if (!DateTime.TryParseExact(parts[0], "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out date))
+                return false;
+
+            // Parse start time
+            if (!TimeSpan.TryParseExact(parts[1], @"hh\:mm", null, out startTime))
+                return false;
+
+            // Parse end time
+            if (!TimeSpan.TryParseExact(parts[2], @"hh\:mm", null, out endTime))
+                return false;
+
+            return true;
         }
     }
 }

@@ -7,5 +7,6 @@
   "Author": "Gaming PC Rehab",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Misc.RepairAppointment.dll",
-  "Description": "Complete repair appointment booking system for mobile and laptop repairs with time slot management, email confirmations, and admin dashboard."
+  "Description": "Complete repair appointment booking system for mobile and laptop repairs with time slot management, email confirmations, and admin dashboard.",
+  "LogoUrl": "logo.png"
 }

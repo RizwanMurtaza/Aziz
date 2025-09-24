@@ -45,6 +45,16 @@
 
                         <div class="form-group row">
                             <div class="col-md-3">
+                                <nop-label asp-for="MaxAppointmentsPerSlot" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaxAppointmentsPerSlot" />
+                                <span class="hint">Default maximum number of appointments allowed per time slot (default: 1). Can be overridden for specific dates/times in Slot Management.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
                                 <nop-label asp-for="BusinessStartTime" />
                             </div>
                             <div class="col-md-9">
@@ -60,6 +70,29 @@
                             <div class="col-md-9">
                                 <nop-editor asp-for="BusinessEndTime" />
                                 <span class="hint">Business end time in 24-hour format (e.g., 17:00)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SelectedWorkingDays" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="working-days-selection">
+                                    @for (int i = 0; i < Model.AvailableWorkingDays.Count; i++)
+                                    {
+                                        var day = Model.AvailableWorkingDays[i];
+                                        <div class="custom-control custom-checkbox custom-control-inline">
+                                            <input type="checkbox" class="custom-control-input"
+                                                   id="workingday_@day.Value" name="SelectedWorkingDays" value="@day.Value"
+                                                   @(Model.SelectedWorkingDays.Contains(int.Parse(day.Value)) ? "checked" : "") />
+                                            <label class="custom-control-label" for="workingday_@day.Value">
+                                                @day.Text
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                                <span class="hint">Select the days when appointments can be scheduled. By default, Sunday is off.</span>
                             </div>
                         </div>
 
@@ -115,3 +148,19 @@
         </div>
     </section>
 </form>
+
+<style>
+.working-days-selection .custom-control-inline {
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.working-days-selection .custom-control-label {
+    font-weight: normal;
+}
+
+.working-days-selection .custom-control-input:checked ~ .custom-control-label {
+    font-weight: bold;
+    color: #28a745;
+}
+</style>

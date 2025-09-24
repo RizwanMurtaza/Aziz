@@ -1,0 +1,157 @@
+@model SlotCapacityModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Edit Slot";
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.SlotManagement");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Edit Slot - @Model.FormattedDate @Model.TimeSlot
+    </h1>
+    <div class="float-right">
+        <a asp-action="List" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+</div>
+
+<form asp-action="Edit" method="post">
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CurrentBookings" type="hidden" />
+    <input asp-for="CreatedOn" type="hidden" />
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-clock"></i>
+                            Slot Details
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.CurrentBookings > 0)
+                        {
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Warning:</strong> This slot currently has @Model.CurrentBookings active booking(s).
+                                Be careful when reducing capacity below current bookings.
+                            </div>
+                        }
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Date" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Date" />
+                                <span asp-validation-for="Date"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StartTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="StartTime" />
+                                <span asp-validation-for="StartTime"></span>
+                                <span class="help-block">Format: HH:MM (e.g., 09:00)</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EndTime" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EndTime" />
+                                <span asp-validation-for="EndTime"></span>
+                                <span class="help-block">Format: HH:MM (e.g., 09:30)</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MaxAppointments" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaxAppointments" />
+                                <span asp-validation-for="MaxAppointments"></span>
+                                <span class="help-block">
+                                    Current bookings: @Model.CurrentBookings | Available: @Model.AvailableSlots
+                                    @if (Model.CurrentBookings > 0)
+                                    {
+                                        <br /><strong>Note:</strong> Cannot set capacity below @Model.CurrentBookings due to existing bookings.
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsActive" />
+                                <span asp-validation-for="IsActive"></span>
+                                @if (Model.CurrentBookings > 0)
+                                {
+                                    <span class="help-block text-warning">
+                                        <i class="fas fa-warning"></i>
+                                        Deactivating this slot will prevent new bookings but won't affect existing ones.
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Notes" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Notes" />
+                                <span asp-validation-for="Notes"></span>
+                            </div>
+                        </div>
+
+                        <!-- Readonly information -->
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label class="control-label">Created On</label>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">
+                                    @Model.CreatedOn.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt")
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.ModifiedOn.HasValue)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">Last Modified</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">
+                                        @Model.ModifiedOn.Value.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                        <a asp-action="List" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

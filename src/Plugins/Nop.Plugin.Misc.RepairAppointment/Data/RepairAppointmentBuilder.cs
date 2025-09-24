@@ -22,7 +22,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Data
                 .WithColumn(nameof(Domain.RepairAppointment.EstimatedPrice)).AsDecimal(18, 4).Nullable()
                 .WithColumn(nameof(Domain.RepairAppointment.AppointmentDate)).AsDateTime().NotNullable()
                 .WithColumn(nameof(Domain.RepairAppointment.TimeSlot)).AsString(50).NotNullable()
-                .WithColumn(nameof(Domain.RepairAppointment.TimeSlotId)).AsInt32().NotNullable()
+                .WithColumn(nameof(Domain.RepairAppointment.TimeSlotId)).AsString(100).NotNullable()
                 .WithColumn(nameof(Domain.RepairAppointment.Status)).AsInt32().NotNullable()
                 .WithColumn(nameof(Domain.RepairAppointment.CustomerId)).AsInt32().Nullable()
                 .WithColumn(nameof(Domain.RepairAppointment.Notes)).AsString(500).Nullable()

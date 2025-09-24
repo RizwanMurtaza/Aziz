@@ -23,6 +23,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
         private readonly IRepairCategoryService _repairCategoryService;
         private readonly IRepairProductService _repairProductService;
         private readonly IRepairTypeService _repairTypeService;
+        private readonly ISlotCapacityService _slotCapacityService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly ISettingService _settingService;
@@ -38,6 +39,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             IRepairCategoryService repairCategoryService,
             IRepairProductService repairProductService,
             IRepairTypeService repairTypeService,
+            ISlotCapacityService slotCapacityService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             ISettingService settingService,
@@ -52,6 +54,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             _repairCategoryService = repairCategoryService;
             _repairProductService = repairProductService;
             _repairTypeService = repairTypeService;
+            _slotCapacityService = slotCapacityService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _settingService = settingService;
@@ -155,29 +158,35 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             }
 
 
-            var isAvailable = await _appointmentService.IsSlotAvailableAsync(model.AppointmentDate, model.TimeSlotId);
-            if (!isAvailable)
-                return Json(new { success = false, message = "Selected time slot is no longer available" });
+            // Parse the TimeSlotId to extract date and time information
+            if (!ParseTimeSlotId(model.TimeSlotId, out var slotDate, out var startTime, out var endTime))
+                return Json(new { success = false, message = "Invalid time slot format" });
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var timeSlot = await _appointmentService.GetTimeSlotByIdAsync(model.TimeSlotId);
+            // Validate the parsed date matches the selected appointment date
+            if (slotDate.Date != model.AppointmentDate.Date)
+                return Json(new { success = false, message = "Time slot date does not match appointment date" });
+
+            // Check slot availability using the new slot capacity system
+            var (maxCapacity, currentBookings) = await _slotCapacityService.GetEffectiveSlotCapacityAsync(model.AppointmentDate, startTime, endTime);
+            var availableCapacity = maxCapacity - currentBookings;
+
+            if (availableCapacity <= 0)
+                return Json(new { success = false, message = "Selected time slot is no longer available" });
 
             // Validate the appointment date
             if (model.AppointmentDate < DateTime.Today)
                 return Json(new { success = false, message = "Cannot book appointments for past dates" });
 
-            // Ensure timeSlot exists and has valid StartTime
-            if (timeSlot == null)
-                return Json(new { success = false, message = "Invalid time slot selected" });
+            var customer = await _workContext.GetCurrentCustomerAsync();
 
             // Create appointment date by combining the selected date with the time slot start time
             var appointmentDateTime = new DateTime(
                 model.AppointmentDate.Year,
                 model.AppointmentDate.Month,
                 model.AppointmentDate.Day,
-                timeSlot.StartTime.Hours,
-                timeSlot.StartTime.Minutes,
-                timeSlot.StartTime.Seconds
+                startTime.Hours,
+                startTime.Minutes,
+                startTime.Seconds
             );
 
             var appointment = new Domain.RepairAppointment
@@ -190,7 +199,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 DeviceModel = model.DeviceModel,
                 IssueDescription = model.IssueDescription,
                 AppointmentDate = appointmentDateTime,
-                TimeSlot = timeSlot.TimeSlot,
+                TimeSlot = $"{startTime:hh\\:mm} - {endTime:hh\\:mm}",
                 TimeSlotId = model.TimeSlotId,
                 Status = AppointmentStatus.Confirmed,
                 CustomerId = !await _customerService.IsGuestAsync(customer) ? customer.Id : null,
@@ -201,6 +210,13 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             };
 
             await _appointmentService.InsertAppointmentAsync(appointment);
+
+            // Update slot booking count
+            await _slotCapacityService.UpdateSlotBookingCountAsync(
+                appointment.AppointmentDate.Date,
+                startTime,
+                endTime,
+                increment: true);
 
             if (settings.SendConfirmationEmail)
             {
@@ -226,14 +242,52 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             if (settings.MaxAdvanceBookingDays > 0 && date > DateTime.Today.AddDays(settings.MaxAdvanceBookingDays))
                 return Json(new { slots = new object[0] });
 
-            var availableSlots = await _appointmentService.GetAvailableSlotsForDateAsync(date);
-
-            var slots = availableSlots.Select(s => new
+            // Check if the selected date is a working day
+            if (!string.IsNullOrEmpty(settings.WorkingDays))
             {
-                id = s.Id,
-                text = s.TimeSlot,
-                available = s.MaxAppointments - s.CurrentBookings
-            }).ToList();
+                var workingDays = settings.WorkingDays.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                     .Select(int.Parse)
+                                                     .ToList();
+                var dayOfWeek = (int)date.DayOfWeek;
+
+                if (!workingDays.Contains(dayOfWeek))
+                    return Json(new { slots = new object[0] });
+            }
+
+            // Generate time slots based on business hours
+            var slots = new List<object>();
+
+            if (!TimeSpan.TryParse(settings.BusinessStartTime, out var startTime) ||
+                !TimeSpan.TryParse(settings.BusinessEndTime, out var endTime))
+            {
+                return Json(new { slots = new object[0] });
+            }
+
+            var slotDuration = TimeSpan.FromMinutes(settings.SlotDurationMinutes);
+            var currentTime = startTime;
+
+            while (currentTime.Add(slotDuration) <= endTime)
+            {
+                var slotEndTime = currentTime.Add(slotDuration);
+
+                // Get effective capacity for this slot (considers both default settings and overrides)
+                var (maxCapacity, currentBookings) = await _slotCapacityService.GetEffectiveSlotCapacityAsync(date, currentTime, slotEndTime);
+
+                // Only include slot if it has available capacity and is active
+                var availableCapacity = maxCapacity - currentBookings;
+                if (availableCapacity > 0)
+                {
+                    slots.Add(new
+                    {
+                        id = $"{date:yyyy-MM-dd}_{currentTime:hh\\:mm}_{slotEndTime:hh\\:mm}",
+                        text = $"{currentTime:hh\\:mm} - {slotEndTime:hh\\:mm}",
+                        available = availableCapacity,
+                        total = maxCapacity
+                    });
+                }
+
+                currentTime = currentTime.Add(slotDuration);
+            }
 
             return Json(new { slots });
         }
@@ -399,6 +453,35 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 estimatedPrice = repairType.EstimatedPrice,
                 estimatedDurationMinutes = repairType.EstimatedDurationMinutes
             });
+        }
+
+        private bool ParseTimeSlotId(string timeSlotId, out DateTime date, out TimeSpan startTime, out TimeSpan endTime)
+        {
+            date = DateTime.MinValue;
+            startTime = TimeSpan.Zero;
+            endTime = TimeSpan.Zero;
+
+            if (string.IsNullOrEmpty(timeSlotId))
+                return false;
+
+            // Expected format: "2025-09-29_13:00_13:30"
+            var parts = timeSlotId.Split('_');
+            if (parts.Length != 3)
+                return false;
+
+            // Parse date
+            if (!DateTime.TryParseExact(parts[0], "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out date))
+                return false;
+
+            // Parse start time
+            if (!TimeSpan.TryParseExact(parts[1], @"hh\:mm", null, out startTime))
+                return false;
+
+            // Parse end time
+            if (!TimeSpan.TryParseExact(parts[2], @"hh\:mm", null, out endTime))
+                return false;
+
+            return true;
         }
     }
 }
