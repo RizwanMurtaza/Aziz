@@ -85,14 +85,24 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 model.Phone = customer.Phone;
             }
 
-            model.AvailableDeviceTypes = new[]
+            // Load categories for Device Type dropdown
+            var categories = await _repairCategoryService.GetAllRepairCategoriesAsync(isActive: true);
+            model.AvailableDeviceTypes = categories.Select(c => new SelectListItem
             {
-                new SelectListItem { Text = "Select Device Type", Value = "" },
-                new SelectListItem { Text = "Mobile Phone", Value = "Mobile" },
-                new SelectListItem { Text = "Laptop", Value = "Laptop" },
-                new SelectListItem { Text = "Desktop", Value = "Desktop" },
-                new SelectListItem { Text = "Tablet", Value = "Tablet" },
-                new SelectListItem { Text = "Other", Value = "Other" }
+                Text = c.Name,
+                Value = c.Id.ToString()
+            }).ToList();
+            model.AvailableDeviceTypes.Insert(0, new SelectListItem { Text = "Select Device Type", Value = "" });
+
+            // Initialize empty dropdowns that will be populated via AJAX
+            model.AvailableProducts = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Select device type first", Value = "" }
+            };
+
+            model.AvailableRepairTypes = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Select product first", Value = "" }
             };
 
             model.AppointmentDate = DateTime.Today.AddDays(1);
@@ -108,8 +118,42 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             if (!settings.EnableAppointmentSystem)
                 return Json(new { success = false, message = "Appointment system is currently disabled" });
 
+            // Handle "Other" selections first before validation
+            if (string.IsNullOrEmpty(model.DeviceType) && model.RepairCategoryId.HasValue)
+            {
+                var category = await _repairCategoryService.GetRepairCategoryByIdAsync(model.RepairCategoryId.Value);
+                if (category != null)
+                    model.DeviceType = category.Name;
+                else
+                    model.DeviceType = "Other";
+            }
+            else if (string.IsNullOrEmpty(model.DeviceType))
+            {
+                model.DeviceType = "Other";
+            }
+
+            // Handle product "Other" selection
+            if (model.RepairProductId.HasValue && model.RepairProductId == 0)
+            {
+                model.DeviceBrand = model.DeviceBrand ?? "Other";
+                model.DeviceModel = model.DeviceModel ?? "Other";
+            }
+
+            // Handle repair type "Other" selection
+            if (model.RepairTypeId.HasValue && model.RepairTypeId == 0)
+            {
+                // Allow "Other" repair type
+                model.RepairTypeId = null;
+            }
+
             if (!ModelState.IsValid)
-                return Json(new { success = false, message = "Please fill all required fields" });
+            {
+                // Create detailed validation error message
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                var errorMessage = errors.Any() ? string.Join(", ", errors) : "Please fill all required fields";
+                return Json(new { success = false, message = errorMessage });
+            }
+
 
             var isAvailable = await _appointmentService.IsSlotAvailableAsync(model.AppointmentDate, model.TimeSlotId);
             if (!isAvailable)
@@ -117,6 +161,24 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var timeSlot = await _appointmentService.GetTimeSlotByIdAsync(model.TimeSlotId);
+
+            // Validate the appointment date
+            if (model.AppointmentDate < DateTime.Today)
+                return Json(new { success = false, message = "Cannot book appointments for past dates" });
+
+            // Ensure timeSlot exists and has valid StartTime
+            if (timeSlot == null)
+                return Json(new { success = false, message = "Invalid time slot selected" });
+
+            // Create appointment date by combining the selected date with the time slot start time
+            var appointmentDateTime = new DateTime(
+                model.AppointmentDate.Year,
+                model.AppointmentDate.Month,
+                model.AppointmentDate.Day,
+                timeSlot.StartTime.Hours,
+                timeSlot.StartTime.Minutes,
+                timeSlot.StartTime.Seconds
+            );
 
             var appointment = new Domain.RepairAppointment
             {
@@ -127,13 +189,15 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 DeviceBrand = model.DeviceBrand,
                 DeviceModel = model.DeviceModel,
                 IssueDescription = model.IssueDescription,
-                AppointmentDate = model.AppointmentDate.Date.Add(timeSlot.StartTime),
+                AppointmentDate = appointmentDateTime,
                 TimeSlot = timeSlot.TimeSlot,
                 TimeSlotId = model.TimeSlotId,
                 Status = AppointmentStatus.Confirmed,
                 CustomerId = !await _customerService.IsGuestAsync(customer) ? customer.Id : null,
                 ConfirmationSent = false,
-                ReminderSent = false
+                ReminderSent = false,
+                CreatedOnUtc = DateTime.UtcNow,
+                ConfirmationCode = Guid.NewGuid().ToString("N")[..8].ToUpper()
             };
 
             await _appointmentService.InsertAppointmentAsync(appointment);
@@ -319,6 +383,22 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             }).ToList();
 
             return Json(results);
+        }
+
+        public async Task<IActionResult> GetRepairTypeDetails(int repairTypeId)
+        {
+            var repairType = await _repairTypeService.GetRepairTypeByIdAsync(repairTypeId);
+            if (repairType == null)
+                return Json(null);
+
+            return Json(new
+            {
+                id = repairType.Id,
+                name = repairType.Name,
+                description = repairType.Description,
+                estimatedPrice = repairType.EstimatedPrice,
+                estimatedDurationMinutes = repairType.EstimatedDurationMinutes
+            });
         }
     }
 }

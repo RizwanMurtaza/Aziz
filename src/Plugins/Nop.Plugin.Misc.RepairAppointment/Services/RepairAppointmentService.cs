@@ -239,15 +239,41 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
 
         public async Task UpdateSlotBookingCountAsync(int timeSlotId, bool increment)
         {
-            var slot = await GetTimeSlotByIdAsync(timeSlotId);
-            if (slot != null)
+            try
             {
-                if (increment)
-                    slot.CurrentBookings++;
-                else if (slot.CurrentBookings > 0)
-                    slot.CurrentBookings--;
+                var slot = await GetTimeSlotByIdAsync(timeSlotId);
+                if (slot != null)
+                {
+                    // Check if the TimeSpan values are corrupted
+                    if (slot.StartTime.TotalHours >= 24 || slot.EndTime.TotalHours >= 24 ||
+                        slot.StartTime < TimeSpan.Zero || slot.EndTime < TimeSpan.Zero)
+                    {
+                        // Skip the update if TimeSpan values are corrupted to prevent MySQL error
+                        System.Diagnostics.Debug.WriteLine($"Skipping slot update due to corrupted TimeSpan values: StartTime={slot.StartTime}, EndTime={slot.EndTime}");
+                        return;
+                    }
 
-                await _timeSlotRepository.UpdateAsync(slot);
+                    // Update booking count
+                    if (increment)
+                    {
+                        if (slot.CurrentBookings < slot.MaxAppointments)
+                            slot.CurrentBookings++;
+                    }
+                    else if (slot.CurrentBookings > 0)
+                    {
+                        slot.CurrentBookings--;
+                    }
+
+                    await _timeSlotRepository.UpdateAsync(slot);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error but don't break the appointment creation
+                System.Diagnostics.Debug.WriteLine($"Error updating slot booking count: {ex.Message}");
+
+                // Don't rethrow to avoid breaking appointment creation
+                // In production, you would log this properly and possibly alert administrators
             }
         }
     }

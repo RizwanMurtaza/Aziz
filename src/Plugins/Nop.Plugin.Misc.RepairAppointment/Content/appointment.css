@@ -1,334 +1,1009 @@
-/* NopCommerce Repair Appointment Styles */
+/* Compact Gaming PC Rehab - Enhanced Repair Appointment Styles */
 .repair-appointment-page {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding: 12px;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* Override NopCommerce fieldset styles for better alignment */
+/* Ensure consistent font inheritance for all elements */
+.repair-appointment-page * {
+    font-family: inherit !important;
+}
+
+/* Compact Page Title */
+.repair-appointment-page .page-title {
+    text-align: center;
+    margin-bottom: 18px;
+    padding: 16px 12px;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
+    color: white;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.repair-appointment-page .page-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.repair-appointment-page .page-title h1 {
+    margin: 0 0 4px 0;
+    font-size: 1.95rem;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.6px;
+}
+
+.repair-appointment-page .page-subtitle {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.95;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+/* Compact Card Styling */
 .repair-appointment-page .fieldset {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    background: white;
+    border: none;
+    border-radius: 16px;
+    margin-bottom: 14px;
     padding: 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-left: 5px solid #ff6b35;
+    position: relative;
+}
+
+.repair-appointment-page .fieldset:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    border-left-width: 8px;
+}
+
+/* Specific Card Types */
+.personal-info-card .title,
+.device-info-card .title,
+.appointment-datetime-card .title {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
 }
 
 .repair-appointment-page .fieldset .title {
-    background: #f8f9fa;
-    border-bottom: 1px solid #ddd;
-    padding: 15px 20px;
+    color: white;
+    padding: 14px 20px;
     margin: 0;
-    border-radius: 8px 8px 0 0;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.repair-appointment-page .fieldset .title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.repair-appointment-page .fieldset:hover .title::before {
+    left: 100%;
 }
 
 .repair-appointment-page .fieldset .title strong {
-    font-size: 1.2em;
-    color: #495057;
-    font-weight: 600;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+.repair-appointment-page .fieldset .title strong::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Compact Form Fields */
 .repair-appointment-page .form-fields {
-    padding: 20px;
+    padding: 16px;
+    background: white;
 }
 
-.repair-appointment-page .inputs {
-    margin-bottom: 20px;
+.form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: flex-start;
 }
 
-.repair-appointment-page .inputs label {
-    font-weight: 600;
-    margin-bottom: 8px;
+.form-row .inputs {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.form-row .inputs.half-width {
+    flex: 0.5;
+}
+
+/* Enhanced Prominent Labels */
+.form-label {
+    font-weight: 900;
+    margin-bottom: 6px;
     display: block;
-    color: #495057;
-    font-size: 0.95em;
+    color: #1a202c;
+    font-size: 0.95rem;
+    letter-spacing: -0.2px;
+    text-transform: uppercase;
+    opacity: 1;
+    position: relative;
+    padding-left: 14px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Style form controls */
-.repair-appointment-page input[type="text"],
-.repair-appointment-page input[type="email"],
-.repair-appointment-page input[type="tel"],
-.repair-appointment-page input[type="date"],
-.repair-appointment-page select,
-.repair-appointment-page textarea {
+.form-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 14px;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(255, 107, 53, 0.3);
+}
+
+/* Compact Form Controls with Prominent Text */
+.form-control {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 16px;
     font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    font-weight: 800;
+    line-height: 1.4;
+    color: #1a202c;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    transition: all 0.3s ease;
     box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    position: relative;
 }
 
-.repair-appointment-page input:focus,
-.repair-appointment-page select:focus,
-.repair-appointment-page textarea:focus {
-    border-color: #80bdff;
+.form-control:focus {
+    border-color: #ff6b35;
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08), 0 6px 18px rgba(255, 107, 53, 0.1);
+    transform: translateY(-1px);
+    font-weight: 900;
 }
 
-.repair-appointment-page input:disabled,
-.repair-appointment-page select:disabled {
-    background-color: #e9ecef;
-    opacity: 0.8;
+.form-control:disabled {
+    background: #e9ecef;
+    opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
 }
 
-/* Required field indicator */
-.repair-appointment-page .inputs nop-required,
-.repair-appointment-page .inputs .required::after {
-    color: #dc3545;
-    font-size: 1.1em;
-    margin-left: 3px;
+/* Enhanced Select Dropdowns */
+.form-control select,
+select.form-control {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6b35' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+    padding-right: 45px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    font-weight: 800;
 }
 
-/* Validation messages */
+/* Compact Textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 90px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+/* Compact Price Display Card */
+.price-display-card {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 16px rgba(39, 174, 96, 0.2);
+    margin-top: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.price-display-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.price-content {
+    position: relative;
+    z-index: 2;
+}
+
+.price-info {
+    color: white;
+    font-weight: 800;
+}
+
+.price-amount {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+    display: block;
+    font-weight: 900;
+}
+
+.price-duration {
+    font-size: 0.9rem;
+    opacity: 0.95;
+    display: block;
+    font-weight: 800;
+}
+
+/* Required field indicator - inline with label */
+.repair-appointment-page .form-label nop-required,
+.repair-appointment-page .form-label .required::after {
+    color: #ff6b35;
+    font-size: 1em;
+    margin-left: 4px;
+    font-weight: 900;
+    text-shadow: 0 1px 2px rgba(255, 107, 53, 0.3);
+    display: inline;
+}
+
+.repair-appointment-page .inputs nop-required {
+    display: none;
+}
+
+/* Enhanced Validation Messages */
 .repair-appointment-page .field-validation-error,
 .repair-appointment-page .text-danger {
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 5px;
+    color: #e74c3c;
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-top: 8px;
     display: block;
+    padding: 10px 14px;
+    background: rgba(231, 76, 60, 0.08);
+    border-radius: 10px;
+    border-left: 4px solid #e74c3c;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1);
 }
 
-/* Button styling */
-.repair-appointment-page .buttons {
+/* Compact Submit Button */
+.form-buttons {
     text-align: center;
     padding: 20px;
-    border-top: 1px solid #ddd;
-    background: #f8f9fa;
-    border-radius: 0 0 8px 8px;
-    margin-top: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 0 0 16px 16px;
+    margin-top: 0;
 }
 
-.repair-appointment-page .button-1 {
-    background-color: #007bff;
+.btn-appointment-submit {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
     color: white;
-    border: 1px solid #007bff;
-    padding: 12px 30px;
+    border: none;
+    padding: 14px 35px;
     font-size: 1.1rem;
-    border-radius: 4px;
+    font-weight: 900;
+    border-radius: 50px;
     cursor: pointer;
-    transition: all 0.15s ease-in-out;
+    transition: all 0.3s ease;
     text-decoration: none;
-    display: inline-block;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+    position: relative;
+    overflow: hidden;
+    transform-origin: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.repair-appointment-page .button-1:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+.btn-appointment-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-appointment-submit:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
     color: white;
     text-decoration: none;
 }
 
-.repair-appointment-page .button-1:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-    background-color: #6c757d;
-    border-color: #6c757d;
+.btn-appointment-submit:hover::before {
+    left: 100%;
 }
 
-/* Message boxes */
+.btn-appointment-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: scale(0.98);
+    background: #6c757d;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.btn-text {
+    font-weight: 900;
+    letter-spacing: 0.6px;
+}
+
+/* Enhanced Message Boxes */
 .repair-appointment-page .message-box {
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 4px;
+    margin: 16px 0;
+    padding: 15px 18px;
+    border-radius: 12px;
     text-align: center;
+    font-weight: 800;
+    font-size: 1rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 .repair-appointment-page .message-success,
 .repair-appointment-page .message-box.success {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
 }
 
 .repair-appointment-page .message-error,
 .repair-appointment-page .message-box.error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-}
-
-/* Auto-complete suggestions */
-.suggestions-dropdown {
-    position: absolute;
-    background: white;
-    border: 1px solid #ddd;
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 0 0 4px 4px;
-}
-
-.suggestion-item {
-    padding: 10px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s;
-}
-
-.suggestion-item:hover,
-.suggestion-item.selected {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);
     color: white;
+    border: none;
 }
 
-.suggestion-item:last-child {
-    border-bottom: none;
+/* Compact Calendar Styles */
+.calendar-section {
+    margin-bottom: 16px;
 }
 
-.suggestion-title {
-    font-weight: 600;
-    margin-bottom: 2px;
+.calendar-container {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    border: 2px solid #f8f9fa;
 }
 
-.suggestion-description {
-    font-size: 0.85em;
-    color: #666;
-    margin-bottom: 2px;
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f8f9fa;
 }
 
-.suggestion-item:hover .suggestion-description,
-.suggestion-item.selected .suggestion-description {
-    color: #e6f3ff;
+.calendar-nav {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 12px rgba(255, 107, 53, 0.25);
 }
 
-.suggestion-price {
-    font-size: 0.9em;
-    font-weight: bold;
-    color: #28a745;
+.calendar-nav:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
 }
 
-.suggestion-duration {
-    font-size: 0.85em;
-    color: #666;
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 12px;
 }
 
-.suggestion-item:hover .suggestion-price,
-.suggestion-item.selected .suggestion-price,
-.suggestion-item:hover .suggestion-duration,
-.suggestion-item.selected .suggestion-duration {
-    color: #90ee90;
+.weekday {
+    text-align: center;
+    font-weight: 900;
+    color: #ff6b35;
+    padding: 6px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 107, 53, 0.05);
+    border-radius: 6px;
 }
 
-.no-suggestions {
-    padding: 10px 12px;
-    color: #666;
-    font-style: italic;
+/* Week view replaces calendar grid */
+.calendar-week-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 0.95rem;
+    color: #1a202c !important;
+    background: white;
+    transition: all 0.2s ease;
+    border: 2px solid #e2e8f0;
+    background: #f8f9fa;
+    min-height: 40px;
+    position: relative;
+}
+
+.calendar-day:hover:not(.disabled) {
+    background: rgba(255, 107, 53, 0.08);
+    border-color: #ff6b35;
+    transform: scale(1.05);
+}
+
+.calendar-day.selected {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
+    color: white;
+    border-color: #ff6b35;
+    transform: scale(1.08);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.25);
+}
+
+.calendar-day.disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    background: #e9ecef;
+}
+
+#calendar-week-range {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #1a202c;
+    text-transform: uppercase;
+    letter-spacing: -0.3px;
+}
+
+/* Compact Time Slots */
+.time-slots-section {
+    margin-top: 16px;
+}
+
+.time-slots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.time-slot {
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 900;
+    background: white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.time-slot:hover:not(.unavailable) {
+    border-color: #ff6b35;
+    background: rgba(255, 107, 53, 0.05);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.15);
+}
+
+.time-slot.selected {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
+    color: white;
+    border-color: #ff6b35;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.25);
+}
+
+.time-slot.unavailable {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #f8f9fa;
+    transform: none;
+}
+
+.slot-time {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: #1a202c !important;
+    margin-bottom: 3px;
+}
+
+.slot-availability {
+    font-size: 0.75rem;
+    color: #4a5568 !important;
+    opacity: 0.8;
+    font-weight: 800;
+}
+
+.time-slot.selected .slot-availability {
+    opacity: 0.95;
+}
+
+/* Enhanced Status Messages */
+.slot-info {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    padding: 10px 14px;
+    border-radius: 8px;
     text-align: center;
 }
 
-/* Price display */
-.price-display {
-    margin-top: 8px;
-    padding: 8px 12px;
-    background: #e7f3ff;
-    border: 1px solid #b3d9ff;
-    border-radius: 4px;
-    display: none;
+.success-message {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+    border: 2px solid rgba(39, 174, 96, 0.2);
 }
 
-.price-display.show {
-    display: block;
+.warning-message {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+    border: 2px solid rgba(243, 156, 18, 0.2);
 }
 
-.price-amount {
-    font-weight: bold;
-    color: #0066cc;
-    font-size: 1.1em;
+.error-message {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 2px solid rgba(231, 76, 60, 0.2);
 }
 
-.price-duration {
+/* Compact Loading States */
+.loading-slots,
+.error-slots,
+.no-slots {
+    text-align: center;
+    padding: 24px;
     color: #666;
-    font-size: 0.9em;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: 2px dashed #e9ecef;
+    border-radius: 10px;
+    background: #f8f9fa;
 }
 
-/* Loading indicator */
-.autocomplete-loading {
-    position: relative;
+.error-slots {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.05);
+    border-color: rgba(231, 76, 60, 0.2);
 }
 
-.autocomplete-loading::after {
-    content: '';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.loading-slots {
+    color: #ff6b35;
+    background: rgba(255, 107, 53, 0.05);
+    border-color: rgba(255, 107, 53, 0.2);
 }
 
-@keyframes spin {
-    0% { transform: translateY(-50%) rotate(0deg); }
-    100% { transform: translateY(-50%) rotate(360deg); }
-}
-
-/* Slot info */
-.slot-info {
-    margin-top: 10px;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.text-warning {
-    color: #856404;
-}
-
-/* Responsive design */
+/* Responsive Design */
 @media (max-width: 768px) {
     .repair-appointment-page {
-        margin: 10px;
+        margin: 6px;
+        padding: 10px;
+    }
+
+    .repair-appointment-page .page-title h1 {
+        font-size: 1.7rem;
+    }
+
+    .repair-appointment-page .page-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-row .inputs.half-width {
+        flex: 1;
+        margin-bottom: 16px;
     }
 
     .repair-appointment-page .fieldset .title {
-        padding: 12px 15px;
+        padding: 12px 16px;
+    }
+
+    .repair-appointment-page .fieldset .title strong {
+        font-size: 1.05rem;
+        font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .repair-appointment-page .form-fields {
-        padding: 15px;
+        padding: 16px;
     }
 
-    .repair-appointment-page .buttons {
-        padding: 15px;
+    .form-buttons {
+        padding: 16px;
     }
 
-    .repair-appointment-page .button-1 {
+    .btn-appointment-submit {
         width: 100%;
         padding: 12px;
+        font-size: 1rem;
     }
 
-    .suggestions-dropdown {
-        max-height: 150px;
+    .time-slots-container {
+        grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+        gap: 6px;
+    }
+
+    .calendar-grid {
+        gap: 3px;
+    }
+
+    .calendar-day {
+        min-height: 28px;
+        font-size: 0.85rem;
+    }
+
+    .calendar-nav {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    .calendar-container {
+        padding: 14px;
     }
 }
 
-/* Fix for relative positioning in inputs with suggestions */
-.repair-appointment-page .inputs {
-    position: relative;
-}
-
-/* Ensure textarea resizes properly */
-.repair-appointment-page textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* Placeholder styling */
-.repair-appointment-page input::placeholder,
-.repair-appointment-page textarea::placeholder {
+/* Enhanced Placeholder Styling */
+.repair-appointment-page .form-control::placeholder {
     color: #6c757d;
     opacity: 1;
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* Compact Animation to Cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.repair-appointment-page .fieldset {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.personal-info-card {
+    animation-delay: 0.1s;
+}
+
+.device-info-card {
+    animation-delay: 0.2s;
+}
+
+.appointment-datetime-card {
+    animation-delay: 0.3s;
+}
+
+/* Form Focus States */
+.repair-appointment-page .form-control:focus + .form-label {
+    color: #ff6b35;
+    transform: scale(1.03);
+}
+
+/* Enhanced interaction states */
+.repair-appointment-page .fieldset .inputs {
+    margin-bottom: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.repair-appointment-page .fieldset .inputs:focus-within {
+    transform: scale(1.005);
+}
+
+/* Accessibility improvements */
+.repair-appointment-page .form-control:focus {
+    outline: 2px solid rgba(255, 107, 53, 0.3);
+    outline-offset: 2px;
+}
+
+.calendar-nav:focus,
+.time-slot:focus,
+.btn-appointment-submit:focus {
+    outline: 2px solid rgba(255, 107, 53, 0.5);
+    outline-offset: 2px;
+}
+
+/* Appointment Confirmation Page Styles */
+.confirmation-success-card .form-fields {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.confirmation-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+    animation: pulse-success 2s infinite;
+}
+
+@keyframes pulse-success {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.checkmark {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.confirmation-hero h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #1a202c;
+    text-align: center;
+}
+
+.confirmation-code-display {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%);
+    padding: 15px 25px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+}
+
+.code-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0.9;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.code-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Detail Grid Styles */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px;
+    background: rgba(255, 107, 53, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #ff6b35;
+}
+
+.detail-item.full-width {
+    grid-column: span 2;
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: #ff6b35;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+
+.detail-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a202c;
+    word-wrap: break-word;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-confirmed {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+}
+
+/* Info List Styles */
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 193, 7, 0.08);
+    border-radius: 8px;
+    border-left: 3px solid #ffc107;
+}
+
+.info-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-item span:not(.info-icon) {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a202c;
+    line-height: 1.4;
+}
+
+/* Button Variations */
+.print-btn {
+    background: linear-gradient(135deg, #6c757d 0%, #868e96 100%) !important;
+    margin-right: 10px;
+}
+
+.print-btn:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #757e84 100%) !important;
+}
+
+.home-btn {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c52 100%) !important;
+    margin-left: 10px;
+}
+
+/* Responsive Design for Confirmation Page */
+@media (max-width: 768px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .detail-item.full-width {
+        grid-column: span 1;
+    }
+
+    .confirmation-hero h2 {
+        font-size: 1.3rem;
+    }
+
+    .code-value {
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .print-btn,
+    .home-btn {
+        margin: 0;
+        width: 100%;
+    }
+
+    .btn-appointment-submit {
+        width: 100%;
+        margin: 5px 0;
+    }
 }

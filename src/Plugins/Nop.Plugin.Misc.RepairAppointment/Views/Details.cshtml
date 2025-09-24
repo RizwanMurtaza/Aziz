@@ -1,0 +1,330 @@
+@model Nop.Plugin.Misc.RepairAppointment.Models.RepairAppointmentModel
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Appointment Details";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.List");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        Appointment Details
+    </h1>
+    <div class="float-right">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="fas fa-pencil-alt"></i>
+            Edit
+        </a>
+        <a asp-action="List" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <!-- Confirmation Code Card -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-barcode"></i>
+                        Confirmation Details
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Confirmation Code</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <strong class="confirmation-code">@Model.ConfirmationCode</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Status</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <span class="badge badge-@(Model.StatusName?.ToLower() == "confirmed" ? "success" : Model.StatusName?.ToLower() == "cancelled" ? "danger" : "info")">
+                                    @Model.StatusName
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Created On</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                @Model.CreatedOn.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt")
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.ModifiedOn.HasValue)
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <div class="label-wrapper">
+                                    <label class="control-label">Last Modified</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">
+                                    @Model.ModifiedOn.Value.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt")
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Customer Information Card -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user"></i>
+                        Customer Information
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Customer Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                @Model.CustomerName
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Phone</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <a href="tel:@Model.Phone">@Model.Phone</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Information Card -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Appointment Information
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Appointment Date</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <strong>@Model.AppointmentDate.ToString("dddd, MMMM dd, yyyy")</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Time Slot</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <strong>@Model.TimeSlot</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device Information Card -->
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-mobile-alt"></i>
+                        Device Information
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Device Type</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                @Model.DeviceType
+                            </div>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.RepairProductName))
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <div class="label-wrapper">
+                                    <label class="control-label">Product Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">
+                                    @Model.RepairProductName
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.RepairTypeName))
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <div class="label-wrapper">
+                                    <label class="control-label">Repair Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">
+                                    @Model.RepairTypeName
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.DeviceBrand))
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <div class="label-wrapper">
+                                    <label class="control-label">Brand</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">
+                                    @Model.DeviceBrand
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.DeviceModel))
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <div class="label-wrapper">
+                                    <label class="control-label">Model</label>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">
+                                    @Model.DeviceModel
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">Issue Description</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">
+                                <div class="issue-description">
+                                    @Html.Raw(Html.Encode(Model.IssueDescription).ToString().Replace("\n", "<br />"))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Card (if notes exist) -->
+            @if (!string.IsNullOrEmpty(Model.Notes))
+            {
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-sticky-note"></i>
+                            Internal Notes
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="notes-content">
+                                    @Html.Raw(Html.Encode(Model.Notes).ToString().Replace("\n", "<br />"))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .confirmation-code {
+        font-size: 1.3em;
+        color: #007bff;
+        font-family: monospace;
+        letter-spacing: 2px;
+        padding: 5px 10px;
+        background: rgba(0, 123, 255, 0.1);
+        border-radius: 5px;
+    }
+
+    .issue-description,
+    .notes-content {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #007bff;
+        line-height: 1.6;
+    }
+
+    .card-title i {
+        margin-right: 8px;
+    }
+
+    .form-text-row {
+        padding: 8px 0;
+        min-height: 30px;
+        display: flex;
+        align-items: center;
+    }
+</style>

@@ -10,7 +10,8 @@
 
 <div class="page repair-appointment-page">
     <div class="page-title">
-        <h1>Book Repair Appointment</h1>
+        <h1>🔧 Book Repair Appointment</h1>
+        <p class="page-subtitle">Professional device repair service</p>
     </div>
 
     <div class="page-body">
@@ -18,116 +19,140 @@
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
 
             <!-- Personal Information Section -->
-            <div class="fieldset">
+            <div class="fieldset personal-info-card">
                 <div class="title">
-                    <strong>Personal Information</strong>
+                    <strong>📋 Personal Information</strong>
                 </div>
                 <div class="form-fields">
-                    <div class="inputs">
-                        <label asp-for="CustomerName" asp-postfix=":"></label>
-                        <input asp-for="CustomerName" />
-                        <nop-required />
-                        <span asp-validation-for="CustomerName"></span>
+                    <div class="form-row">
+                        <div class="inputs">
+                            <label asp-for="CustomerName" class="form-label">Full Name <nop-required /></label>
+                            <input asp-for="CustomerName" placeholder="Enter your full name" class="form-control" />
+                            <span asp-validation-for="CustomerName"></span>
+                        </div>
                     </div>
 
-                    <div class="inputs">
-                        <label asp-for="Email" asp-postfix=":"></label>
-                        <input asp-for="Email" type="email" />
-                        <nop-required />
-                        <span asp-validation-for="Email"></span>
-                    </div>
+                    <div class="form-row">
+                        <div class="inputs half-width">
+                            <label asp-for="Email" class="form-label">Email Address <nop-required /></label>
+                            <input asp-for="Email" type="email" placeholder="your.email@example.com" class="form-control" />
+                            <span asp-validation-for="Email"></span>
+                        </div>
 
-                    <div class="inputs">
-                        <label asp-for="Phone" asp-postfix=":"></label>
-                        <input asp-for="Phone" type="tel" />
-                        <nop-required />
-                        <span asp-validation-for="Phone"></span>
+                        <div class="inputs half-width">
+                            <label asp-for="Phone" class="form-label">Phone Number <nop-required /></label>
+                            <input asp-for="Phone" type="tel" placeholder="+44 7123 456789 or 07123 456789" class="form-control" pattern="^(\+44\s?7\d{3}|\(?07\d{3}\)?|7\d{3})\s?\d{3}\s?\d{3}$" title="Please enter a valid UK mobile number (e.g. +44 7123 456789 or 07123 456789)" />
+                            <span asp-validation-for="Phone"></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Device Information Section -->
-            <div class="fieldset">
+            <div class="fieldset device-info-card">
                 <div class="title">
-                    <strong>Device Information</strong>
+                    <strong>🔧 Device Information</strong>
                 </div>
                 <div class="form-fields">
-                    <!-- Device Type (Primary dropdown) -->
-                    <div class="inputs">
-                        <label asp-for="DeviceType" asp-postfix=":"></label>
-                        <select asp-for="DeviceType" asp-items="Model.AvailableDeviceTypes">
-                            <option value="">Select device type</option>
-                        </select>
-                        <nop-required />
-                        <span asp-validation-for="DeviceType"></span>
+                    <div class="form-row">
+                        <div class="inputs">
+                            <label for="device-type-select" class="form-label">Device Type <nop-required /></label>
+                            <select asp-for="RepairCategoryId" asp-items="Model.AvailableDeviceTypes" id="device-type-select" class="form-control">
+                            </select>
+                            <span asp-validation-for="DeviceType"></span>
+                        </div>
                     </div>
 
-                    <!-- Brand -->
-                    <div class="inputs">
-                        <label asp-for="DeviceBrand" asp-postfix=":"></label>
-                        <input asp-for="DeviceBrand" placeholder="e.g., Apple, Samsung, Dell" />
-                        <span asp-validation-for="DeviceBrand"></span>
+                    <div class="form-row">
+                        <div class="inputs half-width">
+                            <label for="product-select" class="form-label">Product Type</label>
+                            <select asp-for="RepairProductId" id="product-select" class="form-control" disabled>
+                                <option value="">Select device type first</option>
+                            </select>
+                            <span asp-validation-for="RepairProductId"></span>
+                        </div>
+
+                        <div class="inputs half-width">
+                            <label for="repair-type-select" class="form-label">Repair Type</label>
+                            <select asp-for="RepairTypeId" id="repair-type-select" class="form-control" disabled>
+                                <option value="">Select product first</option>
+                            </select>
+                            <span asp-validation-for="RepairTypeId"></span>
+                        </div>
                     </div>
 
-                    <!-- Model -->
-                    <div class="inputs">
-                        <label asp-for="DeviceModel" asp-postfix=":"></label>
-                        <input asp-for="DeviceModel" placeholder="e.g., iPhone 14, Galaxy S23, XPS 15" />
-                        <span asp-validation-for="DeviceModel"></span>
+                    <div class="form-row" id="price-row" style="display: none;">
+                        <div class="price-display-card">
+                            <div id="estimated-price" class="price-content">
+                                <!-- Price will be populated by JavaScript -->
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Repair Type with autocomplete -->
-                    <div class="inputs">
-                        <label for="repair-type-input">Repair Type:</label>
-                        <input type="text" id="repair-type-input" class="text-box single-line" placeholder="Start typing to search repair types (e.g., Screen Replacement, Battery Replacement)" />
-                        <input asp-for="RepairTypeId" type="hidden" id="repair-type-id" />
-                        <div id="repair-type-suggestions" class="suggestions-dropdown"></div>
-                        <div id="estimated-price" class="price-display"></div>
-                    </div>
-
-                    <!-- Issue Description -->
-                    <div class="inputs">
-                        <label asp-for="IssueDescription" asp-postfix=":"></label>
-                        <textarea asp-for="IssueDescription" rows="4"
-                                  placeholder="Please describe the issue with your device..."></textarea>
-                        <nop-required />
-                        <span asp-validation-for="IssueDescription"></span>
+                    <div class="form-row">
+                        <div class="inputs">
+                            <label asp-for="IssueDescription" class="form-label">Issue Description <nop-required /></label>
+                            <textarea asp-for="IssueDescription" rows="4" class="form-control"
+                                      placeholder="Please describe the issue with your device in detail. The more information you provide, the better we can assist you."></textarea>
+                            <span asp-validation-for="IssueDescription"></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Appointment Date & Time Section -->
-            <div class="fieldset">
+            <div class="fieldset appointment-datetime-card">
                 <div class="title">
-                    <strong>Select Appointment Date & Time</strong>
+                    <strong>📅 Select Appointment Date & Time</strong>
                 </div>
                 <div class="form-fields">
-                    <div class="inputs">
-                        <label asp-for="AppointmentDate" asp-postfix=":"></label>
-                        <input asp-for="AppointmentDate" type="date" id="appointment-date" />
-                        <nop-required />
+                    <!-- Week View Calendar -->
+                    <div class="calendar-section">
+                        <label class="form-label">Select Date:</label>
+                        <div class="calendar-container">
+                            <div class="calendar-header">
+                                <button type="button" id="prev-week" class="calendar-nav" aria-label="Previous week">‹</button>
+                                <h3 id="calendar-week-range"></h3>
+                                <button type="button" id="next-week" class="calendar-nav" aria-label="Next week">›</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div class="weekday">Sun</div>
+                                <div class="weekday">Mon</div>
+                                <div class="weekday">Tue</div>
+                                <div class="weekday">Wed</div>
+                                <div class="weekday">Thu</div>
+                                <div class="weekday">Fri</div>
+                                <div class="weekday">Sat</div>
+                            </div>
+                            <div class="calendar-week-row" id="calendar-week">
+                                <!-- Week days will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <input asp-for="AppointmentDate" type="hidden" id="selected-date" />
                         <span asp-validation-for="AppointmentDate"></span>
                     </div>
 
-                    <div class="inputs">
-                        <label asp-for="TimeSlotId" asp-postfix=":"></label>
-                        <select asp-for="TimeSlotId" id="time-slots" disabled>
-                            <option value="">Please select a date first</option>
-                        </select>
-                        <nop-required />
-                        <span asp-validation-for="TimeSlotId"></span>
+                    <!-- Time Slots Grid -->
+                    <div class="time-slots-section" id="time-slots-section" style="display: none;">
+                        <label class="form-label">Available Time Slots:</label>
+                        <div class="time-slots-container" id="time-slots-container">
+                            <!-- Time slots will be populated by JavaScript -->
+                        </div>
+                        <input asp-for="TimeSlotId" type="hidden" id="selected-time-slot" />
                         <div id="slot-availability" class="slot-info"></div>
+                        <span asp-validation-for="TimeSlotId"></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Hidden fields for category and product (used by repair type search) -->
+            <!-- Hidden fields -->
             <input asp-for="RepairCategoryId" type="hidden" id="repair-category-id" />
-            <input asp-for="RepairProductId" type="hidden" id="repair-product-id" />
+            <input asp-for="DeviceType" type="hidden" id="device-type-hidden" />
 
-            <div class="buttons">
-                <button type="submit" class="button-1 register-button" id="submit-appointment">
-                    Book Appointment
+            <div class="form-buttons">
+                <button type="submit" class="btn-appointment-submit" id="submit-appointment">
+                    <span class="btn-icon">🚀</span>
+                    <span class="btn-text">Book My Appointment</span>
                 </button>
             </div>
 
@@ -137,220 +162,419 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        // Set minimum date to today
-        var today = new Date().toISOString().split('T')[0];
-        $('#appointment-date').attr('min', today);
+$(document).ready(function() {
+    // Initialize variables first
+    var currentWeekStart = getWeekStart(new Date());
+    var selectedDate = null;
 
-        // Load time slots when date is selected
-        $('#appointment-date').on('change', function() {
-            var selectedDate = $(this).val();
-            if (selectedDate) {
-                loadAvailableSlots(selectedDate);
+    // Initialize week view calendar after variables are declared
+    initializeWeekView();
+
+    // Device type change handler
+    $('#device-type-select').on('change', function() {
+        var categoryId = $(this).val();
+        var categoryName = $(this).find('option:selected').text();
+
+        console.log('Device type changed:', categoryId, categoryName);
+
+        $('#device-type-hidden').val(categoryName);
+        $('#repair-category-id').val(categoryId);
+
+        // Reset dependent dropdowns
+        $('#product-select').html('<option value="">Loading products...</option>').prop('disabled', true);
+        $('#repair-type-select').html('<option value="">Select product first</option>').prop('disabled', true);
+        hidePrice();
+
+        if (categoryId && categoryId !== '') {
+            loadProductsByCategory(categoryId);
+        } else {
+            resetProductDropdown();
+            resetRepairTypeDropdown();
+        }
+    });
+
+    // Product change handler
+    $('#product-select').on('change', function() {
+        var productId = $(this).val();
+
+        console.log('Product changed:', productId);
+
+        // Reset repair types
+        $('#repair-type-select').html('<option value="">Loading repair types...</option>').prop('disabled', true);
+        hidePrice();
+
+        if (productId && productId !== '' && productId !== 'other') {
+            loadRepairTypesByProduct(productId);
+        } else if (productId === 'other') {
+            resetRepairTypeDropdown(true); // true = include Other option
+        } else {
+            resetRepairTypeDropdown();
+        }
+    });
+
+    // Repair type change handler
+    $('#repair-type-select').on('change', function() {
+        var repairTypeId = $(this).val();
+
+        console.log('Repair type changed:', repairTypeId);
+
+        if (repairTypeId && repairTypeId !== '' && repairTypeId !== 'other') {
+            showEstimatedPrice(repairTypeId);
+        } else {
+            hidePrice();
+        }
+    });
+
+    function loadProductsByCategory(categoryId) {
+        console.log('Loading products for category:', categoryId);
+
+        $.ajax({
+            url: '@Url.Action("GetProductsByCategory", "RepairAppointmentPublic")',
+            type: 'GET',
+            data: { categoryId: categoryId },
+            success: function(products) {
+                console.log('Products loaded:', products);
+
+                var $select = $('#product-select');
+                $select.empty().prop('disabled', false);
+
+                $select.append('<option value="">Select Product Type</option>');
+
+                if (products && products.length > 0) {
+                    $.each(products, function(i, product) {
+                        $select.append('<option value="' + product.id + '">' + product.text + '</option>');
+                    });
+                }
+
+                // Always add "Other" option
+                $select.append('<option value="other">Other</option>');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading products:', error);
+                $('#product-select').html('<option value="">Error loading products</option>').prop('disabled', false);
+            }
+        });
+    }
+
+    function loadRepairTypesByProduct(productId) {
+        console.log('Loading repair types for product:', productId);
+
+        $.ajax({
+            url: '@Url.Action("GetRepairTypesByProduct", "RepairAppointmentPublic")',
+            type: 'GET',
+            data: { productId: productId },
+            success: function(repairTypes) {
+                console.log('Repair types loaded:', repairTypes);
+
+                var $select = $('#repair-type-select');
+                $select.empty().prop('disabled', false);
+
+                $select.append('<option value="">Select Repair Type</option>');
+
+                if (repairTypes && repairTypes.length > 0) {
+                    $.each(repairTypes, function(i, repairType) {
+                        var optionText = repairType.text;
+                        if (repairType.price && repairType.price > 0) {
+                            optionText += ' - $' + repairType.price.toFixed(2);
+                        }
+                        $select.append('<option value="' + repairType.id + '" data-price="' + (repairType.price || 0) + '" data-duration="' + (repairType.duration || 0) + '">' + optionText + '</option>');
+                    });
+                }
+
+                // Always add "Other" option
+                $select.append('<option value="other">Other</option>');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading repair types:', error);
+                $('#repair-type-select').html('<option value="">Error loading repair types</option>').prop('disabled', false);
+            }
+        });
+    }
+
+    function showEstimatedPrice(repairTypeId) {
+        $.ajax({
+            url: '@Url.Action("GetRepairTypeDetails", "RepairAppointmentPublic")',
+            type: 'GET',
+            data: { repairTypeId: repairTypeId },
+            success: function(repairType) {
+                if (repairType && repairType.estimatedPrice > 0) {
+                    var priceHtml = '<div class="price-info">';
+                    priceHtml += '<div class="price-amount">💰 Estimated Price: <strong>$' + repairType.estimatedPrice.toFixed(2) + '</strong></div>';
+                    if (repairType.estimatedDurationMinutes > 0) {
+                        priceHtml += '<div class="price-duration">⏱️ Duration: <strong>' + repairType.estimatedDurationMinutes + ' minutes</strong></div>';
+                    }
+                    priceHtml += '</div>';
+
+                    $('#estimated-price').html(priceHtml);
+                    $('#price-row').slideDown(300);
+                }
+            }
+        });
+    }
+
+    function hidePrice() {
+        $('#price-row').slideUp(300);
+    }
+
+    function resetProductDropdown() {
+        $('#product-select').html('<option value="">Select device type first</option>').prop('disabled', true);
+    }
+
+    function resetRepairTypeDropdown(includeOther = false) {
+        var $select = $('#repair-type-select');
+        if (includeOther) {
+            $select.html('<option value="">Select Repair Type</option><option value="other">Other</option>').prop('disabled', false);
+        } else {
+            $select.html('<option value="">Select product first</option>').prop('disabled', true);
+        }
+    }
+
+    // Week view functionality
+    function initializeWeekView() {
+        renderWeekView(currentWeekStart);
+
+        $('#prev-week').on('click', function() {
+            currentWeekStart = new Date(currentWeekStart);
+            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+            renderWeekView(currentWeekStart);
+        });
+
+        $('#next-week').on('click', function() {
+            currentWeekStart = new Date(currentWeekStart);
+            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            renderWeekView(currentWeekStart);
+        });
+    }
+
+    function getWeekStart(date) {
+        var weekStart = new Date(date);
+        weekStart.setDate(date.getDate() - date.getDay());
+        return weekStart;
+    }
+
+    function renderWeekView(weekStart) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Calculate week end date
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+
+        // Format week range header
+        let rangeText;
+        if (weekStart.getMonth() === weekEnd.getMonth()) {
+            rangeText = `${months[weekStart.getMonth()]} ${weekStart.getDate()}-${weekEnd.getDate()}, ${weekStart.getFullYear()}`;
+        } else {
+            rangeText = `${months[weekStart.getMonth()]} ${weekStart.getDate()} - ${months[weekEnd.getMonth()]} ${weekEnd.getDate()}, ${weekStart.getFullYear()}`;
+        }
+
+        $('#calendar-week-range').text(rangeText);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const $weekRow = $('#calendar-week');
+        $weekRow.empty();
+
+        // Generate 7 days of the week
+        for (let i = 0; i < 7; i++) {
+            const cellDate = new Date(weekStart);
+            cellDate.setDate(weekStart.getDate() + i);
+            const isDisabled = cellDate < today;
+            const isSelected = selectedDate && cellDate.toDateString() === selectedDate.toDateString();
+
+            const $dayCell = $('<div class="calendar-day' +
+                             (isDisabled ? ' disabled' : '') +
+                             (isSelected ? ' selected' : '') +
+                             '">' + cellDate.getDate() + '</div>');
+
+            if (!isDisabled) {
+                $dayCell.on('click', function() {
+                    selectDate(cellDate);
+                });
+            }
+
+            $weekRow.append($dayCell);
+        }
+    }
+
+    function selectDate(date) {
+        selectedDate = date;
+        $('#selected-date').val(date.toISOString().split('T')[0]);
+
+        // Update calendar display
+        $('.calendar-day').removeClass('selected');
+        $('.calendar-day').each(function() {
+            if ($(this).text() == date.getDate() && !$(this).hasClass('disabled')) {
+                $(this).addClass('selected');
             }
         });
 
-        function loadAvailableSlots(date) {
-            $('#time-slots').prop('disabled', true).html('<option>Loading...</option>');
-            $('#slot-availability').html('');
+        // Load available time slots
+        loadAvailableSlots(date);
+    }
 
-            $.ajax({
-                url: '@Url.Action("GetAvailableSlots", "RepairAppointmentPublic")',
-                type: 'GET',
-                data: { date: date },
-                success: function(response) {
-                    var $select = $('#time-slots');
-                    $select.empty().prop('disabled', false);
+    function loadAvailableSlots(date) {
+        $('#time-slots-section').slideDown(300);
+        $('#time-slots-container').html('<div class="loading-slots">🔄 Loading available time slots...</div>');
+        $('#slot-availability').html('');
 
-                    if (response.slots && response.slots.length > 0) {
-                        $select.append('<option value="">Select a time slot</option>');
-                        $.each(response.slots, function(i, slot) {
-                            var optionText = slot.text;
-                            if (slot.available > 0) {
-                                optionText += ' (' + slot.available + ' available)';
-                            }
-                            $select.append('<option value="' + slot.id + '">' + optionText + '</option>');
-                        });
-                    } else {
-                        $select.append('<option value="">No available slots for this date</option>');
-                        $('#slot-availability').html('<span class="text-warning">No appointments available for the selected date. Please choose another date.</span>');
-                    }
-                },
-                error: function() {
-                    $('#time-slots').html('<option value="">Error loading slots</option>');
-                }
-            });
-        }
+        $.ajax({
+            url: '@Url.Action("GetAvailableSlots", "RepairAppointmentPublic")',
+            type: 'GET',
+            data: { date: date.toISOString().split('T')[0] },
+            success: function(response) {
+                const $container = $('#time-slots-container');
+                $container.empty();
 
-        // Simplified repair type search based on device type
-        setupRepairTypeSearch();
+                if (response.slots && response.slots.length > 0) {
+                    $.each(response.slots, function(i, slot) {
+                        const isUnavailable = slot.available <= 0;
+                        const $timeSlot = $('<div class="time-slot' + (isUnavailable ? ' unavailable' : '') + '" data-slot-id="' + slot.id + '">' +
+                                          '<div class="slot-time">' + slot.text + '</div>' +
+                                          '<div class="slot-availability">' +
+                                          (slot.available > 0 ? slot.available + ' available' : 'Fully booked') +
+                                          '</div></div>');
 
-        function setupRepairTypeSearch() {
-            var $input = $('#repair-type-input');
-            var $hidden = $('#repair-type-id');
-            var $suggestions = $('#repair-type-suggestions');
-            var currentRequest = null;
-            var selectedIndex = -1;
-
-            $input.on('input', function() {
-                var term = $(this).val().trim();
-                selectedIndex = -1;
-
-                if (term.length < 2) {
-                    $suggestions.hide().empty();
-                    $hidden.val('');
-                    $('#estimated-price').removeClass('show');
-                    return;
-                }
-
-                if (currentRequest) {
-                    currentRequest.abort();
-                }
-
-                $input.addClass('autocomplete-loading');
-
-                // Search repair types based on current device type
-                var deviceType = $('#DeviceType').val();
-
-                currentRequest = $.ajax({
-                    url: '@Url.Action("SearchRepairTypes", "RepairAppointmentPublic")',
-                    type: 'GET',
-                    data: {
-                        term: term,
-                        deviceType: deviceType
-                    },
-                    success: function(response) {
-                        $input.removeClass('autocomplete-loading');
-                        $suggestions.empty();
-
-                        if (response && response.length > 0) {
-                            $.each(response, function(index, item) {
-                                var suggestionHtml = '<div class="suggestion-item" data-id="' + item.id + '" data-index="' + index + '">';
-                                suggestionHtml += '<div class="suggestion-title">' + item.text + '</div>';
-                                if (item.description) {
-                                    suggestionHtml += '<div class="suggestion-description">' + item.description + '</div>';
-                                }
-                                if (item.price && item.price > 0) {
-                                    suggestionHtml += '<div class="suggestion-price">$' + item.price.toFixed(2) + '</div>';
-                                }
-                                if (item.duration && item.duration > 0) {
-                                    suggestionHtml += '<div class="suggestion-duration">' + item.duration + ' minutes</div>';
-                                }
-                                suggestionHtml += '</div>';
-                                $suggestions.append(suggestionHtml);
+                        if (!isUnavailable) {
+                            $timeSlot.on('click', function() {
+                                selectTimeSlot(slot.id, slot.text);
                             });
-                            $suggestions.show();
-                        } else {
-                            $suggestions.html('<div class="no-suggestions">No repair types found</div>').show();
                         }
-                    },
-                    error: function() {
-                        $input.removeClass('autocomplete-loading');
-                        $suggestions.hide();
-                    }
-                });
-            });
 
-            // Handle suggestion click
-            $suggestions.on('click', '.suggestion-item', function() {
-                var $item = $(this);
-                var id = $item.data('id');
-                var text = $item.find('.suggestion-title').text();
-                var price = parseFloat($item.find('.suggestion-price').text().replace('$', '')) || 0;
-                var duration = parseInt($item.find('.suggestion-duration').text()) || 0;
-
-                $input.val(text);
-                $hidden.val(id);
-                $suggestions.hide();
-
-                // Show estimated price
-                if (price > 0) {
-                    var priceDisplay = '<span class="price-amount">Estimated Price: $' + price.toFixed(2) + '</span>';
-                    if (duration > 0) {
-                        priceDisplay += '<span class="price-duration"> | Duration: ' + duration + ' minutes</span>';
-                    }
-                    $('#estimated-price').html(priceDisplay).addClass('show');
+                        $container.append($timeSlot);
+                    });
                 } else {
-                    $('#estimated-price').removeClass('show');
+                    $container.html('<div class="no-slots">📅 No appointments available for the selected date.<br/>Please choose another date.</div>');
+                    $('#slot-availability').html('<div class="warning-message">⚠️ No appointments available for the selected date.</div>');
                 }
-            });
-
-            // Keyboard navigation
-            $input.on('keydown', function(e) {
-                var $items = $suggestions.find('.suggestion-item');
-
-                if (e.keyCode === 40) { // Down arrow
-                    e.preventDefault();
-                    selectedIndex = Math.min(selectedIndex + 1, $items.length - 1);
-                    updateSelection($items);
-                } else if (e.keyCode === 38) { // Up arrow
-                    e.preventDefault();
-                    selectedIndex = Math.max(selectedIndex - 1, -1);
-                    updateSelection($items);
-                } else if (e.keyCode === 13) { // Enter
-                    e.preventDefault();
-                    if (selectedIndex >= 0) {
-                        $items.eq(selectedIndex).click();
-                    }
-                } else if (e.keyCode === 27) { // Escape
-                    $suggestions.hide();
-                    selectedIndex = -1;
-                }
-            });
-
-            function updateSelection($items) {
-                $items.removeClass('selected');
-                if (selectedIndex >= 0) {
-                    $items.eq(selectedIndex).addClass('selected');
-                }
+            },
+            error: function() {
+                $('#time-slots-container').html('<div class="error-slots">❌ Error loading time slots. Please try again.</div>');
             }
+        });
+    }
 
-            // Hide suggestions when clicking outside
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('#repair-type-input, #repair-type-suggestions').length) {
-                    $suggestions.hide();
-                }
-            });
+    function selectTimeSlot(slotId, slotText) {
+        $('#selected-time-slot').val(slotId);
+
+        $('.time-slot').removeClass('selected');
+        $('[data-slot-id="' + slotId + '"]').addClass('selected');
+
+        $('#slot-availability').html('<div class="success-message">✅ Selected: ' + slotText + '</div>');
+    }
+
+    // Form validation helper
+    function validateForm() {
+        var isValid = true;
+        var errors = [];
+
+        // Check required fields
+        if (!$('#CustomerName').val().trim()) {
+            errors.push('Full Name is required');
+            isValid = false;
+        }
+        if (!$('#Email').val().trim()) {
+            errors.push('Email is required');
+            isValid = false;
+        }
+        var phoneValue = $('#Phone').val().trim();
+        if (!phoneValue) {
+            errors.push('Phone Number is required');
+            isValid = false;
+        } else if (!phoneValue.match(/^(\+44\s?7\d{3}|\(?07\d{3}\)?|7\d{3})\s?\d{3}\s?\d{3}$/)) {
+            errors.push('Please enter a valid UK mobile number');
+            isValid = false;
+        }
+        var deviceTypeValue = $('#device-type-select').val();
+        var deviceTypeHiddenValue = $('#device-type-hidden').val();
+        if (!deviceTypeValue && !deviceTypeHiddenValue) {
+            errors.push('Device Type is required');
+            isValid = false;
+        }
+        if (!$('#IssueDescription').val().trim()) {
+            errors.push('Issue Description is required');
+            isValid = false;
+        }
+        if (!$('#selected-date').val()) {
+            errors.push('Appointment Date is required');
+            isValid = false;
+        }
+        if (!$('#selected-time-slot').val()) {
+            errors.push('Time Slot is required');
+            isValid = false;
         }
 
-        // Form submission
-        $('#appointment-form').on('submit', function(e) {
-            e.preventDefault();
+        if (!isValid) {
+            $('#appointment-message').removeClass('message-success').addClass('message-error')
+                .html('❌ Please fill in all required fields:<br/>• ' + errors.join('<br/>• ')).show();
+        }
 
-            var $form = $(this);
-            var $submitBtn = $('#submit-appointment');
-            var $message = $('#appointment-message');
+        return isValid;
+    }
 
-            $submitBtn.prop('disabled', true).text('Processing...');
-            $message.hide();
+    // Form submission
+    $('#appointment-form').on('submit', function(e) {
+        e.preventDefault();
 
-            $.ajax({
-                url: $form.attr('action'),
-                type: 'POST',
-                data: $form.serialize(),
-                success: function(response) {
-                    if (response.success) {
-                        $message.removeClass('message-error').addClass('message-success')
-                            .html(response.message + '<br/>Confirmation Code: <strong>' + response.confirmationCode + '</strong>')
-                            .show();
+        if (!validateForm()) {
+            return;
+        }
 
-                        if (response.redirectUrl) {
-                            setTimeout(function() {
-                                window.location.href = response.redirectUrl;
-                            }, 2000);
-                        }
-                    } else {
-                        $message.removeClass('message-success').addClass('message-error')
-                            .html(response.message).show();
-                        $submitBtn.prop('disabled', false).text('Book Appointment');
-                    }
-                },
-                error: function() {
-                    $message.removeClass('message-success').addClass('message-error')
-                        .html('An error occurred. Please try again.').show();
-                    $submitBtn.prop('disabled', false).text('Book Appointment');
+        var $form = $(this);
+        var $submitBtn = $('#submit-appointment');
+        var $message = $('#appointment-message');
+
+        $submitBtn.prop('disabled', true).html('<span class="btn-icon">⏳</span><span class="btn-text">Processing...</span>');
+        $message.hide();
+
+        // Handle "other" values properly before serialization
+        var formData = $form.serializeArray();
+        var dataObj = {};
+
+        $.each(formData, function(_, field) {
+            if (field.value === 'other') {
+                // Don't send "other" as an ID, let the server handle it
+                if (field.name === 'RepairProductId' || field.name === 'RepairTypeId') {
+                    dataObj[field.name] = 0; // Send 0 for other selections
+                } else {
+                    dataObj[field.name] = field.value;
                 }
-            });
+            } else {
+                dataObj[field.name] = field.value;
+            }
+        });
+
+        // Convert back to serialized format
+        formData = $.param(dataObj);
+
+        $.ajax({
+            url: $form.attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    $message.removeClass('message-error').addClass('message-success')
+                        .html('🎉 ' + response.message + '<br/>Confirmation Code: <strong>' + response.confirmationCode + '</strong>')
+                        .show();
+
+                    if (response.redirectUrl) {
+                        setTimeout(function() {
+                            window.location.href = response.redirectUrl;
+                        }, 2000);
+                    }
+                } else {
+                    $message.removeClass('message-success').addClass('message-error')
+                        .html('❌ ' + response.message).show();
+                    $submitBtn.prop('disabled', false).html('<span class="btn-icon">🚀</span><span class="btn-text">Book My Appointment</span>');
+                }
+            },
+            error: function() {
+                $message.removeClass('message-success').addClass('message-error')
+                    .html('❌ An error occurred. Please try again.').show();
+                $submitBtn.prop('disabled', false).html('<span class="btn-icon">🚀</span><span class="btn-text">Book My Appointment</span>');
+            }
         });
     });
+});
 </script>

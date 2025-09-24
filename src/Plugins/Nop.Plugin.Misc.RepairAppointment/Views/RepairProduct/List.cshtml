@@ -132,9 +132,16 @@
                             new ColumnProperty(nameof(RepairProductModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
+                                Width = "50",
                                 ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("~/Admin/RepairProduct/Edit"))
+                            },
+                            new ColumnProperty(nameof(RepairProductModel.Id))
+                            {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonRemove("Delete")
                             }
                         }
                     })

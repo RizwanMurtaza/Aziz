@@ -69,6 +69,7 @@
                         {
                             Name = "categories-grid",
                             UrlRead = new DataUrl("CategoryList", "RepairCategory", new RouteValueDictionary { ["area"] = "Admin" }),
+                            UrlDelete = new DataUrl("Delete", "RepairCategory", new RouteValueDictionary { ["area"] = "Admin" }),
                             SearchButtonId = "search-categories",
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,

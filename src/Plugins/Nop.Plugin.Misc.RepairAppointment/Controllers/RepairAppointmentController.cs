@@ -23,6 +23,8 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
     public class RepairAppointmentController : BasePluginController
     {
         private readonly IRepairAppointmentService _appointmentService;
+        private readonly IRepairProductService _repairProductService;
+        private readonly IRepairTypeService _repairTypeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -31,6 +33,8 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
 
         public RepairAppointmentController(
             IRepairAppointmentService appointmentService,
+            IRepairProductService repairProductService,
+            IRepairTypeService repairTypeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
@@ -38,6 +42,8 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             IStoreContext storeContext)
         {
             _appointmentService = appointmentService;
+            _repairProductService = repairProductService;
+            _repairTypeService = repairTypeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
@@ -245,6 +251,56 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 .ToList();
 
             return View("~/Plugins/Misc.RepairAppointment/Views/Edit.cshtml", model);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
+                return AccessDeniedView();
+
+            var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
+            if (appointment == null)
+                return RedirectToAction("List");
+
+            // Get product and repair type names
+            string? repairProductName = null;
+            string? repairTypeName = null;
+
+            if (appointment.RepairProductId.HasValue)
+            {
+                var product = await _repairProductService.GetRepairProductByIdAsync(appointment.RepairProductId.Value);
+                repairProductName = product?.Name;
+            }
+
+            if (appointment.RepairTypeId.HasValue)
+            {
+                var repairType = await _repairTypeService.GetRepairTypeByIdAsync(appointment.RepairTypeId.Value);
+                repairTypeName = repairType?.Name;
+            }
+
+            var model = new RepairAppointmentModel
+            {
+                Id = appointment.Id,
+                CustomerName = appointment.CustomerName,
+                Email = appointment.Email,
+                Phone = appointment.Phone,
+                DeviceType = appointment.DeviceType,
+                DeviceBrand = appointment.DeviceBrand,
+                DeviceModel = appointment.DeviceModel,
+                IssueDescription = appointment.IssueDescription,
+                AppointmentDate = appointment.AppointmentDate,
+                TimeSlot = appointment.TimeSlot,
+                StatusId = (int)appointment.Status,
+                StatusName = appointment.Status.ToString(),
+                Notes = appointment.Notes,
+                ConfirmationCode = appointment.ConfirmationCode,
+                CreatedOn = appointment.CreatedOnUtc,
+                ModifiedOn = appointment.ModifiedOnUtc,
+                RepairProductName = repairProductName,
+                RepairTypeName = repairTypeName
+            };
+
+            return View("~/Plugins/Misc.RepairAppointment/Views/Details.cshtml", model);
         }
 
         [HttpPost]

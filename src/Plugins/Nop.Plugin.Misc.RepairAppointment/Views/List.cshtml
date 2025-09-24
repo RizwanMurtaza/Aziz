@@ -79,6 +79,7 @@
                         {
                             Name = "appointments-grid",
                             UrlRead = new DataUrl("AppointmentList", "RepairAppointment", new RouteValueDictionary { ["area"] = "Admin" }),
+                            UrlDelete = new DataUrl("Delete", "RepairAppointment", new RouteValueDictionary { ["area"] = "Admin" }),
                             SearchButtonId = "search-appointments",
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,
@@ -135,10 +136,17 @@
                                 },
                                 new ColumnProperty(nameof(RepairAppointmentModel.Id))
                                 {
+                                    Title = "View",
+                                    Width = "50",
+                                    ClassName = NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonView(new DataUrl("~/Admin/RepairAppointment/Details"))
+                                },
+                                new ColumnProperty(nameof(RepairAppointmentModel.Id))
+                                {
                                     Title = "Edit",
                                     Width = "50",
                                     ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit", "RepairAppointment", new RouteValueDictionary { ["area"] = "Admin" }))
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/RepairAppointment/Edit"))
                                 },
                                 new ColumnProperty(nameof(RepairAppointmentModel.Id))
                                 {
@@ -155,3 +163,4 @@
         </div>
     </div>
 </section>
+
