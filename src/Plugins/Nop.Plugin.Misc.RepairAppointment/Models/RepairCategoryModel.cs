@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -22,7 +24,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
 
     public record RepairCategoryListModel : BasePagedListModel<RepairCategoryModel>
     {
-        public int Total { get; set; }
     }
 
     public record RepairCategorySearchModel : BaseSearchModel
@@ -32,5 +33,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.RepairCategory.Search.IsActive")]
         public int IsActiveId { get; set; }
+
+        public List<SelectListItem> AvailableActiveOptions { get; set; } = new();
     }
 }

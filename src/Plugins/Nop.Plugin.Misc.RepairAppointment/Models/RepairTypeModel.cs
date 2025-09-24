@@ -50,7 +50,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
 
     public record RepairTypeListModel : BasePagedListModel<RepairTypeModel>
     {
-        public int Total { get; set; }
     }
 
     public record RepairTypeSearchModel : BaseSearchModel
@@ -59,6 +58,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         {
             AvailableCategories = new List<SelectListItem>();
             AvailableProducts = new List<SelectListItem>();
+            AvailableActiveOptions = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.RepairType.Search.CategoryId")]
@@ -75,5 +75,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
 
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableProducts { get; set; }
+        public IList<SelectListItem> AvailableActiveOptions { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public RepairProductModel()
         {
             AvailableCategories = new List<SelectListItem>();
+            RepairTypes = new List<RepairTypeModel>();
         }
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.RepairProduct.Fields.RepairCategoryId")]
@@ -25,7 +26,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public string Brand { get; set; } = string.Empty;
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.RepairProduct.Fields.Model")]
-        public string Model { get; set; } = string.Empty;
+        public string ProductModel { get; set; } = string.Empty;
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.RepairProduct.Fields.Description")]
         public string Description { get; set; } = string.Empty;
@@ -38,11 +39,11 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
 
         public string CategoryName { get; set; } = string.Empty;
         public IList<SelectListItem> AvailableCategories { get; set; }
+        public IList<RepairTypeModel> RepairTypes { get; set; }
     }
 
     public record RepairProductListModel : BasePagedListModel<RepairProductModel>
     {
-        public int Total { get; set; }
     }
 
     public record RepairProductSearchModel : BaseSearchModel
@@ -50,6 +51,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public RepairProductSearchModel()
         {
             AvailableCategories = new List<SelectListItem>();
+            AvailableActiveOptions = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Plugins.Misc.RepairAppointment.RepairProduct.Search.CategoryId")]
@@ -65,5 +67,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public int IsActiveId { get; set; }
 
         public IList<SelectListItem> AvailableCategories { get; set; }
+        public IList<SelectListItem> AvailableActiveOptions { get; set; }
     }
 }

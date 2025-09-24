@@ -2,6 +2,8 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Edit Repair Product";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.Products");
 }
 
 <form asp-controller="RepairProduct" asp-action="Edit" method="post">
@@ -74,11 +76,11 @@
 
                         <div class="form-group row">
                             <div class="col-md-3">
-                                <nop-label asp-for="Model" />
+                                <nop-label asp-for="ProductModel" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Model" />
-                                <span asp-validation-for="Model"></span>
+                                <nop-editor asp-for="ProductModel" />
+                                <span asp-validation-for="ProductModel"></span>
                             </div>
                         </div>
 
@@ -107,3 +109,322 @@
         </div>
     </section>
 </form>
+
+<!-- Repair Types Section -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-wrench"></i>
+                            Repair Types for this Product
+                        </div>
+                        <div class="float-right">
+                            <button type="button" id="add-repair-type-btn" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i>
+                                Add Repair Type
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="repair-types-container">
+                            @if (Model.RepairTypes != null && Model.RepairTypes.Any())
+                            {
+                                foreach (var repairType in Model.RepairTypes)
+                                {
+                                    <div class="repair-type-item" data-id="@repairType.Id">
+                                        <div class="row mb-2 p-2 border rounded">
+                                            <div class="col-md-3">
+                                                <strong>@repairType.Name</strong>
+                                                <br><small class="text-muted">@repairType.Description</small>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <span class="badge badge-info">$@repairType.EstimatedPrice</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <span class="badge badge-secondary">@repairType.EstimatedDurationMinutes min</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                @if (repairType.IsActive)
+                                                {
+                                                    <span class="badge badge-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger">Inactive</span>
+                                                }
+                                            </div>
+                                            <div class="col-md-3 text-right">
+                                                <button type="button" class="btn btn-sm btn-info edit-repair-type-btn" data-id="@repairType.Id">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger delete-repair-type-btn" data-id="@repairType.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div id="no-repair-types" class="alert alert-info">
+                                    No repair types have been added for this product yet.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add/Edit Repair Type Modal -->
+<div class="modal fade" id="repair-type-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="repair-type-modal-title">Add Repair Type</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="repair-type-form">
+                    <input type="hidden" id="repair-type-id" value="0" />
+                    <div class="form-group">
+                        <label for="repair-type-name">Name *</label>
+                        <input type="text" class="form-control" id="repair-type-name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="repair-type-description">Description</label>
+                        <textarea class="form-control" id="repair-type-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="repair-type-price">Estimated Price</label>
+                        <input type="number" class="form-control" id="repair-type-price" step="0.01" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label for="repair-type-duration">Duration (Minutes)</label>
+                        <input type="number" class="form-control" id="repair-type-duration" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label for="repair-type-display-order">Display Order</label>
+                        <input type="number" class="form-control" id="repair-type-display-order" min="0" value="0" />
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="repair-type-active" checked />
+                        <label class="form-check-label" for="repair-type-active">Is Active</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-repair-type-btn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    var productId = @Model.Id;
+    var currentRepairTypes = {};
+
+    // Store current repair types data
+    @if (Model.RepairTypes != null)
+    {
+        foreach (var rt in Model.RepairTypes)
+        {
+            <text>
+            currentRepairTypes[@rt.Id] = {
+                id: @rt.Id,
+                name: '@Html.Raw(Html.Encode(rt.Name))',
+                description: '@Html.Raw(Html.Encode(rt.Description ?? ""))',
+                estimatedPrice: @rt.EstimatedPrice,
+                estimatedDurationMinutes: @rt.EstimatedDurationMinutes,
+                isActive: @rt.IsActive.ToString().ToLower(),
+                displayOrder: @rt.DisplayOrder
+            };
+            </text>
+        }
+    }
+
+    // Add repair type button
+    $('#add-repair-type-btn').click(function() {
+        openRepairTypeModal();
+    });
+
+    // Edit repair type buttons
+    $(document).on('click', '.edit-repair-type-btn', function() {
+        var repairTypeId = $(this).data('id');
+        var repairType = currentRepairTypes[repairTypeId];
+        openRepairTypeModal(repairType);
+    });
+
+    // Delete repair type buttons
+    $(document).on('click', '.delete-repair-type-btn', function() {
+        var repairTypeId = $(this).data('id');
+        if (confirm('Are you sure you want to delete this repair type?')) {
+            deleteRepairType(repairTypeId);
+        }
+    });
+
+    // Save repair type
+    $('#save-repair-type-btn').click(function() {
+        saveRepairType();
+    });
+
+    function openRepairTypeModal(repairType) {
+        if (repairType) {
+            // Edit mode
+            $('#repair-type-modal-title').text('Edit Repair Type');
+            $('#repair-type-id').val(repairType.id);
+            $('#repair-type-name').val(repairType.name);
+            $('#repair-type-description').val(repairType.description);
+            $('#repair-type-price').val(repairType.estimatedPrice);
+            $('#repair-type-duration').val(repairType.estimatedDurationMinutes);
+            $('#repair-type-display-order').val(repairType.displayOrder);
+            $('#repair-type-active').prop('checked', repairType.isActive);
+        } else {
+            // Add mode
+            $('#repair-type-modal-title').text('Add Repair Type');
+            $('#repair-type-form')[0].reset();
+            $('#repair-type-id').val(0);
+            $('#repair-type-active').prop('checked', true);
+        }
+        $('#repair-type-modal').modal('show');
+    }
+
+    function saveRepairType() {
+        var id = parseInt($('#repair-type-id').val());
+        var name = $('#repair-type-name').val().trim();
+        var description = $('#repair-type-description').val().trim();
+        var estimatedPrice = parseFloat($('#repair-type-price').val()) || 0;
+        var estimatedDurationMinutes = parseInt($('#repair-type-duration').val()) || 0;
+        var displayOrder = parseInt($('#repair-type-display-order').val()) || 0;
+        var isActive = $('#repair-type-active').is(':checked');
+
+        if (!name) {
+            alert('Name is required');
+            return;
+        }
+
+        var url = id > 0 ? '@Url.Action("UpdateRepairType", "RepairProduct", new { area = "Admin" })' : '@Url.Action("AddRepairType", "RepairProduct", new { area = "Admin" })';
+        var data = {
+            id: id,
+            productId: productId,
+            name: name,
+            description: description,
+            estimatedPrice: estimatedPrice,
+            estimatedDurationMinutes: estimatedDurationMinutes,
+            isActive: isActive,
+            displayOrder: displayOrder
+        };
+
+        addAntiForgeryToken(data);
+        $.post(url, data)
+            .done(function(response) {
+                if (response.success) {
+                    $('#repair-type-modal').modal('hide');
+                    if (id === 0) {
+                        // Add new repair type to the list
+                        currentRepairTypes[response.id] = {
+                            id: response.id,
+                            name: response.name,
+                            description: response.description,
+                            estimatedPrice: response.estimatedPrice,
+                            estimatedDurationMinutes: response.estimatedDurationMinutes,
+                            isActive: response.isActive,
+                            displayOrder: response.displayOrder
+                        };
+                        addRepairTypeToUI(response);
+                    } else {
+                        // Update existing repair type
+                        currentRepairTypes[id] = data;
+                        updateRepairTypeInUI(id, data);
+                    }
+                } else {
+                    alert('Error: ' + (response.message || 'Failed to save repair type'));
+                }
+            })
+            .fail(function() {
+                alert('Error communicating with server');
+            });
+    }
+
+    function deleteRepairType(id) {
+        var postData = { id: id };
+        addAntiForgeryToken(postData);
+        $.post('@Url.Action("DeleteRepairType", "RepairProduct", new { area = "Admin" })', postData)
+            .done(function(response) {
+                if (response.success) {
+                    delete currentRepairTypes[id];
+                    $('[data-id="' + id + '"]').remove();
+
+                    // Show "no repair types" message if none left
+                    if (Object.keys(currentRepairTypes).length === 0) {
+                        $('#repair-types-container').html('<div id="no-repair-types" class="alert alert-info">No repair types have been added for this product yet.</div>');
+                    }
+                } else {
+                    alert('Error: ' + (response.message || 'Failed to delete repair type'));
+                }
+            })
+            .fail(function() {
+                alert('Error communicating with server');
+            });
+    }
+
+    function addRepairTypeToUI(repairType) {
+        $('#no-repair-types').remove();
+
+        var html = '<div class="repair-type-item" data-id="' + repairType.id + '">' +
+            '<div class="row mb-2 p-2 border rounded">' +
+                '<div class="col-md-3">' +
+                    '<strong>' + repairType.name + '</strong>' +
+                    '<br><small class="text-muted">' + (repairType.description || '') + '</small>' +
+                '</div>' +
+                '<div class="col-md-2">' +
+                    '<span class="badge badge-info">$' + repairType.estimatedPrice + '</span>' +
+                '</div>' +
+                '<div class="col-md-2">' +
+                    '<span class="badge badge-secondary">' + repairType.estimatedDurationMinutes + ' min</span>' +
+                '</div>' +
+                '<div class="col-md-2">' +
+                    (repairType.isActive ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>') +
+                '</div>' +
+                '<div class="col-md-3 text-right">' +
+                    '<button type="button" class="btn btn-sm btn-info edit-repair-type-btn" data-id="' + repairType.id + '">' +
+                        '<i class="fas fa-edit"></i>' +
+                    '</button>' +
+                    '<button type="button" class="btn btn-sm btn-danger delete-repair-type-btn" data-id="' + repairType.id + '">' +
+                        '<i class="fas fa-trash"></i>' +
+                    '</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+
+        $('#repair-types-container').append(html);
+    }
+
+    function updateRepairTypeInUI(id, repairType) {
+        var item = $('[data-id="' + id + '"]');
+        item.find('strong').text(repairType.name);
+        item.find('.text-muted').text(repairType.description || '');
+        item.find('.badge-info').text('$' + repairType.estimatedPrice);
+        item.find('.badge-secondary').text(repairType.estimatedDurationMinutes + ' min');
+
+        var statusBadge = item.find('.badge-success, .badge-danger');
+        statusBadge.removeClass('badge-success badge-danger');
+        if (repairType.isActive) {
+            statusBadge.addClass('badge-success').text('Active');
+        } else {
+            statusBadge.addClass('badge-danger').text('Inactive');
+        }
+    }
+});
+</script>
+

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,14 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             var model = new RepairCategorySearchModel();
             model.SetGridPageSize();
 
+            // Load active options
+            model.AvailableActiveOptions = new List<SelectListItem>
+            {
+                new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" },
+                new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.Active"), Value = "1" },
+                new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.Inactive"), Value = "2" }
+            };
+
             return View("~/Plugins/Misc.RepairAppointment/Views/RepairCategory/List.cshtml", model);
         }
 
@@ -69,7 +78,9 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                     IsActive = category.IsActive,
                     DisplayOrder = category.DisplayOrder
                 }).ToList(),
-                Total = categories.TotalCount
+                Draw = searchModel.Draw,
+                RecordsTotal = categories.TotalCount,
+                RecordsFiltered = categories.TotalCount
             };
 
             return Json(model);
@@ -109,6 +120,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             return View("~/Plugins/Misc.RepairAppointment/Views/RepairCategory/Create.cshtml", model);
         }
 
+        [Route("Admin/RepairCategory/Edit/{id:int}")]
         public async Task<IActionResult> Edit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))

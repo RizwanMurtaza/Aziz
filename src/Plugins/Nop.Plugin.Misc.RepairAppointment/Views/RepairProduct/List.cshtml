@@ -2,6 +2,8 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Repair Products";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.Products");
 }
 
 <div class="content-header clearfix">
@@ -21,39 +23,39 @@
         <div class="form-horizontal">
             <div class="card card-default">
                 <div class="card-body">
-                    <div class="row search-row opened" data-hideAttribute="@(Model.HideSearchBlock)">
+                    <div class="row search-row opened">
                         <div class="search-text">@T("Admin.Common.Search")</div>
                         <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="far fa-angle-@(!Model.HideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-up" aria-hidden="true"></i></div>
                     </div>
 
-                    <div class="search-body @(Model.HideSearchBlock ? "closed" : "")">
+                    <div class="search-body">
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-group row">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchProductName" />
+                                        <nop-label asp-for="SearchName" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-editor asp-for="SearchProductName" />
+                                        <nop-editor asp-for="SearchName" />
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchCategoryId" />
+                                        <nop-label asp-for="CategoryId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                        <nop-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-7">
                                 <div class="form-group row">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="SearchIsActive" />
+                                        <nop-label asp-for="IsActiveId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="SearchIsActive" asp-items="Model.AvailableActiveOptions" />
+                                        <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
                                     </div>
                                 </div>
                             </div>
@@ -81,9 +83,9 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.SearchProductName)),
-                            new FilterParameter(nameof(Model.SearchCategoryId)),
-                            new FilterParameter(nameof(Model.SearchIsActive))
+                            new FilterParameter(nameof(Model.SearchName)),
+                            new FilterParameter(nameof(Model.CategoryId)),
+                            new FilterParameter(nameof(Model.IsActiveId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -109,7 +111,7 @@
                                 Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Brand").Text,
                                 Width = "150"
                             },
-                            new ColumnProperty(nameof(RepairProductModel.Model))
+                            new ColumnProperty(nameof(RepairProductModel.ProductModel))
                             {
                                 Title = T("Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Model").Text,
                                 Width = "150"
@@ -132,7 +134,7 @@
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
                                 ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit", "RepairProduct", new RouteValueDictionary { ["area"] = "Admin" }))
+                                Render = new RenderButtonEdit(new DataUrl("~/Admin/RepairProduct/Edit"))
                             }
                         }
                     })
@@ -167,5 +169,6 @@
             $('#delete-selected-action-confirmation').modal('toggle');
             return false;
         });
+
     });
 </script>

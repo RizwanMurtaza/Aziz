@@ -117,7 +117,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                 })
                 .ToList();
 
-            model.AvailableStatuses.Insert(0, new SelectListItem { Text = "All", Value = "0" });
+            model.AvailableStatuses.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
 
             return View("~/Plugins/Misc.RepairAppointment/Views/List.cshtml", model);
         }
@@ -157,12 +157,15 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                     ConfirmationCode = appointment.ConfirmationCode,
                     CreatedOn = appointment.CreatedOnUtc.ToLocalTime()
                 }).ToList(),
-                Total = appointments.TotalCount
+                Draw = searchModel.Draw,
+                RecordsTotal = appointments.TotalCount,
+                RecordsFiltered = appointments.TotalCount
             };
 
             return Json(model);
         }
 
+        [Route("Admin/RepairAppointment/Edit/{id:int}")]
         public async Task<IActionResult> Edit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))

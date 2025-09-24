@@ -2,6 +2,8 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Add New Repair Category";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.Categories");
 }
 
 <form asp-controller="RepairCategory" asp-action="Create" method="post">
@@ -71,3 +73,4 @@
         </div>
     </section>
 </form>
+

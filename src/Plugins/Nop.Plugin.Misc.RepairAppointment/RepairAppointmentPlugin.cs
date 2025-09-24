@@ -87,6 +87,7 @@ namespace Nop.Plugin.Misc.RepairAppointment
                 // Search fields
                 ["Plugins.Misc.RepairAppointment.Search.FromDate"] = "From Date",
                 ["Plugins.Misc.RepairAppointment.Search.ToDate"] = "To Date",
+                ["Plugins.Misc.RepairAppointment.Search.Status"] = "Status",
                 ["Plugins.Misc.RepairAppointment.Search.StatusId"] = "Status",
                 ["Plugins.Misc.RepairAppointment.Search.SearchText"] = "Search Text",
 
@@ -96,13 +97,34 @@ namespace Nop.Plugin.Misc.RepairAppointment
                 ["Admin.Plugins.Misc.RepairAppointment.Updated"] = "The appointment has been updated successfully",
                 ["Admin.Plugins.Misc.RepairAppointment.Deleted"] = "The appointment has been deleted successfully",
 
-                // RepairCategory fields
+                // RepairCategory fields (Form)
+                ["Plugins.Misc.RepairAppointment.RepairCategory.Fields.Name"] = "Name",
+                ["Plugins.Misc.RepairAppointment.RepairCategory.Fields.Description"] = "Description",
+                ["Plugins.Misc.RepairAppointment.RepairCategory.Fields.IsActive"] = "Is Active",
+                ["Plugins.Misc.RepairAppointment.RepairCategory.Fields.DisplayOrder"] = "Display Order",
+                ["Plugins.Misc.RepairAppointment.RepairCategory.Search.Name"] = "Search by Name",
+                ["Plugins.Misc.RepairAppointment.RepairCategory.Search.IsActive"] = "Is Active",
+
+                // RepairCategory fields (Grid)
                 ["Admin.Plugins.Misc.RepairAppointment.RepairCategories.Fields.Name"] = "Name",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairCategories.Fields.Description"] = "Description",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairCategories.Fields.IsActive"] = "Active",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairCategories.Fields.DisplayOrder"] = "Display Order",
 
-                // RepairProduct fields
+                // RepairProduct fields (Form)
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.RepairCategoryId"] = "Category",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.Name"] = "Name",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.Brand"] = "Brand",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.Model"] = "Model",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.Description"] = "Description",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.IsActive"] = "Is Active",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Fields.DisplayOrder"] = "Display Order",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Search.CategoryId"] = "Category",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Search.Name"] = "Search by Name",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Search.Brand"] = "Search by Brand",
+                ["Plugins.Misc.RepairAppointment.RepairProduct.Search.IsActive"] = "Is Active",
+
+                // RepairProduct fields (Grid)
                 ["Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Name"] = "Name",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Category"] = "Category",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.Brand"] = "Brand",
@@ -110,14 +132,46 @@ namespace Nop.Plugin.Misc.RepairAppointment
                 ["Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.IsActive"] = "Active",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairProducts.Fields.DisplayOrder"] = "Display Order",
 
-                // RepairType fields
+                // RepairType fields (Form)
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.RepairCategoryId"] = "Category",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.RepairProductId"] = "Product (Optional)",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.Name"] = "Name",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.Description"] = "Description",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.EstimatedPrice"] = "Estimated Price",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.EstimatedDurationMinutes"] = "Estimated Duration (Minutes)",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.IsActive"] = "Is Active",
+                ["Plugins.Misc.RepairAppointment.RepairType.Fields.DisplayOrder"] = "Display Order",
+                ["Plugins.Misc.RepairAppointment.RepairType.Search.CategoryId"] = "Category",
+                ["Plugins.Misc.RepairAppointment.RepairType.Search.ProductId"] = "Product",
+                ["Plugins.Misc.RepairAppointment.RepairType.Search.Name"] = "Search by Name",
+                ["Plugins.Misc.RepairAppointment.RepairType.Search.IsActive"] = "Is Active",
+
+                // RepairType fields (Grid)
                 ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.Name"] = "Name",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.Category"] = "Category",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.Product"] = "Product",
-                ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.EstimatedPrice"] = "Estimated Price",
-                ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.EstimatedDuration"] = "Duration (minutes)",
+                ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.EstimatedPrice"] = "Price",
+                ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.EstimatedDurationMinutes"] = "Duration (Min)",
                 ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.IsActive"] = "Active",
-                ["Admin.Plugins.Misc.RepairAppointment.RepairTypes.Fields.DisplayOrder"] = "Display Order",
+
+                // Configuration page
+                ["Plugins.Misc.RepairAppointment.Configuration.EnableAppointmentSystem"] = "Enable Appointment System",
+                ["Plugins.Misc.RepairAppointment.Configuration.SlotDurationMinutes"] = "Slot Duration (Minutes)",
+                ["Plugins.Misc.RepairAppointment.Configuration.MaxSlotsPerDay"] = "Max Slots Per Day",
+                ["Plugins.Misc.RepairAppointment.Configuration.BusinessStartTime"] = "Business Start Time",
+                ["Plugins.Misc.RepairAppointment.Configuration.BusinessEndTime"] = "Business End Time",
+                ["Plugins.Misc.RepairAppointment.Configuration.SendConfirmationEmail"] = "Send Confirmation Email",
+                ["Plugins.Misc.RepairAppointment.Configuration.SendReminderEmail"] = "Send Reminder Email",
+                ["Plugins.Misc.RepairAppointment.Configuration.ReminderHoursBeforeAppointment"] = "Reminder Hours Before Appointment",
+                ["Plugins.Misc.RepairAppointment.Configuration.MaxAdvanceBookingDays"] = "Max Advance Booking Days",
+                ["Plugins.Misc.RepairAppointment.Configuration.RequireCustomerLogin"] = "Require Customer Login",
+
+                // Common dropdown options
+                ["Admin.Common.All"] = "All",
+                ["Admin.Common.Active"] = "Active",
+                ["Admin.Common.Inactive"] = "Inactive",
+                ["Admin.Common.None"] = "None",
+                ["Admin.Common.Select"] = "Select...",
 
                 // Public messages
                 ["Plugins.Misc.RepairAppointment.BookAppointment"] = "Book Repair Appointment",

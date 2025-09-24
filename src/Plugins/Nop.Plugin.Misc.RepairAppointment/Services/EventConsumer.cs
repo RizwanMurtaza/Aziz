@@ -28,7 +28,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
             if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
                 return null;
 
-            return new AdminMenuItem
+            var menuItem = new AdminMenuItem
             {
                 Visible = true,
                 SystemName = "RepairAppointments",
@@ -78,6 +78,8 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
                     }
                 }
             };
+
+            return menuItem;
         }
     }
 }

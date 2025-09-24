@@ -2,6 +2,8 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Add New Repair Type";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.RepairTypes");
 }
 
 <form asp-controller="RepairType" asp-action="Create" method="post">
@@ -83,11 +85,11 @@
 
                         <div class="form-group row">
                             <div class="col-md-3">
-                                <nop-label asp-for="EstimatedDuration" />
+                                <nop-label asp-for="EstimatedDurationMinutes" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="EstimatedDuration" />
-                                <span asp-validation-for="EstimatedDuration"></span>
+                                <nop-editor asp-for="EstimatedDurationMinutes" />
+                                <span asp-validation-for="EstimatedDurationMinutes"></span>
                                 <div class="form-text">Duration in minutes</div>
                             </div>
                         </div>
@@ -142,5 +144,6 @@
                 });
             }
         });
+
     });
 </script>

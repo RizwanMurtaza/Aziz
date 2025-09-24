@@ -2,6 +2,8 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Repair Categories";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.Categories");
 }
 
 <div class="content-header clearfix">
@@ -44,11 +46,7 @@
                                         <nop-label asp-for="IsActiveId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="IsActiveId">
-                                            <option value="0">All</option>
-                                            <option value="1">Active only</option>
-                                            <option value="2">Inactive only</option>
-                                        </nop-select>
+                                        <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +107,7 @@
                                     Title = "Edit",
                                     Width = "50",
                                     ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("Edit", "RepairCategory", new RouteValueDictionary { ["area"] = "Admin" }))
+                                    Render = new RenderButtonEdit(new DataUrl("~/Admin/RepairCategory/Edit"))
                                 },
                                 new ColumnProperty(nameof(RepairCategoryModel.Id))
                                 {
@@ -126,3 +124,4 @@
         </div>
     </div>
 </section>
+

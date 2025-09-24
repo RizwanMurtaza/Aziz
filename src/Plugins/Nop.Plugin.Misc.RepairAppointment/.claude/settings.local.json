@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Read(//m/GamingRehab/Aziz/src/Presentation/Nop.Web/**)",
-      "Read(//m/GamingRehab/Aziz/src/**)"
+      "Read(//m/GamingRehab/Aziz/src/**)",
+      "Read(//m/GamingRehab/Aziz/**)",
+      "Bash(dotnet build)",
+      "Bash(for file in RepairProduct/Create.cshtml RepairProduct/Edit.cshtml RepairType/List.cshtml RepairType/Create.cshtml RepairType/Edit.cshtml)",
+      "Bash(do echo \"Processing $file\")",
+      "Bash(grep:*)",
+      "Bash(echo \"Found in $file\")",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(dotnet build:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

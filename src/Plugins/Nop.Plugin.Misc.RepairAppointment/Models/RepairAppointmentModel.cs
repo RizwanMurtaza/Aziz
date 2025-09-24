@@ -95,7 +95,6 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
 
     public record RepairAppointmentListModel : BasePagedListModel<RepairAppointmentModel>
     {
-        public int Total { get; set; }
     }
 
     public record RepairAppointmentSearchModel : BaseSearchModel

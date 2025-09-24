@@ -2,6 +2,8 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Add New Repair Product";
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("RepairAppointments.Products");
 }
 
 <form asp-controller="RepairProduct" asp-action="Create" method="post">
@@ -72,11 +74,11 @@
 
                         <div class="form-group row">
                             <div class="col-md-3">
-                                <nop-label asp-for="Model" />
+                                <nop-label asp-for="ProductModel" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="Model" />
-                                <span asp-validation-for="Model"></span>
+                                <nop-editor asp-for="ProductModel" />
+                                <span asp-validation-for="ProductModel"></span>
                             </div>
                         </div>
 
@@ -105,3 +107,4 @@
         </div>
     </section>
 </form>
+
