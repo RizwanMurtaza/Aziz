@@ -5,6 +5,8 @@
     NopHtml.SetActiveMenuItemSystemName("RepairAppointments.SlotManagement");
 }
 
+<nop-antiforgery-token />
+
 <div class="content-header clearfix">
     <h1 class="float-left">
         <i class="fas fa-calendar-week"></i>
@@ -69,12 +71,15 @@
                             @for (int i = 0; i < Model.AvailableWeekdays.Count; i++)
                             {
                                 var weekday = Model.AvailableWeekdays[i];
-                                <div class="custom-control custom-checkbox custom-control-inline">
+                                var isDisabled = weekday.Disabled;
+                                var isChecked = !isDisabled && Model.SelectedWeekdays.Contains(int.Parse(weekday.Value));
+                                <div class="custom-control custom-checkbox custom-control-inline @(isDisabled ? "disabled" : "")">
                                     <input type="checkbox" class="custom-control-input weekday-checkbox"
                                            id="weekday_@weekday.Value" name="SelectedWeekdays" value="@weekday.Value"
-                                           @(Model.SelectedWeekdays.Contains(int.Parse(weekday.Value)) ? "checked" : "") />
-                                    <label class="custom-control-label" for="weekday_@weekday.Value">
-                                        @weekday.Text
+                                           @(isChecked ? "checked" : "")
+                                           @(isDisabled ? "disabled" : "") />
+                                    <label class="custom-control-label @(isDisabled ? "text-muted" : "")" for="weekday_@weekday.Value">
+                                        @weekday.Text @(isDisabled ? "(Not a working day)" : "")
                                     </label>
                                 </div>
                             }
@@ -210,6 +215,15 @@
     margin-right: 15px;
     margin-bottom: 10px;
 }
+
+.weekday-selection .custom-control-inline.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.weekday-selection .custom-control-inline.disabled .custom-control-label {
+    cursor: not-allowed;
+}
 </style>
 
 <script>
@@ -219,7 +233,7 @@ $(document).ready(function() {
 
     // Enable/disable load button based on weekday selection
     $('.weekday-checkbox').change(function() {
-        var selectedCount = $('.weekday-checkbox:checked').length;
+        var selectedCount = $('.weekday-checkbox:checked:not(:disabled)').length;
         $('#load-time-slots').prop('disabled', selectedCount === 0);
 
         if (selectedCount === 0) {
@@ -227,10 +241,13 @@ $(document).ready(function() {
         }
     });
 
+    // Trigger change event on page load to set initial state
+    $('.weekday-checkbox').trigger('change');
+
     // Load time slots for selected weekdays
     $('#load-time-slots').click(function() {
         var selectedWeekdays = [];
-        $('.weekday-checkbox:checked').each(function() {
+        $('.weekday-checkbox:checked:not(:disabled)').each(function() {
             selectedWeekdays.push($(this).val());
         });
 
@@ -244,13 +261,25 @@ $(document).ready(function() {
         $('#time-slots-card').show();
 
         // Load time slots via AJAX
+        var ajaxUrl = '@Url.Action("GetTimeSlotsForWeekdays", "SlotManagement", new { area = "Admin" })';
+        console.log('AJAX URL:', ajaxUrl);
+        console.log('Selected weekdays:', selectedWeekdays);
+
         $.ajax({
-            url: '@Url.Action("GetTimeSlotsForWeekdays")',
+            url: ajaxUrl,
             type: 'POST',
-            data: JSON.stringify({ weekdays: selectedWeekdays }),
+            data: JSON.stringify({ Weekdays: selectedWeekdays }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
+            beforeSend: function(xhr) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                console.log('GetTimeSlotsForWeekdays - Antiforgery token found:', token ? 'Yes' : 'No');
+                if (token) {
+                    xhr.setRequestHeader("RequestVerificationToken", token);
+                }
+            },
             success: function(response) {
+                console.log('AJAX Success:', response);
                 if (response.success) {
                     timeSlots = response.timeSlots;
                     renderTimeSlots();
@@ -259,8 +288,13 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX Error:', xhr.responseText);
-                $('#time-slots-container').html('<div class="alert alert-danger">Error loading time slots: ' + error + '. Please try again.</div>');
+                console.error('AJAX Error Details:');
+                console.error('Status:', status);
+                console.error('Error:', error);
+                console.error('Response Text:', xhr.responseText);
+                console.error('Status Code:', xhr.status);
+                console.error('URL:', ajaxUrl);
+                $('#time-slots-container').html('<div class="alert alert-danger">Error loading time slots (Status: ' + xhr.status + '): ' + error + '. Please check browser console for details.</div>');
             }
         });
     });
@@ -270,7 +304,7 @@ $(document).ready(function() {
 
         for (var i = 0; i < timeSlots.length; i++) {
             var slot = timeSlots[i];
-            var isModified = slot.newCapacity !== slot.defaultCapacity;
+            var isModified = slot.NewCapacity !== slot.DefaultCapacity;
             var capacityClass = isModified ? 'capacity-modified' : 'capacity-default';
             var cardClass = isModified ? 'time-slot-card modified' : 'time-slot-card';
 
@@ -278,12 +312,12 @@ $(document).ready(function() {
             html += '<div class="' + cardClass + '" data-slot-index="' + i + '">';
             html += '<div class="time-slot-info">';
             html += '<div>';
-            html += '<strong>' + slot.timeSlot + '</strong><br/>';
-            html += '<small class="text-muted">' + slot.startTime + ' - ' + slot.endTime + '</small>';
+            html += '<strong>' + slot.TimeSlot + '</strong><br/>';
+            html += '<small class="text-muted">' + slot.StartTimeFormatted + ' - ' + slot.EndTimeFormatted + '</small>';
             html += '</div>';
             html += '<div>';
             html += '<span class="capacity-badge ' + capacityClass + '">';
-            html += isModified ? slot.newCapacity : slot.defaultCapacity;
+            html += isModified ? slot.NewCapacity : slot.DefaultCapacity;
             html += '</span>';
             html += '</div>';
             html += '</div>';
@@ -301,9 +335,9 @@ $(document).ready(function() {
         selectedSlotIndex = $(this).data('slot-index');
         var slot = timeSlots[selectedSlotIndex];
 
-        $('#modal-time-slot').val(slot.timeSlot);
-        $('#modal-default-capacity').val(slot.defaultCapacity);
-        $('#modal-new-capacity').val(slot.newCapacity);
+        $('#modal-time-slot').val(slot.TimeSlot);
+        $('#modal-default-capacity').val(slot.DefaultCapacity);
+        $('#modal-new-capacity').val(slot.NewCapacity);
 
         $('#capacity-modal').modal('show');
     });
@@ -317,7 +351,7 @@ $(document).ready(function() {
             return;
         }
 
-        timeSlots[selectedSlotIndex].newCapacity = newCapacity;
+        timeSlots[selectedSlotIndex].NewCapacity = newCapacity;
         renderTimeSlots();
         $('#capacity-modal').modal('hide');
     });
@@ -325,7 +359,7 @@ $(document).ready(function() {
     // Apply changes
     $('#apply-changes').click(function() {
         var selectedWeekdays = [];
-        $('.weekday-checkbox:checked').each(function() {
+        $('.weekday-checkbox:checked:not(:disabled)').each(function() {
             selectedWeekdays.push($(this).val());
         });
 
@@ -337,7 +371,7 @@ $(document).ready(function() {
             return;
         }
 
-        var changedSlots = timeSlots.filter(slot => slot.newCapacity !== slot.defaultCapacity);
+        var changedSlots = timeSlots.filter(slot => slot.NewCapacity !== slot.DefaultCapacity);
 
         if (changedSlots.length === 0) {
             alert('No capacity changes to apply.');
@@ -350,7 +384,7 @@ $(document).ready(function() {
 
         // Apply changes via AJAX
         $.ajax({
-            url: '@Url.Action("ApplyBulkCapacityChanges")',
+            url: '@Url.Action("ApplyBulkCapacityChanges", "SlotManagement", new { area = "Admin" })',
             type: 'POST',
             data: JSON.stringify({
                 fromDate: fromDate,
@@ -360,11 +394,18 @@ $(document).ready(function() {
             }),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
+            beforeSend: function(xhr) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                console.log('ApplyBulkCapacityChanges - Antiforgery token found:', token ? 'Yes' : 'No');
+                if (token) {
+                    xhr.setRequestHeader("RequestVerificationToken", token);
+                }
+            },
             success: function(response) {
                 if (response.success) {
                     alert('Capacity changes applied successfully to ' + response.affectedSlots + ' slots.');
                     // Optionally redirect back to list
-                    window.location.href = '@Url.Action("List")';
+                    window.location.href = '@Url.Action("List", "SlotManagement", new { area = "Admin" })';
                 } else {
                     alert('Error: ' + response.message);
                 }
@@ -379,7 +420,7 @@ $(document).ready(function() {
     // Reset changes
     $('#reset-changes').click(function() {
         if (confirm('Are you sure you want to reset all capacity changes?')) {
-            timeSlots.forEach(slot => slot.newCapacity = slot.defaultCapacity);
+            timeSlots.forEach(slot => slot.NewCapacity = slot.DefaultCapacity);
             renderTimeSlots();
         }
     });

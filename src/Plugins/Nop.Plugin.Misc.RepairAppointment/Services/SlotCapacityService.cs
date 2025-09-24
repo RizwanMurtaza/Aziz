@@ -15,13 +15,16 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
     public class SlotCapacityService : ISlotCapacityService
     {
         private readonly IRepository<SlotCapacity> _slotCapacityRepository;
+        private readonly IRepository<Domain.RepairAppointment> _appointmentRepository;
         private readonly ISettingService _settingService;
 
         public SlotCapacityService(
             IRepository<SlotCapacity> slotCapacityRepository,
+            IRepository<Domain.RepairAppointment> appointmentRepository,
             ISettingService settingService)
         {
             _slotCapacityRepository = slotCapacityRepository;
+            _appointmentRepository = appointmentRepository;
             _settingService = settingService;
         }
 
@@ -100,20 +103,19 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
 
         public virtual async Task<(int maxCapacity, int currentBookings)> GetEffectiveSlotCapacityAsync(DateTime date, TimeSpan startTime, TimeSpan endTime)
         {
+            // Always get the actual current bookings from the appointments table for accuracy
+            var currentBookings = await GetCurrentBookingsForSlotAsync(date, startTime, endTime);
+
             // Check for specific slot capacity override first
             var slotCapacity = await GetSlotCapacityAsync(date, startTime, endTime);
             if (slotCapacity != null && slotCapacity.IsActive)
             {
-                return (slotCapacity.MaxAppointments, slotCapacity.CurrentBookings);
+                return (slotCapacity.MaxAppointments, currentBookings);
             }
 
             // Fall back to default settings
             var settings = await _settingService.LoadSettingAsync<RepairAppointmentSettings>();
             var defaultCapacity = settings.MaxAppointmentsPerSlot;
-
-            // Get current bookings from appointments table (this would need to be implemented)
-            // For now, return 0 current bookings when using default capacity
-            var currentBookings = await GetCurrentBookingsForSlotAsync(date, startTime, endTime);
 
             return (defaultCapacity, currentBookings);
         }
@@ -221,15 +223,22 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
 
         /// <summary>
         /// Helper method to get current bookings from appointments table
-        /// This should query the actual appointments to get real booking count
+        /// This queries the actual appointments to get real booking count
         /// </summary>
         private async Task<int> GetCurrentBookingsForSlotAsync(DateTime date, TimeSpan startTime, TimeSpan endTime)
         {
-            // This would need to be implemented to query the actual appointments table
-            // For now, return 0 as a placeholder
-            // In a real implementation, this would count appointments for the given date/time slot
-            await Task.CompletedTask;
-            return 0;
+            var dateOnly = date.Date;
+            var appointmentDateTime = dateOnly.Add(startTime);
+            var endDateTime = dateOnly.Add(endTime);
+
+            // Count active appointments (not cancelled) for this specific date and time slot
+            var count = await _appointmentRepository.Table
+                .Where(a => a.AppointmentDate >= appointmentDateTime
+                           && a.AppointmentDate < endDateTime
+                           && a.Status != AppointmentStatus.Cancelled)
+                .CountAsync();
+
+            return count;
         }
     }
 }

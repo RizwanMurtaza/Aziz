@@ -123,6 +123,8 @@ namespace Nop.Plugin.Misc.RepairAppointment.Models
         public TimeSpan EndTime { get; set; }
         public int DefaultCapacity { get; set; }
         public int NewCapacity { get; set; }
+        public string StartTimeFormatted { get; set; } = string.Empty;
+        public string EndTimeFormatted { get; set; } = string.Empty;
     }
 
     public record GetTimeSlotsRequest

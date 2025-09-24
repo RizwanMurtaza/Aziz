@@ -23,7 +23,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
 
         protected override string BeforeMenuSystemName => "Configuration";
 
-        protected override async Task<AdminMenuItem> GetAdminMenuItemAsync(IPlugin plugin)
+        protected override async Task<AdminMenuItem?> GetAdminMenuItemAsync(IPlugin plugin)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
                 return null;

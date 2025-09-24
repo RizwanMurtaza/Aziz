@@ -69,7 +69,7 @@ namespace Nop.Plugin.Misc.RepairAppointment.Services
                     a.CustomerName.Contains(searchText) ||
                     a.Email.Contains(searchText) ||
                     a.Phone.Contains(searchText) ||
-                    a.DeviceModel.Contains(searchText) ||
+                    (a.DeviceModel != null && a.DeviceModel.Contains(searchText)) ||
                     a.ConfirmationCode.Contains(searchText));
             }
 

@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Misc.RepairAppointment.Models;
 using Nop.Plugin.Misc.RepairAppointment.Services;
 using Nop.Plugin.Misc.RepairAppointment.Domain;
@@ -9,10 +10,6 @@ using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nop.Plugin.Misc.RepairAppointment.Controllers
 {
@@ -243,10 +240,33 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS))
                 return AccessDeniedView();
 
+            var settings = await _settingService.LoadSettingAsync<RepairAppointmentSettings>();
+            var workingDays = new List<int>();
+            if (!string.IsNullOrEmpty(settings.WorkingDays))
+            {
+                workingDays = settings.WorkingDays.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                 .Select(int.Parse)
+                                                 .ToList();
+            }
+
+            // Create available weekdays list with only working days enabled
+            var availableWeekdays = new List<SelectListItem>
+            {
+                new() { Text = "Sunday", Value = "0", Disabled = !workingDays.Contains(0) },
+                new() { Text = "Monday", Value = "1", Disabled = !workingDays.Contains(1) },
+                new() { Text = "Tuesday", Value = "2", Disabled = !workingDays.Contains(2) },
+                new() { Text = "Wednesday", Value = "3", Disabled = !workingDays.Contains(3) },
+                new() { Text = "Thursday", Value = "4", Disabled = !workingDays.Contains(4) },
+                new() { Text = "Friday", Value = "5", Disabled = !workingDays.Contains(5) },
+                new() { Text = "Saturday", Value = "6", Disabled = !workingDays.Contains(6) }
+            };
+
             var model = new BulkSlotManagementModel
             {
                 FromDate = DateTime.Today.AddDays(1),
-                ToDate = DateTime.Today.AddDays(7)
+                ToDate = DateTime.Today.AddDays(7),
+                SelectedWeekdays = workingDays,
+                AvailableWeekdays = availableWeekdays
             };
 
             return View("~/Plugins/Misc.RepairAppointment/Views/SlotManagement/BulkManagement.cshtml", model);
@@ -282,7 +302,9 @@ namespace Nop.Plugin.Misc.RepairAppointment.Controllers
                         StartTime = currentTime,
                         EndTime = slotEndTime,
                         DefaultCapacity = settings.MaxAppointmentsPerSlot,
-                        NewCapacity = settings.MaxAppointmentsPerSlot
+                        NewCapacity = settings.MaxAppointmentsPerSlot,
+                        StartTimeFormatted = currentTime.ToString(@"hh\:mm"),
+                        EndTimeFormatted = slotEndTime.ToString(@"hh\:mm")
                     });
 
                     currentTime = currentTime.Add(slotDuration);
